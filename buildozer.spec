@@ -4,26 +4,33 @@ package.name = utsalesanalytics
 package.domain = org.umbrellaweb
 
 source.dir = .
-source.include_exts = py,kv,png,jpg,txt,json
+source.include_exts = py,txt,png,jpg,kv,atlas
 
-# Main Python file
-entrypoint = main.py
-
-orientation = portrait
+requirements = python3,kivy,kivymd,requests,pandas,matplotlib,cython
 
 version = 1.0.0
 
-requirements = python3,kivy==2.3.0,kivymd==1.2.0,requests,pandas,matplotlib
+# Forzar versiones Android correctas:
+android.api = 33
+android.ndk = 25b
+android.build_tools_version = 33.0.0
 
-# uncomment if you use internet or save files
+# (list) Permissions
 android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE
 
-fullscreen = 1
+# (str) Presplash of the application
+#presplash.filename = %(source.dir)s/data/presplash.png
 
-[buildozer]
-log_level = 2
-warn_on_root = 0
+# (str) Icon of the application
+#icon.filename = %(source.dir)s/data/icon.png
 
-[android]
-android.api = 34
-android.ndk = 25b
+# (bool) Indicate if the application should be fullscreen or not
+fullscreen = 0
+
+# (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
+orientation = portrait
+
+# (str) Entry point, default is main.py
+# entrypoint = main.py
+
+# Otros ajustes por defecto (no toques)
