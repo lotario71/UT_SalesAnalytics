@@ -2,15 +2,28 @@
 title = UT_SalesAnalytics
 package.name = utsalesanalytics
 package.domain = org.umbrellaweb
+
 source.dir = .
-source.include_exts = py,txt,png,jpg,kv,atlas
+source.include_exts = py,kv,png,jpg,txt,json
 
-# buildozer.spec
-requirements = python3,kivy==2.3.1,kivymd,matplotlib,requests,pandas,lxml
-python_version = 3.11
+# Main Python file
+entrypoint = main.py
 
-
-# Enable PythonService support
-android.add_services = true
+orientation = portrait
 
 version = 1.0.0
+
+requirements = python3,kivy==2.3.0,kivymd==1.2.0,requests,pandas,matplotlib
+
+# uncomment if you use internet or save files
+android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE
+
+fullscreen = 1
+
+[buildozer]
+log_level = 2
+warn_on_root = 0
+
+[android]
+android.api = 34
+android.ndk = 25b
