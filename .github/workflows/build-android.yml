@@ -20,39 +20,18 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential git zip unzip wget python3-pip gettext autopoint
-        pip install --upgrade pip
-        pip install buildozer virtualenv
-        pip install "cython<3.0"
-
-
-    - name: Bootstrap Buildozer (to generate .buildozer folder)
-      run: |
-        buildozer android debug || true
-
-    - name: Manually install Android cmdline-tools
-      run: |
-        SDK_DIR=$HOME/.buildozer/android/platform/android-sdk
-        mkdir -p $SDK_DIR/cmdline-tools
-        cd $SDK_DIR/cmdline-tools
-        wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O tools.zip
-        unzip tools.zip
-        mv cmdline-tools latest
-
-    - name: Accept Android licenses and install SDK components
-      run: |
-        export SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk
-        yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK_ROOT --licenses
-        yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK_ROOT "platform-tools" "build-tools;33.0.0" "platforms;android-33"
-
-    - name: Clean previous builds
-      run: |
-        buildozer android clean
+        sudo apt-get install -y build-essential git zip unzip wget python3-pip gettext autopoint ccache \
+          libssl-dev libffi-dev libz-dev libncurses5 libsqlite3-dev \
+          xvfb libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev \
+          libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev \
+          zlib1g-dev libjpeg-dev
+        pip install --no-binary=:all: cython==3.0.10
+        pip install buildozer==1.5.0
 
     - name: Build APK
       run: |
@@ -61,5 +40,5 @@ jobs:
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: HelloWorld-APK
-        path: bin/*.apk
+        name: UT_SalesAnalytics-APK
+        path: bin/*-debug.apk
