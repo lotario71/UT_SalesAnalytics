@@ -28,7 +28,7 @@ android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE
 fullscreen = 0
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
-orientation = unspecified
+# orientation = unspecified
 
 # (str) Entry point, default is main.py
 # entrypoint = main.py
