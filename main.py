@@ -13,6 +13,9 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.snackbar import Snackbar
 
+# Permitir que la app rote automáticamente según orientación del dispositivo
+from kivy.core.window import Window
+
 # ─── Plotting Support ──────────────────────────────
 import matplotlib
 matplotlib.use("Agg")  # use non-GUI backend for saving plots
@@ -738,6 +741,11 @@ class SalesAnalyticsApp(MDApp):
         sys.exit()
 
 
+
+# Permitir que la app rote automáticamente según orientación del dispositivo
+Window.allow_screensaver = False
+# Nota: en versiones recientes, no hace falta poner Window.rotation.
+# Simplemente no pongas 'orientation' en el .spec y la app debería rotar.
 
 if __name__ == "__main__":
     SalesAnalyticsApp().run()
