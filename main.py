@@ -261,12 +261,20 @@ MDNavigationLayout:
                             anchor_x: "center"
                             anchor_y: "center"
 
-                            Image:
-                                id: graph_image
-                                source: "plot.png"
-                                allow_stretch: True
-                                keep_ratio: True
-                                size_hint: 0.95, 0.95
+                            Scatter:
+                                do_rotation: False
+                                do_translation: True
+                                do_scale: True
+                                scale_min: 1
+                                scale_max: 6
+
+                                Image:
+                                    id: graph_image
+                                    source: "plot.png"
+                                    allow_stretch: True
+                                    keep_ratio: True
+                                    size_hint: None, None
+                                    size: self.texture_size
 
 
                     # ───────────────────── Slide 4 ──────────────────────
@@ -277,12 +285,20 @@ MDNavigationLayout:
                             anchor_x: "center"
                             anchor_y: "center"
 
-                            Image:
-                                id: daily_sales_image
-                                source: "daily_sales_plot.png"
-                                allow_stretch: True
-                                keep_ratio: True
-                                size_hint: 0.95, 0.95
+                            Scatter:
+                                do_rotation: False
+                                do_translation: True
+                                do_scale: True
+                                scale_min: 1
+                                scale_max: 6
+
+                                Image:
+                                    id: daily_sales_image
+                                    source: "daily_sales_plot.png"
+                                    allow_stretch: True
+                                    keep_ratio: True
+                                    size_hint: None, None
+                                    size: self.texture_size
 
 
 
