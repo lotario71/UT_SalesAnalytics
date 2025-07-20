@@ -13,9 +13,6 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.snackbar import Snackbar
 
-# Permitir que la app rote automáticamente según orientación del dispositivo
-from kivy.core.window import Window
-
 # ─── Plotting Support ──────────────────────────────
 import matplotlib
 matplotlib.use("Agg")  # use non-GUI backend for saving plots
@@ -292,35 +289,38 @@ MDNavigationLayout:
 
     # ──────────── Navigation Drawer (Menu) ─────────────
     MDNavigationDrawer:
-    id: nav_drawer
-    width: 320  # You can adjust this value if still not enough!
+        id: nav_drawer
+        width: 320  # You can adjust this value if still not enough!
 
-    MDNavigationDrawerMenu:
 
-        MDNavigationDrawerHeader:
-            title: "Sales Analytics"
-            title_color: app.theme_cls.primary_color
-            font_size: "20sp"
-            padding: "8dp", "16dp"
-            spacing: "8dp"
+        MDNavigationDrawerMenu:
 
-        MDNavigationDrawerItem:
-            icon: "cash"
-            text: "Set Avg. Monthly Expense"
-            on_release: app.show_expense_dialog()
-            divider: None
+            MDNavigationDrawerHeader:
+                title: "Sales Analytics"
+                title_color: app.theme_cls.primary_color
+                padding: "16dp"
+                spacing: "4dp"
 
-        MDNavigationDrawerItem:
-            icon: "delete"
-            text: "Clear Sales History"
-            on_release: app.clear_sales_history()
-            divider: None
+            MDNavigationDrawerItem:
+                icon: "cash"
+                text: "Set Average Monthly Expense"
+                on_release: app.show_expense_dialog()
+                max_text_lines: 2
+                divider: None
 
-        MDNavigationDrawerItem:
-            icon: "exit-to-app"
-            text: "Salir"
-            on_release: app.exit_app()
-            divider: None
+            MDNavigationDrawerItem:
+                icon: "delete"
+                text: "Clear Daily Sales History"
+                on_release: app.clear_sales_history()
+                max_text_lines: 2
+                divider: None
+
+            MDNavigationDrawerItem:
+                icon: "exit-to-app"
+                text: "Salir"
+                on_release: app.exit_app()
+                max_text_lines: 2
+                divider: None
 
 
 
@@ -738,11 +738,6 @@ class SalesAnalyticsApp(MDApp):
         sys.exit()
 
 
-
-# Permitir que la app rote automáticamente según orientación del dispositivo
-Window.allow_screensaver = False
-# Nota: en versiones recientes, no hace falta poner Window.rotation.
-# Simplemente no pongas 'orientation' en el .spec y la app debería rotar.
 
 if __name__ == "__main__":
     SalesAnalyticsApp().run()
