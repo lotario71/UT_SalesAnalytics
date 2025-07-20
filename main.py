@@ -292,38 +292,35 @@ MDNavigationLayout:
 
     # ──────────── Navigation Drawer (Menu) ─────────────
     MDNavigationDrawer:
-        id: nav_drawer
-        width: 320  # You can adjust this value if still not enough!
+    id: nav_drawer
+    width: 320  # You can adjust this value if still not enough!
 
+    MDNavigationDrawerMenu:
 
-        MDNavigationDrawerMenu:
+        MDNavigationDrawerHeader:
+            title: "Sales Analytics"
+            title_color: app.theme_cls.primary_color
+            font_size: "20sp"
+            padding: "8dp", "16dp"
+            spacing: "8dp"
 
-            MDNavigationDrawerHeader:
-                title: "Sales Analytics"
-                title_color: app.theme_cls.primary_color
-                padding: "16dp"
-                spacing: "4dp"
+        MDNavigationDrawerItem:
+            icon: "cash"
+            text: "Set Avg. Monthly Expense"
+            on_release: app.show_expense_dialog()
+            divider: None
 
-            MDNavigationDrawerItem:
-                icon: "cash"
-                text: "Set Average Monthly Expense"
-                on_release: app.show_expense_dialog()
-                max_text_lines: 2
-                divider: None
+        MDNavigationDrawerItem:
+            icon: "delete"
+            text: "Clear Sales History"
+            on_release: app.clear_sales_history()
+            divider: None
 
-            MDNavigationDrawerItem:
-                icon: "delete"
-                text: "Clear Daily Sales History"
-                on_release: app.clear_sales_history()
-                max_text_lines: 2
-                divider: None
-
-            MDNavigationDrawerItem:
-                icon: "exit-to-app"
-                text: "Salir"
-                on_release: app.exit_app()
-                max_text_lines: 2
-                divider: None
+        MDNavigationDrawerItem:
+            icon: "exit-to-app"
+            text: "Salir"
+            on_release: app.exit_app()
+            divider: None
 
 
 
