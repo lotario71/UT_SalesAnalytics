@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-Buildozer — Sales Analytics Android (SOAP + conta seed).
-Compilar en Linux/WSL o GitHub Actions:
-  cd "Version Android"
-  buildozer -v android debug
-APK en: bin/salesanalytics-2.2.3-arm64-v8a-debug.apk
-"""
+# Buildozer — Sales Analytics Android (SOAP + conta seed).
+# Compilar: buildozer -v android debug
+# APK en: bin/salesanalytics-2.2.3-arm64-v8a-debug.apk
 
 [app]
 title = Sales Analytics
