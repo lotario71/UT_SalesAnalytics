@@ -38,22 +38,14 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           python -m pip install --upgrade pip setuptools wheel
-          pip install "buildozer==1.5.0" "cython<3.0" virtualenv
+          pip install "buildozer==1.5.0" "Cython==0.29.37" virtualenv
 
       - name: Build debug APK
         run: |
           source .venv/bin/activate
           set -o pipefail
-          # Reintentos: descargas externas (freetype, NDK mirrors) a veces dan 502
-          for attempt in 1 2 3; do
-            echo "=== Build attempt ${attempt}/3 ==="
-            if buildozer -v android debug 2>&1 | tee -a buildozer-ci.log; then
-              exit 0
-            fi
-            echo "Attempt ${attempt} failed; waiting before retry..."
-            sleep $((attempt * 45))
-          done
-          exit 1
+          buildozer -v android debug 2>&1 | tee buildozer-ci.log
+          exit ${PIPESTATUS[0]}
 
       - name: Upload build log on failure
         if: failure()
