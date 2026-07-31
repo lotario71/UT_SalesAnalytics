@@ -16,7 +16,9 @@ source.exclude_patterns = BACKUP/*,APK/*,Hello_World/*,__pycache__/*,chart_*.png
 
 version = 2.2.3
 
-requirements = python3,kivy==2.3.0,kivymd==1.2.0,requests,urllib3,charset-normalizer,idna,certifi,pandas,numpy,matplotlib,pillow,pyjnius,android,openssl,sqlite3
+# Sin pandas/numpy/matplotlib: fallan al cruzar-compilar en Android (NDK).
+# Graficas = Pillow; ventas SOAP = list[dict].
+requirements = python3,kivy==2.3.0,kivymd==1.2.0,requests,urllib3,charset-normalizer,idna,certifi,pillow,pyjnius,android,openssl,sqlite3
 
 orientation = portrait
 fullscreen = 0

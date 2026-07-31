@@ -11,7 +11,6 @@ import traceback
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor
 
-import pandas as pd
 import requests
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -77,7 +76,7 @@ def fetch_sales_summary(from_date, to_date, only_paid=False, first_level_client_
             for child in item:
                 record[child.tag.split("}")[-1]] = child.text
             records.append(record)
-    return pd.DataFrame(records)
+    return records
 
 
 class MainScreen(MDScreen):

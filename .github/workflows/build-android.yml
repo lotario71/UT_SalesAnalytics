@@ -25,20 +25,24 @@ jobs:
       - name: System deps
         run: |
           sudo apt-get update
+          # Set completo Buildozer/p4a (Ubuntu 22.04) + extras que suelen faltar en CI
           sudo apt-get install -y \
-            build-essential git zip unzip openjdk-17-jdk \
-            autoconf automake autopoint gettext libtool pkg-config \
+            build-essential ccache cmake ninja-build pkg-config \
+            git zip unzip patch wget curl \
+            openjdk-17-jdk \
+            autoconf automake autopoint gettext libtool libltdl-dev \
             zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 \
-            cmake libffi-dev libssl-dev
+            libffi-dev libssl-dev liblzma-dev libbz2-dev \
+            libsqlite3-dev libjpeg-dev libpng-dev libfreetype6-dev \
+            lld gfortran
           python -m venv .venv
           source .venv/bin/activate
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip setuptools wheel
           pip install "buildozer==1.5.0" "cython<3.0" virtualenv
 
       - name: Build debug APK
         run: |
           source .venv/bin/activate
-          # VIRTUAL_ENV ya activo: evita el fallo clásico de pip --user
           buildozer -v android debug 2>&1 | tee buildozer-ci.log
           exit ${PIPESTATUS[0]}
 

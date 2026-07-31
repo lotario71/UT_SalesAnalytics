@@ -309,51 +309,100 @@ def _popup_net(m: YearMetrics) -> dict:
     )
 
 
-def sum_column(df, candidates: tuple[str, ...]) -> float:
-    if df is None or getattr(df, "empty", True):
+def _rows(data) -> list[dict]:
+    """Acepta lista de dicts (Android) u objeto tipo DataFrame legacy."""
+    if data is None:
+        return []
+    if isinstance(data, list):
+        return [r for r in data if isinstance(r, dict)]
+    # Compatibilidad por si llega un DataFrame en PC
+    if hasattr(data, "to_dict") and hasattr(data, "empty"):
+        if getattr(data, "empty", True):
+            return []
+        return data.to_dict(orient="records")
+    return []
+
+
+def sum_column(data, candidates: tuple[str, ...]) -> float:
+    rows = _rows(data)
+    if not rows:
         return 0.0
     for col in candidates:
-        if col in df.columns:
+        total = 0.0
+        found = False
+        for r in rows:
+            if col not in r or r[col] in (None, ""):
+                continue
+            found = True
             try:
-                return float(df[col].astype(float).sum())
+                total += float(r[col])
             except Exception:
-                return 0.0
+                pass
+        if found:
+            return total
     return 0.0
 
 
-def prepare_sales_df(df):
-    """Normaliza tipos y nombres de servicio."""
-    if df is None or getattr(df, "empty", True):
-        return df
-    out = df.copy()
-    for col in ("TotalPrice", "TotalCost"):
-        if col in out.columns:
-            out[col] = out[col].astype(float)
-    if "ServiceType" in out.columns:
-        out["ServiceType"] = out["ServiceType"].astype(int)
-        out["ServiceTypeName"] = out["ServiceType"].map(SERVICE_TYPE_NAMES).fillna("Other")
-    if "GroupByMonth" in out.columns:
-        out["GroupByMonth"] = out["GroupByMonth"].astype(int)
-    if "GroupByYear" in out.columns:
-        out["GroupByYear"] = out["GroupByYear"].astype(int)
+def prepare_sales_df(data):
+    """Normaliza tipos y nombres de servicio. Devuelve list[dict]."""
+    rows = _rows(data)
+    out: list[dict] = []
+    for raw in rows:
+        r = dict(raw)
+        for col in ("TotalPrice", "TotalCost"):
+            if col in r and r[col] not in (None, ""):
+                try:
+                    r[col] = float(r[col])
+                except Exception:
+                    r[col] = 0.0
+        if "ServiceType" in r and r["ServiceType"] not in (None, ""):
+            try:
+                st = int(float(r["ServiceType"]))
+                r["ServiceType"] = st
+                r["ServiceTypeName"] = SERVICE_TYPE_NAMES.get(st, "Other")
+            except Exception:
+                r["ServiceTypeName"] = "Other"
+        for col in ("GroupByMonth", "GroupByYear"):
+            if col in r and r[col] not in (None, ""):
+                try:
+                    r[col] = int(float(r[col]))
+                except Exception:
+                    pass
+        out.append(r)
     return out
 
 
-def monthly_sales(df) -> list[tuple[int, float]]:
-    """[(mes, ventas), ...] para el año del DF."""
-    if df is None or getattr(df, "empty", True) or "GroupByMonth" not in df.columns:
+def monthly_sales(data) -> list[tuple[int, float]]:
+    """[(mes, ventas), ...]"""
+    rows = _rows(data)
+    if not rows:
         return []
-    g = df.groupby("GroupByMonth")["TotalPrice"].sum().sort_index()
-    return [(int(m), float(v)) for m, v in g.items()]
+    totals: dict[int, float] = {}
+    for r in rows:
+        if "GroupByMonth" not in r:
+            continue
+        try:
+            m = int(r["GroupByMonth"])
+            v = float(r.get("TotalPrice") or 0)
+        except Exception:
+            continue
+        totals[m] = totals.get(m, 0.0) + v
+    return sorted(totals.items())
 
 
-def service_sales(df) -> list[tuple[str, float]]:
-    if df is None or getattr(df, "empty", True):
+def service_sales(data) -> list[tuple[str, float]]:
+    rows = _rows(data)
+    if not rows:
         return []
-    if "ServiceTypeName" not in df.columns:
-        return []
-    g = df.groupby("ServiceTypeName")["TotalPrice"].sum().sort_values(ascending=False)
-    return [(str(k), float(v)) for k, v in g.items()]
+    totals: dict[str, float] = {}
+    for r in rows:
+        name = r.get("ServiceTypeName") or "Other"
+        try:
+            v = float(r.get("TotalPrice") or 0)
+        except Exception:
+            v = 0.0
+        totals[str(name)] = totals.get(str(name), 0.0) + v
+    return sorted(totals.items(), key=lambda x: x[1], reverse=True)
 
 
 SALES_COLS = ("TotalPrice", "TotalSales", "Total", "SalesTotal", "Importe")
