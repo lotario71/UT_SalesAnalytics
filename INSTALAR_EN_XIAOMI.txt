@@ -1,0 +1,40 @@
+COMO INSTALAR Sales Analytics en Xiaomi 14T (sin Play Store)
+============================================================
+
+1) CONSEGUIR EL APK
+   En este PC no se puede compilar (falta WSL/Linux).
+   Opciones:
+   A) GitHub Actions: sube el proyecto a GitHub → Actions →
+      "Build Android APK" → Run workflow → descarga el artefacto.
+   B) WSL2 Ubuntu en el PC:
+        cd "/mnt/c/Python/Sales Analytics/Version Android"
+        pip install buildozer cython
+        buildozer -v android debug
+      El APK queda en: Version Android/bin/*.apk
+
+2) PASAR EL APK AL XIAOMI 14T
+   - USB: copia el .apk a Descargas del telefono, o
+   - WhatsApp/Telegram/Drive: enviatelo a ti mismo y abre el archivo.
+
+3) PERMITIR INSTALAR APPS DESCONOCIDAS (Xiaomi / HyperOS)
+   Ajustes → Privacidad y seguridad → Instalar apps desconocidas
+   (o Seguridad → Instalar apps desconocidas)
+   Activa el permiso para Archivos / Chrome / Drive / el app que uses.
+
+4) INSTALAR
+   Abre el .apk → Instalar → Abrir.
+   La primera vez puede pedir permiso de Internet: Aceptar.
+
+5) SI XIAOMI BLOQUEA
+   - Desactiva temporalmente "Optimizar apps" / Protectores MIUI
+   - O Ajustes → Apps → Gestionar apps → 3 puntos → Mostrar apps del sistema
+   - Confirma "Instalar de todos modos"
+
+6) PANTALLA XIAOMI 14T
+   La app va en vertical (portrait), arm64, densidades altas.
+   Si ves barras del sistema encima: gira a vertical y deja
+   "pantalla completa" de otras apps desactivada para esta.
+
+7) DATOS
+   Necesita Wi‑Fi/datos (SOAP año en curso).
+   Años pasados usan conta empaquetada (va sin SQL Server).

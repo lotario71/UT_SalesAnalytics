@@ -1,32 +1,50 @@
 """
-Read Umbrella-Sales config values.
-
-Currently supports just one line:
-    <monthly_expense>   # e.g. 8900.00
+Read/write monthly expense for Android.
 """
+from __future__ import annotations
+
 from pathlib import Path
 
+import android_paths
 
-CONFIG_FILE = Path(__file__).with_name("config.txt")
+
+def _config_file() -> Path:
+    return android_paths.config_path()
 
 
-def get_monthly_expense(default: float = 8_900.00) -> float:
-    """Return the monthly expense saved in config.txt (or the default)."""
-    if not CONFIG_FILE.exists():
+def _default_from_conta() -> float:
+    try:
+        from android_expense import average_expense_last_months
+
+        avg, _ = average_expense_last_months(6)
+        if avg is not None:
+            return float(avg)
+    except Exception:
+        pass
+    return 7_507.74
+
+
+def get_monthly_expense(default: float | None = None) -> float:
+    if default is None:
+        default = _default_from_conta()
+    path = _config_file()
+    # Migrar config del paquete si aun no hay en storage
+    pkg = android_paths.package_dir() / "config.txt"
+    if not path.exists() and pkg.exists() and path != pkg:
+        try:
+            path.write_text(pkg.read_text(encoding="utf-8"), encoding="utf-8")
+        except Exception:
+            pass
+    if not path.exists():
         return default
     try:
-        first_line = CONFIG_FILE.read_text(encoding="utf-8").strip()
-        return float(first_line)
+        return float(path.read_text(encoding="utf-8").strip())
     except Exception:
         return default
 
 
-# ─────────────────────────────────────────────────────────────────────────
-# NEW: allow the app to update the value from a settings screen
-# ─────────────────────────────────────────────────────────────────────────
 def save_monthly_expense(value: float) -> None:
-    """Persist a new monthly expense to config.txt."""
     try:
-        CONFIG_FILE.write_text(f"{value:.2f}", encoding="utf-8")
+        _config_file().write_text(f"{value:.2f}", encoding="utf-8")
     except Exception as exc:
         print("ERROR writing config.txt:", exc)

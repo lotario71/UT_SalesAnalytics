@@ -1,63 +1,55 @@
-from kivymd.app import MDApp
-from kivy.lang import Builder
-from kivymd.uix.screen import MDScreen
-from kivymd.uix.carousel import MDCarousel
-import requests  # Para llamadas HTTP
-import xml.etree.ElementTree as ET  # Para procesar SOAP XML
+"""
+Sales Analytics — Android (versión simple SOAP).
+Cuadrantes + Todas vs pagadas + Tipos + Comportamiento + Evolución PE.
+Sin conta: gasto desde config.txt (respaldo).
+"""
+from __future__ import annotations
 
 import datetime
-import config   
-
-from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDFlatButton
-from kivymd.uix.textfield import MDTextField
-from kivymd.uix.snackbar import Snackbar
-
-# ─── Plotting Support ──────────────────────────────
-import matplotlib
-matplotlib.use("Agg")  # use non-GUI backend for saving plots
-import matplotlib.pyplot as plt
-
-
-
-from kivymd.uix.navigationdrawer import (
-    MDNavigationLayout,
-    MDNavigationDrawer,
-    MDNavigationDrawerMenu,
-    MDNavigationDrawerHeader,
-    MDNavigationDrawerItem
-)
-
 import json
+import traceback
+import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor
+
 import pandas as pd
+import requests
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.widget import Widget
+from kivymd.app import MDApp
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.button import MDFlatButton, MDRaisedButton
+from kivymd.uix.card import MDCard
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.label import MDLabel
+from kivymd.uix.screen import MDScreen
+from kivymd.uix.snackbar import Snackbar
+from kivymd.uix.spinner import MDSpinner
+from kivymd.uix.textfield import MDTextField
 
-# >>> DIAGNÓSTICO: Escribir log al arrancar <<<
-try:
-    with open("arranque_android.txt", "w") as f:
-        f.write("main.py ejecutado\n")
-except Exception as e:
-    pass
-# <<< FIN DIAGNÓSTICO <<<
+import android_charts as charts
+import android_expense as expense
+import android_history as pe_history
+import android_metrics as metrics
+import android_paths as apaths
+import android_year_data as year_data
+import app_version
+import config
 
+
+def _cpath(name: str) -> str:
+    """Ruta escribible para graficas (PC o storage Android)."""
+    return apaths.chart_path(name)
+SOAP_URL = "https://www.umbrellatravel.com/Services/PublicServices.svc"
 
 
 def fetch_sales_summary(from_date, to_date, only_paid=False, first_level_client_id=None):
-    """
-    Obtiene datos de ventas mediante el servicio SOAP
-    GetServicesSalesStatistics y devuelve un DataFrame de pandas.
-    """
-    
-    # Endpoint SOAP
-    url = "https://www.umbrellatravel.com/Services/PublicServices.svc"
-
-    # ─── Etiqueta de cliente opcional ───────────────────────────────────
     first_level_tag = (
         f"<firstLevelClientId>{first_level_client_id}</firstLevelClientId>"
         if first_level_client_id not in (None, "")
         else ""
     )
-
-    # Construye el sobre SOAP
     envelope = f'''<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -71,688 +63,1308 @@ def fetch_sales_summary(from_date, to_date, only_paid=False, first_level_client_
     </GetServicesSalesStatistics>
   </soap:Body>
 </soap:Envelope>'''
-
     headers = {
         "Content-Type": "text/xml; charset=utf-8",
-        "SOAPAction": "\"http://tempuri.org/IPublicServices/GetServicesSalesStatistics\""
+        "SOAPAction": '"http://tempuri.org/IPublicServices/GetServicesSalesStatistics"',
     }
-
-    # Envía la petición
-    response = requests.post(url, headers=headers, data=envelope)
+    response = requests.post(SOAP_URL, headers=headers, data=envelope, timeout=35)
     response.raise_for_status()
-
-
-    # Procesa la respuesta XML
-    ns = {
-        "s": "http://schemas.xmlsoap.org/soap/envelope/",
-        "t": "http://tempuri.org/"
-    }
-    root = ET.fromstring(response.text)
-    # ─── Recorremos todos los bloques de resultados ─────────────────────
-    # ─── Recolectar TODOS los nodos «…TotalSalesStatisticsDto» ───────────
     records = []
+    root = ET.fromstring(response.text)
     for item in root.iter():
         if item.tag.endswith("TotalSalesStatisticsDto"):
             record = {}
             for child in item:
-                key = child.tag.split('}')[-1]          # quita el namespace
-                record[key] = child.text
+                record[child.tag.split("}")[-1]] = child.text
             records.append(record)
-
-    df = pd.DataFrame(records)
-
-
-
     return pd.DataFrame(records)
 
 
-
-
 class MainScreen(MDScreen):
-    """Root screen for the app."""
     pass
 
 
-# --- Baseline KV layout -------------------------------------------------
 kv = """
-#:import MDTopAppBar kivymd.uix.toolbar.MDTopAppBar
-
 MDNavigationLayout:
+    md_bg_color: 0.067, 0.094, 0.153, 1
 
     ScreenManager:
-
         MainScreen:
             name: "main"
-
             MDBoxLayout:
                 orientation: "vertical"
+                md_bg_color: 0.067, 0.094, 0.153, 1
 
-                AnchorLayout:
-                    anchor_x: "left"
-                    anchor_y: "top"
+                MDTopAppBar:
+                    id: top_bar
+                    title: "Sales Analytics"
+                    elevation: 2
+                    md_bg_color: 0.06, 0.09, 0.16, 1
+                    specific_text_color: 0.89, 0.91, 0.94, 1
+                    left_action_items: [["menu", lambda x: app.open_drawer()]]
+                    right_action_items: [["refresh", lambda x: app.refresh_data()]]
+
+                MDBoxLayout:
+                    orientation: "horizontal"
                     size_hint_y: None
-                    height: "48dp"
+                    height: "40dp"
+                    padding: "8dp", "2dp"
+                    spacing: "6dp"
+                    MDRaisedButton:
+                        id: btn_all
+                        text: "Todas"
+                        size_hint_x: 0.5
+                        md_bg_color: 0.08, 0.72, 0.65, 1
+                        on_release: app.set_metrics_mode("all")
+                    MDRaisedButton:
+                        id: btn_paid
+                        text: "Solo pagadas"
+                        size_hint_x: 0.5
+                        md_bg_color: 0.22, 0.26, 0.34, 1
+                        on_release: app.set_metrics_mode("paid")
 
-                    MDIconButton:
-                        icon: "menu"
-                        pos_hint: {"center_y": 0.5}
-                        on_release: nav_drawer.set_state("open")
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: "38dp"
+                    padding: "10dp", "0dp"
+                    spacing: "6dp"
+                    MDRaisedButton:
+                        text: "<"
+                        size_hint_x: None
+                        width: "48dp"
+                        md_bg_color: 0.16, 0.20, 0.28, 1
+                        on_release: app.shift_pe_year(-1)
+                    MDRaisedButton:
+                        id: year_header
+                        text: "2026  ▾"
+                        size_hint_x: 1
+                        md_bg_color: 0.08, 0.72, 0.65, 1
+                        on_release: app.pick_pe_year()
+                    MDRaisedButton:
+                        text: ">"
+                        size_hint_x: None
+                        width: "48dp"
+                        md_bg_color: 0.16, 0.20, 0.28, 1
+                        on_release: app.shift_pe_year(1)
 
-                MDCarousel:
-                    id: sales_carousel
-                    loop: False
-                    swipe_distance: "20dp"
+                MDLabel:
+                    id: mode_subtitle
+                    text: "Toca el año (▾) para ir directo · o usa < >"
+                    font_style: "Caption"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 0.58, 0.64, 0.72, 1
+                    size_hint_y: None
+                    height: "18dp"
 
-                    # ───────────────────── Slide 1 ──────────────────────
-                    MDScreen:
-                        AnchorLayout:
-                            anchor_x: "center"
-                            anchor_y: "center"
+                MDBoxLayout:
+                    id: loading_row
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: "0dp"
+                    opacity: 0
+                    padding: "12dp", "0dp"
+                    spacing: "10dp"
+                    MDSpinner:
+                        id: loading_spinner
+                        size_hint: None, None
+                        size: "22dp", "22dp"
+                        active: False
+                    MDLabel:
+                        id: loading_banner
+                        text: "Actualizando..."
+                        font_style: "Caption"
+                        bold: True
+                        theme_text_color: "Custom"
+                        text_color: 0.96, 0.75, 0.20, 1
+                        valign: "middle"
 
+                MDLabel:
+                    id: expense_chip
+                    text: "Gasto mes: —  (menú → Editar gasto)"
+                    font_style: "Caption"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 0.8, 0.83, 0.88, 1
+                    size_hint_y: None
+                    height: "22dp"
+
+                MDBottomNavigation:
+                    id: bottom_nav
+                    panel_color: 0.08, 0.11, 0.18, 1
+                    text_color_active: 0.08, 0.72, 0.65, 1
+
+                    MDBottomNavigationItem:
+                        name: "resumen"
+                        text: "Resumen"
+                        icon: "view-dashboard"
+                        ScrollView:
+                            do_scroll_x: False
                             MDBoxLayout:
+                                id: cards_box
                                 orientation: "vertical"
-                                spacing: "8dp"
-                                padding: "0dp"
-                                size_hint_x: .9
-                                size_hint_y: None
                                 adaptive_height: True
-
-                                MDLabel:
-                                    id: year_header_all
-                                    text: "2025"
-                                    font_style: "H4"
-                                    halign: "center"
-                                    theme_text_color: "Primary"
-
-                                Widget:
-                                    size_hint_y: None
-                                    height: "8dp"
-
-                                MDCard:
-                                    elevation: 2
-                                    radius: 12
-                                    padding: "12dp"
-                                    spacing: "8dp"
-                                    orientation: "vertical"
-                                    size_hint_x: 1
-                                    size_hint_y: None
-                                    adaptive_height: True
-                                    md_bg_color: app.theme_cls.bg_light
-
-                                    MDLabel:
-                                        id: subheader_all
-                                        text: "Resultados para All Data:"
-                                        font_style: "Subtitle1"
-                                        halign: "center"
-
-                                    Widget:
-                                        size_hint_y: None
-                                        height: "8dp"
-
-                                    MDLabel:
-                                        id: metrics_all
-                                        text: "Cargando métricas..."
-                                        halign: "center"
-                                        theme_text_color: "Secondary"
-                                        markup: True
-                                        size_hint_y: None
-                                        height: self.texture_size[1]
-
-                    # ───────────────────── Slide 2 ──────────────────────
-                    MDScreen:
-                        AnchorLayout:
-                            anchor_x: "center"
-                            anchor_y: "center"
-
-                            MDBoxLayout:
-                                orientation: "vertical"
+                                padding: "10dp"
                                 spacing: "8dp"
-                                padding: "0dp"
-                                size_hint_x: .9
-                                size_hint_y: None
-                                adaptive_height: True
 
-                                MDLabel:
-                                    id: year_header_paid
-                                    text: "2025"
-                                    font_style: "H4"
-                                    halign: "center"
-                                    theme_text_color: "Primary"
-
-                                Widget:
-                                    size_hint_y: None
-                                    height: "16dp"
-
-                                MDCard:
-                                    elevation: 2
-                                    radius: 12
-                                    padding: "12dp"
-                                    spacing: "8dp"
-                                    orientation: "vertical"
-                                    size_hint_x: 1
-                                    size_hint_y: None
-                                    adaptive_height: True
-                                    md_bg_color: app.theme_cls.bg_light
-
-                                    MDLabel:
-                                        id: subheader_paid
-                                        text: "Reservas Pagadas"
-                                        font_style: "Subtitle1"
-                                        halign: "center"
-
-                                    Widget:
-                                        size_hint_y: None
-                                        height: "8dp"
-
-                                    MDLabel:
-                                        id: metrics_paid
-                                        text: "Cargando métricas..."
-                                        halign: "center"
-                                        theme_text_color: "Secondary"
-                                        markup: True
-                                        size_hint_y: None
-                                        height: self.texture_size[1]
-
-                    # ───────────────────── Slide 3 ──────────────────────
-                    MDScreen:
-                        name: "slide_graph"
-
+                    MDBottomNavigationItem:
+                        name: "vs"
+                        text: "Vs pagadas"
+                        icon: "chart-bar"
                         AnchorLayout:
-                            anchor_x: "center"
-                            anchor_y: "center"
+                            Image:
+                                id: img_vs
+                                source: "chart_vs_paid.png"
+                                allow_stretch: True
+                                keep_ratio: True
 
-                            Scatter:
-                                do_rotation: False
-                                do_translation: True
-                                do_scale: True
-                                scale_min: 1
-                                scale_max: 6
+                    MDBottomNavigationItem:
+                        name: "tipos"
+                        text: "Tipos"
+                        icon: "chart-pie"
+                        AnchorLayout:
+                            Image:
+                                id: img_tipos
+                                source: "chart_tipos.png"
+                                allow_stretch: True
+                                keep_ratio: True
 
+                    MDBottomNavigationItem:
+                        name: "comp"
+                        text: "Comport."
+                        icon: "chart-line"
+                        AnchorLayout:
+                            Image:
+                                id: img_comp
+                                source: "chart_comportamiento.png"
+                                allow_stretch: True
+                                keep_ratio: True
+
+                    MDBottomNavigationItem:
+                        name: "pe"
+                        text: "Evol. PE"
+                        icon: "finance"
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            padding: "8dp", "4dp"
+                            spacing: "4dp"
+                            MDLabel:
+                                id: pe_hint
+                                text: "Mismo año que arriba (SOAP + historial PE)"
+                                font_style: "Caption"
+                                halign: "center"
+                                size_hint_y: None
+                                height: "22dp"
+                                theme_text_color: "Custom"
+                                text_color: 0.58, 0.64, 0.72, 1
+                            AnchorLayout:
                                 Image:
-                                    id: graph_image
-                                    source: "plot.png"
+                                    id: img_pe
+                                    source: "chart_pe_hist.png"
                                     allow_stretch: True
                                     keep_ratio: True
-                                    size_hint: None, None
-                                    size: self.texture_size
 
+                    MDBottomNavigationItem:
+                        name: "actividad"
+                        text: "Actividad"
+                        icon: "history"
+                        ScrollView:
+                            do_scroll_x: False
+                            MDLabel:
+                                id: activity_log
+                                text: "Sin actividad aun."
+                                padding: "14dp", "12dp"
+                                theme_text_color: "Custom"
+                                text_color: 0.80, 0.84, 0.90, 1
+                                size_hint_y: None
+                                markup: False
 
-                    # ───────────────────── Slide 4 ──────────────────────
-                    MDScreen:
-                        name: "slide_daily_sales"
-
-                        AnchorLayout:
-                            anchor_x: "center"
-                            anchor_y: "center"
-
-                            Scatter:
-                                do_rotation: False
-                                do_translation: True
-                                do_scale: True
-                                scale_min: 1
-                                scale_max: 6
-
-                                Image:
-                                    id: daily_sales_image
-                                    source: "daily_sales_plot.png"
-                                    allow_stretch: True
-                                    keep_ratio: True
-                                    size_hint: None, None
-                                    size: self.texture_size
-
-
-
-
-    # ──────────── Navigation Drawer (Menu) ─────────────
     MDNavigationDrawer:
         id: nav_drawer
-        width: 320  # You can adjust this value if still not enough!
-
-
-        MDNavigationDrawerMenu:
-
-            MDNavigationDrawerHeader:
-                title: "Sales Analytics"
-                title_color: app.theme_cls.primary_color
-                padding: "16dp"
-                spacing: "4dp"
-
-            MDNavigationDrawerItem:
-                icon: "cash"
-                text: "Set Average Monthly Expense"
+        radius: 0, 18, 18, 0
+        width: "300dp"
+        md_bg_color: 0.07, 0.10, 0.16, 1
+        MDBoxLayout:
+            orientation: "vertical"
+            padding: "18dp"
+            spacing: "12dp"
+            MDLabel:
+                text: "Sales Analytics"
+                bold: True
+                font_style: "H6"
+                theme_text_color: "Custom"
+                text_color: 0.08, 0.72, 0.65, 1
+                size_hint_y: None
+                height: "28dp"
+            MDLabel:
+                id: drawer_version
+                text: "v2.2.2"
+                font_style: "Caption"
+                theme_text_color: "Custom"
+                text_color: 0.58, 0.64, 0.72, 1
+                size_hint_y: None
+                height: "18dp"
+            MDRaisedButton:
+                text: "Actualizar datos"
+                size_hint_x: 1
+                md_bg_color: 0.08, 0.72, 0.65, 1
+                on_release: app.refresh_data()
+            MDRaisedButton:
+                text: "Editar gasto mensual"
+                size_hint_x: 1
+                md_bg_color: 0.16, 0.22, 0.30, 1
                 on_release: app.show_expense_dialog()
-                max_text_lines: 2
-                divider: None
-
-            MDNavigationDrawerItem:
-                icon: "delete"
-                text: "Clear Daily Sales History"
-                on_release: app.clear_sales_history()
-                max_text_lines: 2
-                divider: None
-
-            MDNavigationDrawerItem:
-                icon: "exit-to-app"
+            MDRaisedButton:
                 text: "Salir"
+                size_hint_x: 1
+                md_bg_color: 0.45, 0.18, 0.20, 1
                 on_release: app.exit_app()
-                max_text_lines: 2
-                divider: None
-
-
-
+            Widget:
+                size_hint_y: 1
+            MDLabel:
+                text: "Windows = SQL/conta · Movil = conta (años cerrados) + SOAP (año en curso)."
+                font_style: "Caption"
+                theme_text_color: "Custom"
+                text_color: 0.55, 0.60, 0.68, 1
+                size_hint_y: None
+                height: "48dp"
 """
-# -----------------------------------------------------------------------
+
+
+class MetricCard(MDCard):
+    """Tarjeta táctil estilo Windows (2 líneas)."""
+
+    def __init__(self, key: str, title: str, on_open, **kwargs):
+        super().__init__(**kwargs)
+        self.key = key
+        self.on_open = on_open
+        self.orientation = "vertical"
+        self.padding = "12dp"
+        self.radius = [12]
+        self.size_hint_y = None
+        self.height = "92dp"
+        self.md_bg_color = (0.12, 0.16, 0.22, 1)
+        self.ripple_behavior = True
+        self.title_lbl = MDLabel(
+            text=title,
+            font_style="Caption",
+            theme_text_color="Custom",
+            text_color=(0.08, 0.72, 0.65, 1),
+        )
+        self.line1 = MDLabel(
+            text="—",
+            font_style="Subtitle1",
+            bold=True,
+            theme_text_color="Custom",
+            text_color=(0.89, 0.91, 0.94, 1),
+        )
+        self.line2 = MDLabel(
+            text="",
+            font_style="Caption",
+            theme_text_color="Custom",
+            text_color=(0.8, 0.83, 0.88, 1),
+        )
+        self.add_widget(self.title_lbl)
+        self.add_widget(self.line1)
+        self.add_widget(self.line2)
+
+    def on_release(self):
+        if callable(self.on_open):
+            self.on_open(self.key)
+
+
+def _rgba_tone(tone):
+    if tone == "ok":
+        return (0.13, 0.77, 0.37, 1)
+    if tone == "bad":
+        return (0.94, 0.27, 0.27, 1)
+    return (0.89, 0.91, 0.94, 1)
+
+
+class MetricPopupBody(MDBoxLayout):
+    """Contenido visual del detalle de métrica (badge + filas + fórmula)."""
+
+    def __init__(self, popup: dict, **kwargs):
+        super().__init__(**kwargs)
+        self.orientation = "vertical"
+        self.spacing = "10dp"
+        self.padding = "4dp", "8dp", "4dp", "4dp"
+        self.size_hint_y = None
+        self.bind(minimum_height=self.setter("height"))
+
+        badge = (popup or {}).get("badge")
+        if badge:
+            chip = MDCard(
+                size_hint_y=None,
+                height="36dp",
+                padding="10dp",
+                radius=[10],
+                md_bg_color=(0.14, 0.18, 0.26, 1),
+            )
+            chip.add_widget(
+                MDLabel(
+                    text=str(badge),
+                    bold=True,
+                    theme_text_color="Custom",
+                    text_color=_rgba_tone((popup or {}).get("badge_tone")),
+                    halign="center",
+                )
+            )
+            self.add_widget(chip)
+
+        for row in (popup or {}).get("rows") or []:
+            card = MDCard(
+                orientation="horizontal",
+                size_hint_y=None,
+                height="44dp",
+                padding="12dp",
+                radius=[10],
+                md_bg_color=(0.10, 0.14, 0.20, 1),
+            )
+            card.add_widget(
+                MDLabel(
+                    text=str(row.get("label") or ""),
+                    theme_text_color="Custom",
+                    text_color=(0.70, 0.74, 0.80, 1),
+                    size_hint_x=0.48,
+                )
+            )
+            card.add_widget(
+                MDLabel(
+                    text=str(row.get("value") or ""),
+                    bold=True,
+                    halign="right",
+                    theme_text_color="Custom",
+                    text_color=_rgba_tone(row.get("tone")),
+                    size_hint_x=0.52,
+                )
+            )
+            self.add_widget(card)
+
+        formula = (popup or {}).get("formula") or ""
+        if formula:
+            box = MDCard(
+                size_hint_y=None,
+                padding="12dp",
+                radius=[10],
+                md_bg_color=(0.08, 0.11, 0.16, 1),
+            )
+            box.bind(minimum_height=box.setter("height"))
+            lbl = MDLabel(
+                text=formula,
+                theme_text_color="Custom",
+                text_color=(0.58, 0.64, 0.72, 1),
+                size_hint_y=None,
+            )
+            lbl.bind(texture_size=lambda *_: setattr(lbl, "height", lbl.texture_size[1]))
+            box.add_widget(lbl)
+            self.add_widget(box)
+
+        footer = (popup or {}).get("footer") or ""
+        if footer:
+            self.add_widget(
+                MDLabel(
+                    text=footer,
+                    font_style="Caption",
+                    theme_text_color="Custom",
+                    text_color=(0.50, 0.55, 0.62, 1),
+                    size_hint_y=None,
+                    height="36dp",
+                )
+            )
 
 
 class SalesAnalyticsApp(MDApp):
-    """Main application class."""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.metrics_mode = "all"
+        self._metrics_all = None
+        self._metrics_paid = None
+        self._card_data = {}
+        self._metric_cards: dict[str, MetricCard] = {}
+        self._popup = None
+        self.pe_series = "all"
+        self.pe_year = datetime.date.today().year
+        self._pe_history: list = []
+        self._pe_years: list[int] = []
+        self._year_cache: dict = {}
+        self._load_token = 0
+        self._data_source_note = ""
+        self._activity_log: list[str] = []
+        self._is_loading = False
 
+    def build(self):
+        # Xiaomi 14T / pantallas altas: teclado y densidad mas comodos
+        try:
+            from kivy.core.window import Window
+            from kivy.utils import platform
 
+            Window.softinput_mode = "below_target"
+            if platform == "android":
+                try:
+                    from android.permissions import Permission, request_permissions
 
-    def clear_sales_history(self):
-        from kivymd.uix.dialog import MDDialog
-        from kivymd.uix.button import MDFlatButton
+                    request_permissions([Permission.INTERNET, Permission.ACCESS_NETWORK_STATE])
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        if hasattr(self.theme_cls, "material_style"):
+            self.theme_cls.material_style = "M3"
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette = "Teal"
+        self.theme_cls.primary_hue = "400"
+        return Builder.load_string(kv)
 
-        def confirm_clear(*_):
-            import os
-            json_file = "daily_sales_history.json"
-            try:
-                if os.path.exists(json_file):
-                    os.remove(json_file)
-                self.on_start()  # Refresh all metrics and charts
-                self.root.ids.nav_drawer.set_state("close")  # Close the menu
-                snackbar = Snackbar()
-                snackbar.text = "Historial de ventas diarias eliminado."
-                snackbar.open()
+    def open_drawer(self, *_):
+        try:
+            self.root.ids.nav_drawer.set_state("open")
+        except Exception:
+            pass
 
+    def set_pe_series(self, series: str):
+        # Compat: redirige al interruptor global Todas / Solo pagadas
+        self.set_metrics_mode(series)
 
-                
-            except Exception as e:
-                import traceback
-                print("ERROR while clearing sales history:", e)
-                traceback.print_exc()
-                snackbar = Snackbar()
-                snackbar.text = f"Error: {e}"
-                snackbar.open()
-            dialog.dismiss()
+    def _years_list(self) -> list[int]:
+        return pe_history.selectable_years(self._pe_history)
 
-        def cancel(*_):
-            dialog.dismiss()
+    def shift_pe_year(self, delta: int):
+        years = self._years_list()
+        if not years:
+            return
+        cur = self.pe_year if self.pe_year in years else years[0]
+        idx = years.index(cur)
+        # years descendente: +1 = mas reciente (indice menor)
+        new_idx = max(0, min(len(years) - 1, idx - int(delta)))
+        self.set_selected_year(years[new_idx])
 
+    def pick_pe_year(self, *_):
+        """Lista de años: salto directo (como selector de Windows)."""
+        years = self._years_list()
+        if not years:
+            sb = Snackbar()
+            sb.text = "No hay años disponibles"
+            sb.open()
+            return
+
+        scroll = ScrollView(size_hint_y=None, height="360dp", do_scroll_x=False)
+        box = MDBoxLayout(
+            orientation="vertical",
+            spacing="6dp",
+            size_hint_y=None,
+            padding="4dp",
+        )
+        box.bind(minimum_height=box.setter("height"))
+
+        def _make_pick(y):
+            def _pick(*_):
+                dialog.dismiss()
+                self.set_selected_year(int(y))
+
+            return _pick
+
+        today_y = datetime.date.today().year
+        for y in years:
+            mark = "  · en curso" if y == today_y else ""
+            selected = y == self.pe_year
+            box.add_widget(
+                MDRaisedButton(
+                    text=f"{y}{mark}",
+                    size_hint_x=1,
+                    size_hint_y=None,
+                    height="44dp",
+                    md_bg_color=(0.08, 0.72, 0.65, 1) if selected else (0.16, 0.22, 0.30, 1),
+                    on_release=_make_pick(y),
+                )
+            )
+
+        scroll.add_widget(box)
         dialog = MDDialog(
-            title="¿Borrar historial?",
-            text="¿Estás seguro que deseas borrar el historial de ventas diarias? Esta acción no se puede deshacer.",
-            buttons=[
-                MDFlatButton(text="Cancelar", on_release=cancel),
-                MDFlatButton(text="Borrar", on_release=confirm_clear)
-            ]
+            title="Ir a un año",
+            type="custom",
+            content_cls=scroll,
+            buttons=[MDFlatButton(text="Cerrar", on_release=lambda *_: dialog.dismiss())],
         )
         dialog.open()
 
-
-
-    def build_daily_sales_chart(self):
-        import matplotlib.dates as mdates
-
-        json_file = "daily_sales_history.json"
-
-        # Load data from JSON
-        try:
-            with open(json_file, "r", encoding="utf-8") as f:
-                history = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
-            history = []
-
-        if not history:
-            print("No daily sales history to plot.")
+    def set_selected_year(self, year: int):
+        """Cambia el año, va a Resumen y recarga el dashboard."""
+        year = int(year)
+        years = self._years_list()
+        if years:
+            year = min(max(year, min(years)), max(years))
+        if year == self.pe_year and self._metrics_all is not None and year in self._year_cache:
+            self._goto_resumen_tab()
+            self._refresh_paid_button_state()
             return
+        self.pe_year = year
+        # Años cerrados: solo vista Todas (conta = cobrado)
+        if year < datetime.date.today().year:
+            self.metrics_mode = "all"
+            self.pe_series = "all"
+        try:
+            self.root.ids.year_header.text = f"{year}  ▾"
+        except Exception:
+            pass
+        self._goto_resumen_tab()
+        self.log_activity(f"▸ Cambio de año → {year}")
+        self.reload_dashboard()
 
-        # Prepare lists for plotting
-        dates = []
-        all_data = []
-        paid_only = []
+    def _paid_allowed(self) -> bool:
+        """Solo pagadas tiene sentido en el año en curso (SOAP)."""
+        return int(self.pe_year) >= datetime.date.today().year
 
-        for entry in sorted(history, key=lambda x: x["date"]):
-            dates.append(datetime.datetime.fromisoformat(entry["date"]))
-            all_data.append(entry.get("all_data_avg", 0))
-            paid_only.append(entry.get("paid_only_avg", 0))
+    def _refresh_paid_button_state(self):
+        """Activa/desactiva Solo pagadas segun el año."""
+        teal = (0.08, 0.72, 0.65, 1)
+        muted = (0.22, 0.26, 0.34, 1)
+        disabled = (0.12, 0.14, 0.18, 1)
+        try:
+            btn = self.root.ids.btn_paid
+            if self._paid_allowed():
+                btn.disabled = False
+                btn.opacity = 1
+                btn.md_bg_color = teal if self.metrics_mode == "paid" else muted
+                btn.text = "Solo pagadas"
+            else:
+                self.metrics_mode = "all"
+                self.pe_series = "all"
+                btn.disabled = True
+                btn.opacity = 0.45
+                btn.md_bg_color = disabled
+                btn.text = "Pagadas (N/D)"
+                self.root.ids.btn_all.md_bg_color = teal
+        except Exception:
+            pass
 
-        fig, ax = plt.subplots(figsize=(8, 5))
+    def _goto_resumen_tab(self):
+        try:
+            nav = self.root.ids.bottom_nav
+            if hasattr(nav, "switch_tab"):
+                nav.switch_tab("resumen")
+        except Exception:
+            pass
 
-        # Preparar listas históricas
-        pe_values = [entry.get("pe_value", 0) for entry in history]
+    def log_activity(self, message: str, *, level: str = "info"):
+        stamp = datetime.datetime.now().strftime("%H:%M:%S")
+        prefix = {"ok": "✓", "warn": "!", "err": "✗", "step": "·"}.get(level, "·")
+        line = f"{stamp}  {prefix}  {message}"
+        self._activity_log.insert(0, line)
+        self._activity_log = self._activity_log[:120]
+        self._refresh_activity_ui()
 
-        if any(all_data):
-            ax.plot(dates, all_data, marker="o", linestyle="-", color="blue", label="Promedio Todas las Reservas")
-        if any(paid_only):
-            ax.plot(dates, paid_only, marker="o", linestyle="-", color="teal", label="Promedio Solo Pagadas")
-        if any(pe_values):
-            ax.plot(dates, pe_values, marker="o", linestyle="--", color="green", label="Punto de Equilibrio (PE)")
+    def log_activity_block(self, title: str, lines: list[str]):
+        stamp = datetime.datetime.now().strftime("%d-%b %H:%M:%S")
+        block = [f"── {title} · {stamp} ──"] + [f"   {ln}" for ln in lines] + [""]
+        self._activity_log = block + self._activity_log
+        self._activity_log = self._activity_log[:120]
+        self._refresh_activity_ui()
 
-        # Ajustar el rango del eje X solo al rango de tus datos
-        if dates:
-            ax.set_xlim(min(dates), max(dates))
+    def _refresh_activity_ui(self):
+        try:
+            w = self.root.ids.activity_log
+            if not self._activity_log:
+                w.text = (
+                    "Registro de sesión\n\n"
+                    "Aqui veras el proceso de carga: fuente (conta/SOAP),\n"
+                    "tiempos de red, ventas/PE y caché.\n\n"
+                    "Pulsa ↻ arriba para actualizar."
+                )
+            else:
+                w.text = "\n".join(self._activity_log)
+            w.texture_update()
+            w.height = max(w.texture_size[1] + 28, 240)
+        except Exception:
+            pass
 
-        ax.set_title("Historial de Ventas Diarias")
-        ax.set_xlabel("Fecha")
-        ax.set_ylabel("Venta Promedio Diaria (USD)")
-        ax.xaxis.set_major_locator(mdates.AutoDateLocator())
-        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
-        fig.autofmt_xdate()
+    def _trace_ui(self, message: str, level: str = "step"):
+        """Desde hilo de fondo: encola mensaje a Actividad."""
+        Clock.schedule_once(lambda dt: self.log_activity(message, level=level))
 
-        ax.grid(True)
-        ax.legend()
+    def exit_app(self, *_):
+        self.stop()
 
-        plt.tight_layout()
-        fig.savefig("daily_sales_plot.png", dpi=160)
-        plt.close(fig)
+    def refresh_data(self, *_):
+        """Fuerza recarga del año actual (ignora caché)."""
+        if self._is_loading:
+            return
+        try:
+            self.root.ids.nav_drawer.set_state("close")
+        except Exception:
+            pass
+        try:
+            self._year_cache.pop(self.pe_year, None)
+        except Exception:
+            pass
+        self._set_loading(True, f"Actualizando {self.pe_year}…")
+        self.log_activity(f"Actualizar manual · año {self.pe_year}")
+        self.reload_dashboard(force=True)
 
+    def _set_loading(self, active: bool, message: str = "Actualizando…"):
+        self._is_loading = bool(active)
+        try:
+            row = self.root.ids.loading_row
+            spin = self.root.ids.loading_spinner
+            banner = self.root.ids.loading_banner
+            if active:
+                row.height = "28dp"
+                row.opacity = 1
+                spin.active = True
+                banner.text = message
+                self.root.ids.mode_subtitle.text = message
+            else:
+                row.height = "0dp"
+                row.opacity = 0
+                spin.active = False
+                banner.text = ""
+        except Exception:
+            pass
 
+    def _refresh_pe_year_ui(self):
+        try:
+            self.root.ids.year_header.text = f"{self.pe_year}  ▾"
+            n = sum(
+                1
+                for e in self._pe_history
+                if str(e.get("date", "")).startswith(str(self.pe_year))
+            )
+            mode = "Pagadas" if self.metrics_mode == "paid" else "Todas"
+            self.root.ids.pe_hint.text = (
+                f"Evol. PE {self.pe_year}: {n} puntos · vista {mode}"
+            )
+        except Exception:
+            pass
 
-    def build_sales_plot(self, all_avg, paid_avg, break_even_value, date_label):
-        """Modern 2-bar chart with green PE line and paid % inside bar."""
-        fig, ax = plt.subplots(figsize=(6, 4))
+    def _redraw_pe_chart(self):
+        pe_all = self._metrics_all.breakeven if self._metrics_all else 0.0
+        pe_paid = self._metrics_paid.breakeven if self._metrics_paid else 0.0
+        series = "paid" if self.metrics_mode == "paid" else "all"
+        charts.save_pe_history(
+            self._pe_history or [],
+            pe_all,
+            pe_paid,
+            _cpath("chart_pe_hist.png"),
+            year=self.pe_year,
+            series=series,
+        )
+        self._reload_image("img_pe", _cpath("chart_pe_hist.png"))
 
-        labels = ["All Data", "Only Paid"]
-        values = [all_avg, paid_avg]
-        colors = ["#1976D2", "#009688"]  # Blue, Teal
+    def set_metrics_mode(self, mode: str):
+        if mode == "paid" and not self._paid_allowed():
+            sb = Snackbar()
+            sb.text = "En años pasados todo se asume cobrado (conta)"
+            sb.open()
+            mode = "all"
+        self.metrics_mode = "paid" if mode == "paid" else "all"
+        self.pe_series = self.metrics_mode
+        self._refresh_mode_ui()
+        self._refresh_paid_button_state()
+        self._apply_cards()
+        self._refresh_pe_year_ui()
+        self._redraw_pe_chart()
+    def _tone_color(self, tone):
+        if tone == "ok":
+            return (0.13, 0.77, 0.37, 1)
+        if tone == "bad":
+            return (0.94, 0.27, 0.27, 1)
+        return (0.89, 0.91, 0.94, 1)
 
-        bars = ax.bar(labels, values, color=colors, width=0.6)
+    def _ensure_cards(self):
+        box = self.root.ids.cards_box
+        if self._metric_cards:
+            return
+        # grid 2 columnas con filas de BoxLayout
+        keys = ["sales", "margin", "daily", "pe", "vs_pe", "net"]
+        titles = {
+            "sales": "Ventas (real vs PE)",
+            "margin": "Márgenes %",
+            "daily": "Media diaria (real vs PE)",
+            "pe": "Punto de equilibrio",
+            "vs_pe": "Vs punto de equilibrio",
+            "net": "Resultado neto est.",
+        }
+        row = None
+        for i, key in enumerate(keys):
+            if i % 2 == 0:
+                row = MDBoxLayout(
+                    orientation="horizontal",
+                    adaptive_height=True,
+                    spacing="8dp",
+                    size_hint_y=None,
+                    height="92dp",
+                )
+                box.add_widget(row)
+            card = MetricCard(key, titles[key], on_open=self.show_metric_popup, size_hint_x=0.5)
+            self._metric_cards[key] = card
+            row.add_widget(card)
+        hint = MDLabel(
+            text="Toca una tarjeta para el desglose · Conta (años cerrados) / SOAP (en curso)",
+            font_style="Caption",
+            halign="center",
+            theme_text_color="Custom",
+            text_color=(0.45, 0.51, 0.58, 1),
+            size_hint_y=None,
+            height="24dp",
+        )
+        box.add_widget(hint)
 
-        # Bar labels above
-        for bar, val in zip(bars, values):
-            ax.text(bar.get_x() + bar.get_width() / 2, val + max(values) * 0.03,
-                    f"${val:,.2f}", ha="center", va="bottom", fontsize=11, fontweight="bold")
+    def _apply_cards(self):
+        m = self._metrics_paid if self.metrics_mode == "paid" else self._metrics_all
+        if m is None:
+            return
+        payload = metrics.cards_payload(m)
+        self._card_data = payload
+        for key, card in self._metric_cards.items():
+            data = payload[key]
+            card.title_lbl.text = data["title"]
+            card.line1.text = data["line1"]
+            card.line2.text = data["line2"]
+            card.line1.text_color = self._tone_color(data.get("tone1"))
+            card.line2.text_color = self._tone_color(data.get("tone2"))
 
-        # Percentage inside "Only Paid" bar
-        if all_avg > 0:
-            pct = paid_avg / all_avg * 100
-            bar = bars[1]  # second bar = Only Paid
-            ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() * 0.5,
-                    f"{pct:.1f}%", ha="center", va="center",
-                    fontsize=12, fontweight="bold", color="white")
+    def show_metric_popup(self, key: str):
+        data = self._card_data.get(key) or {}
+        popup = data.get("popup") or {}
+        title = data.get("title") or key
+        if self._popup:
+            try:
+                self._popup.dismiss()
+            except Exception:
+                pass
 
-        # Green PE line
-        ax.axhline(break_even_value, color="green", linestyle="--", linewidth=2, label="Punto de Equilibrio")
-        ax.text(1.1, break_even_value + max(values) * 0.01, f"${break_even_value:,.2f}",
-                color="green", fontsize=10, va="bottom")
+        def _close(*_):
+            self._popup.dismiss()
 
-        ax.set_ylim(0, max(max(values), break_even_value) * 1.25)
-        ax.set_ylabel("USD")
-        ax.set_title(f"Venta diaria vs PE (ALL DATA) – {date_label}", fontsize=14, fontweight="bold", pad=15)
-        ax.legend(loc="upper right", frameon=False)
+        # Compat: si algún popup viejo viniera como texto plano
+        if isinstance(popup, str):
+            body = MDLabel(
+                text=popup,
+                size_hint_y=None,
+                theme_text_color="Custom",
+                text_color=(0.85, 0.88, 0.92, 1),
+            )
+            body.bind(texture_size=lambda *_: setattr(body, "height", body.texture_size[1] + 20))
+            content = body
+        else:
+            content = MetricPopupBody(popup)
 
-        plt.tight_layout()
-        fig.savefig("plot.png", dpi=160)
-        plt.close(fig)
+        self._popup = MDDialog(
+            title=title,
+            type="custom",
+            content_cls=content,
+            buttons=[MDFlatButton(text="Cerrar", on_release=_close)],
+        )
+        self._popup.open()
 
+    def show_expense_dialog(self, *_):
+        try:
+            self.root.ids.nav_drawer.set_state("close")
+        except Exception:
+            pass
 
+        avg, note = expense.average_expense_last_months(6)
+        current = config.get_monthly_expense()
+        # Por defecto: media 6 meses si existe; si no, el valor guardado
+        initial = avg if avg is not None else current
 
-    def build(self):
-        # ── Modern Material style (use M3 when available) ────────────────
-        if hasattr(self.theme_cls, "material_style"):
-            self.theme_cls.material_style = "M3"
-
-        self.theme_cls.primary_palette = "BlueGray"
-        self.theme_cls.primary_hue     = "600"
-        self.theme_cls.theme_style     = "Light"
-
-        # ----------------------------------------------------------------
-        # Always build and return the root widget
-        # ----------------------------------------------------------------
-        root = Builder.load_string(kv)
-        return root
-
-    # -------------------------------------------------------------------
-    # Load today's sales summary and display the total value
-    # -------------------------------------------------------------------
-
-
-
-    # ──────────────────────────────────────────────────────────────
-    # Pop-up to edit the monthly fixed expense
-    # ──────────────────────────────────────────────────────────────
-    def show_expense_dialog(self, *args):
-        print("GEAR-TAP")   # ← appears in console every time icon is tapped
-
-        
-        cur_value = config.get_monthly_expense()
-
+        box = MDBoxLayout(
+            orientation="vertical",
+            spacing="8dp",
+            size_hint_y=None,
+            height="160dp",
+            padding="4dp",
+        )
+        tip = MDLabel(
+            text=note if avg is not None else "Sin conta: edita el respaldo manualmente.",
+            font_style="Caption",
+            theme_text_color="Custom",
+            text_color=(0.70, 0.74, 0.80, 1),
+            size_hint_y=None,
+            height="56dp",
+        )
         tf = MDTextField(
-            text=f"{cur_value:.2f}",
+            text=f"{float(initial):.2f}",
             hint_text="Gasto mensual (USD)",
             input_filter="float",
             mode="rectangle",
         )
+        box.add_widget(tip)
+        box.add_widget(tf)
 
-        def save_callback(*_):
+        def use_avg(*_):
+            if avg is None:
+                sb = Snackbar()
+                sb.text = "No hay media de conta disponible"
+                sb.open()
+                return
+            tf.text = f"{avg:.2f}"
+
+        def save(*_):
             try:
-                new_val = float(tf.text)
-                config.save_monthly_expense(new_val)
-                self.on_start()                 # recalc all metrics
-
-                self.root.ids.nav_drawer.set_state("close")  # 👈 closes the drawer
-                dialog.dismiss()                             # 👈 closes the dialog earlier
-
-                from kivymd.uix.snackbar import Snackbar
-                snackbar = Snackbar()
-                snackbar.text = "Gasto mensual actualizado"
-                snackbar.open()
-
+                config.save_monthly_expense(float(tf.text))
+                dialog.dismiss()
+                self.on_start()
+                sb = Snackbar()
+                sb.text = "Gasto mensual actualizado"
+                sb.open()
             except ValueError:
-                from kivymd.uix.snackbar import Snackbar
-                snackbar = Snackbar()
-                snackbar.text = "Número inválido"
-                snackbar.open()
+                sb = Snackbar()
+                sb.text = "Número inválido"
+                sb.open()
 
         dialog = MDDialog(
-            title="Editar gasto mensual",
+            title="Editor de gasto mensual",
             type="custom",
-            content_cls=tf,
+            content_cls=box,
             buttons=[
-                MDFlatButton(
-                    text="Cancelar",
-                    on_release=lambda *_: (
-                        dialog.dismiss(),
-                        self.root.ids.nav_drawer.set_state("close")  # 👈 also close drawer
-                    )
-                ),
-
-
-                MDFlatButton(text="Guardar",  on_release=save_callback),
+                MDFlatButton(text="Media 6 meses", on_release=use_avg),
+                MDFlatButton(text="Cancelar", on_release=lambda *_: dialog.dismiss()),
+                MDRaisedButton(text="Guardar", on_release=save, md_bg_color=(0.08, 0.72, 0.65, 1)),
             ],
         )
         dialog.open()
 
+    def clear_sales_history(self, *_):
+        try:
+            self.root.ids.nav_drawer.set_state("close")
+        except Exception:
+            pass
+
+        def confirm(*_):
+            import os
+
+            try:
+                if os.path.exists("daily_sales_history.json"):
+                    os.remove("daily_sales_history.json")
+                dialog.dismiss()
+                self.on_start()
+                sb = Snackbar()
+                sb.text = "Puntos del movil borrados (el seed del PC sigue)"
+                sb.open()
+            except Exception as exc:
+                sb = Snackbar()
+                sb.text = f"Error: {exc}"
+                sb.open()
+
+        dialog = MDDialog(
+            title="Borrar puntos del movil",
+            text=(
+                "Solo elimina lo que esta app guardo al abrirse "
+                "(daily_sales_history.json).\n\n"
+                "NO borra el historial del PC: data_log ni conta "
+                "(pe_history_seed.json). La curva historica seguira visible."
+            ),
+            buttons=[
+                MDFlatButton(text="Cancelar", on_release=lambda *_: dialog.dismiss()),
+                MDFlatButton(text="Borrar", on_release=confirm),
+            ],
+        )
+        dialog.open()
+
+    def _reload_image(self, widget_id: str, path: str):
+        try:
+            w = self.root.ids[widget_id]
+            w.source = path
+            w.reload()
+        except Exception:
+            pass
 
     def on_start(self):
-        today      = datetime.date.today()
-        first_day  = datetime.date(today.year, 1, 1)
-        last_day   = datetime.date(today.year, 12, 31)
+        self.reload_dashboard()
 
+    def reload_dashboard(self, force: bool = False):
+        """Carga el año seleccionado. Usa caché; años cerrados desde conta (rapido)."""
+        today = datetime.date.today()
+        year = int(self.pe_year or today.year)
 
-        df = fetch_sales_summary(first_day, last_day)
+        self._ensure_cards()
+        try:
+            self.root.ids.year_header.text = f"{year}  ▾"
+            self.root.ids.top_bar.title = f"Sales Analytics  {app_version.APP_VERSION_LABEL}"
+        except Exception:
+            pass
 
-        # --- DEBUG: show columns and first rows in the console -----------
-        print("DEBUG → DataFrame columns:", list(df.columns))
-        print("DEBUG → First 5 rows:\n", df.head())
+        cached = None if force else self._year_cache.get(year)
+        if cached:
+            self._apply_year_bundle(year, cached, from_cache=True)
+            return
 
-        # -----------------------------------------------------------------
+        self._set_loading(True, f"Cargando {year}…")
 
-        # Try a few likely column names
-        candidate_cols = ["TotalPrice", "TotalSales", "Total", "SalesTotal", "Importe"]
-        total = 0
-        for col in candidate_cols:
-            if col in df.columns:
-                total = df[col].astype(float).sum()
-                break
+        self._load_token += 1
+        token = self._load_token
 
-        # ── Update first slide (“Todas las Reservas”) ────────────────────
-        # ────────────────────────────  Headers  ──────────────────────────
-        self.root.ids.year_header_all.text = str(today.year)
-        self.root.ids.subheader_all.text   = "Resultados para All Data:"
-        # (label removed from the layout – no action needed here)
+        def worker():
+            try:
+                bundle = self._build_year_bundle(year)
+            except Exception as exc:
+                traceback.print_exc()
+                Clock.schedule_once(lambda dt: self._on_load_error(year, token, str(exc)))
+                return
+            Clock.schedule_once(lambda dt: self._on_load_ok(year, token, bundle))
 
+        import threading
 
-        # ─────────────────────  Metric calculations  ─────────────────────
-        day_of_year   = today.timetuple().tm_yday
-        daily_avg     = total / day_of_year if day_of_year else 0
+        threading.Thread(target=worker, daemon=True).start()
 
+    def _on_load_error(self, year: int, token: int, msg: str):
+        if token != self._load_token or year != self.pe_year:
+            return
+        self._set_loading(False)
+        self.log_activity(f"Error cargando {year}: {msg}")
+        try:
+            self.root.ids.mode_subtitle.text = f"Error {year}: {msg}"
+        except Exception:
+            pass
+        try:
+            sb = Snackbar()
+            sb.text = f"Error al cargar {year}"
+            sb.open()
+        except Exception:
+            pass
 
-        total_cost    = df["TotalCost"].astype(float).sum()
+    def _on_load_ok(self, year: int, token: int, bundle: dict):
+        if token != self._load_token or year != self.pe_year:
+            return
+        self._year_cache[year] = bundle
+        self._apply_year_bundle(year, bundle, from_cache=False)
 
+    def _build_year_bundle(self, year: int) -> dict:
+        """Trabajo pesado (red/disco). NO tocar UI aqui. Emite traza a Actividad."""
+        import time
 
-        # --- monthly fixed cost from config.py ---------------------------
-        monthly_expense = config.get_monthly_expense()   # e.g. 8900.00
+        t0 = time.perf_counter()
+        today = datetime.date.today()
+        first_day, last_day, day_of_year, days_in_year = year_data.year_bounds(year)
+        subtitle = f"01-01-{year} a 31-12-{year}"
+        closed = year < today.year
+        steps = []
 
-        # Windows rounds the margin to 2 decimals first
-        gp_raw            = (1 - total_cost / total) * 100 if total else 0.01
-        gross_margin_pct  = round(gp_raw, 2)
+        def step(msg, level="step"):
+            steps.append(msg)
+            self._trace_ui(msg, level=level)
 
-        # Windows formula: (monthly expense ÷ GP%) ÷ 30 days
-        break_even    = (monthly_expense / (gross_margin_pct / 100)) / 30
+        step(f"Inicio carga {year} ({'cerrado' if closed else 'en curso'})")
+        step(f"Endpoint SOAP: umbrellatravel.com/PublicServices")
 
+        monthly_all = []
+        monthly_paid = []
+        services_all = []
+        services_paid = []
+        paid_pending = False
 
-        # Build chart data for Slide 3
-        dates = [today.replace(day=d) for d in range(1, day_of_year + 1) if d <= 28 or d <= today.day]
-        daily_averages = [daily_avg for _ in dates]
+        def _soap(paid: bool):
+            t = time.perf_counter()
+            df = metrics.prepare_sales_df(
+                fetch_sales_summary(first_day, last_day, only_paid=paid)
+            )
+            ms = (time.perf_counter() - t) * 1000
+            tag = "pagadas" if paid else "todas"
+            step(f"SOAP {tag}: {ms:.0f} ms · {len(df)} filas", level="ok")
+            return df
 
+        if closed:
+            t_c = time.perf_counter()
+            conta_pack = year_data.metrics_from_conta(year)
+            ms_c = (time.perf_counter() - t_c) * 1000
+            if conta_pack is None:
+                step("Conta: sin datos → fallback SOAP", level="warn")
+                monthly_expense, exp_note = expense.resolve_monthly_expense(year)
+                df_all = _soap(False)
+                m_all = metrics.compute_year_metrics(
+                    total_sales=metrics.sum_column(df_all, metrics.SALES_COLS),
+                    total_cost=metrics.sum_column(df_all, metrics.COST_COLS),
+                    monthly_expense=monthly_expense,
+                    day_of_year=day_of_year,
+                    period_days=days_in_year,
+                    days_in_year=days_in_year,
+                )
+                monthly_all = metrics.monthly_sales(df_all)
+                services_all = metrics.service_sales(df_all)
+                source_note = f"SOAP (sin conta) · {exp_note.split(chr(183))[0].strip()}"
+                m_paid = m_all
+                paid_pending = True
+            else:
+                m_all, monthly_all, note = conta_pack
+                source_note = note
+                step(
+                    f"Conta local: {ms_c:.0f} ms · ventas ${m_all.total_sales:,.0f} · "
+                    f"PE ${m_all.breakeven:,.0f} (como Windows)",
+                    level="ok",
+                )
+                # Años cerrados: conta = cobrado. No SOAP pagadas (mas rapido).
+                m_paid = m_all
+                paid_pending = False
+                step("Solo pagadas: N/D en años cerrados (se asume cobrado)", level="ok")
+        else:
+            monthly_expense, exp_note = expense.resolve_monthly_expense(year)
+            source_note = f"SOAP en vivo · {exp_note.split(chr(183))[0].strip()}"
+            step("Año en curso: 2 llamadas SOAP en paralelo…")
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                fut_all = pool.submit(_soap, False)
+                fut_paid = pool.submit(_soap, True)
+                df_all = fut_all.result()
+                df_paid = fut_paid.result()
+            m_all = metrics.compute_year_metrics(
+                total_sales=metrics.sum_column(df_all, metrics.SALES_COLS),
+                total_cost=metrics.sum_column(df_all, metrics.COST_COLS),
+                monthly_expense=monthly_expense,
+                day_of_year=day_of_year,
+                period_days=days_in_year,
+                days_in_year=days_in_year,
+            )
+            m_paid = metrics.compute_year_metrics(
+                total_sales=metrics.sum_column(df_paid, metrics.SALES_COLS),
+                total_cost=metrics.sum_column(df_paid, metrics.COST_COLS),
+                monthly_expense=monthly_expense,
+                day_of_year=day_of_year,
+                period_days=days_in_year,
+                days_in_year=days_in_year,
+            )
+            monthly_all = metrics.monthly_sales(df_all)
+            monthly_paid = metrics.monthly_sales(df_paid)
+            services_all = metrics.service_sales(df_all)
+            services_paid = metrics.service_sales(df_paid)
+            step(
+                f"Resumen SOAP: Todas ${m_all.total_sales:,.0f} · Pagadas ${m_paid.total_sales:,.0f}",
+                level="ok",
+            )
 
-
-        diff_be       = daily_avg - break_even
-        diff_color    = "00C853" if diff_be >= 0 else "E53935"   # green / red
-
-        predicted_sales  = daily_avg * 365
-        gross_profit_est = predicted_sales * gross_margin_pct / 100
-
-        expenses_total   = monthly_expense * 12          # full-year fixed costs
-        net_result_est   = gross_profit_est - expenses_total
-        net_color        = "00C853" if net_result_est >= 0 else "E53935"
-
-
-
-        # ── DEBUG: print the raw sums to the console ─────────────────────
-        print("DEBUG → total_price  :", total)          # sales total
-        print("DEBUG → total_cost   :", total_cost)     # cost total
-        print("DEBUG → day_of_year  :", day_of_year)
-        print("DEBUG → monthly_exp  :", monthly_expense)
-        # ----------------------------------------------------------------
-
-
-        # ─────────────────────  Formatted output  ────────────────────────
-        metrics_text = (
-            f"[b]Ventas Totales:[/b] ${total:,.2f}\n"
-            f"[b]Número del Día del Año:[/b] {day_of_year}\n"
-            f"[b]Venta Promedio Diaria:[/b] ${daily_avg:,.2f}\n"
-            f"[b]Venta diaria para punto de equilibrio:[/b] ${break_even:,.2f}\n"
-            f"[color=#{diff_color}][b]Diferencia con el punto de equilibrio:[/b] "
-            f"{diff_be:+,.2f}[/color]\n\n"
-            f"[b]Predicción de Ventas Totales para el Año:[/b] ${predicted_sales:,.2f}\n"
-            f"[b]Porcentaje de Ganancia Bruta Promedio:[/b] {gross_margin_pct:.2f}%\n"
-            f"[b]Ganancia Bruta Estimada:[/b] ${gross_profit_est:,.2f}\n"
-            f"[b]Gastos Totales estimados:[/b] ${expenses_total:,.2f}\n"
-            f"[color=#{net_color}][b]Resultado Neto Estimado para el Año:[/b] "
-            f"{net_result_est:+,.2f}[/color]"
+        t_g = time.perf_counter()
+        charts.save_vs_paid(
+            m_all.total_sales, m_paid.total_sales, _cpath(f"chart_vs_paid_{year}.png"), subtitle
         )
-
-        self.root.ids.metrics_all.text = metrics_text
-
-
-        # -----------------------------------------------------------------
-
-        # ─────────────────────  «Reservas Pagadas» slide  ─────────────────
-        paid_df = fetch_sales_summary(first_day, last_day, only_paid=True)
-
-        paid_total      = paid_df["TotalPrice"].astype(float).sum()
-        paid_total_cost = paid_df["TotalCost"].astype(float).sum()
-
-        # Same day-count and monthly expense
-        paid_daily_avg  = paid_total / day_of_year if day_of_year else 0
-
-        gp_raw_paid         = (1 - paid_total_cost / paid_total) * 100 if paid_total else 0.01
-        gross_margin_paid   = round(gp_raw_paid, 2)
-
-        paid_break_even = (monthly_expense / (gross_margin_paid / 100)) / 30
-        paid_diff_be    = paid_daily_avg - paid_break_even
-        paid_diff_color = "00C853" if paid_diff_be >= 0 else "E53935"
-
-        paid_pred_sales    = paid_daily_avg * 365
-        paid_gross_profit  = paid_pred_sales * gross_margin_paid / 100
-        paid_net_result    = paid_gross_profit - expenses_total
-        paid_net_color     = "00C853" if paid_net_result >= 0 else "E53935"
-
-        # --- update widgets ------------------------------------------------
-        self.root.ids.year_header_paid.text = str(today.year)
-        self.root.ids.subheader_paid.text   = "Resultados para Only Paid:"
-
-        metrics_paid_text = (
-            f"[b]Ventas Totales:[/b] ${paid_total:,.2f}\n"
-            f"[b]Número del Día del Año:[/b] {day_of_year}\n"
-            f"[b]Venta Promedio Diaria:[/b] ${paid_daily_avg:,.2f}\n"
-            f"[b]Venta diaria para punto de equilibrio:[/b] ${paid_break_even:,.2f}\n"
-            f"[color=#{paid_diff_color}][b]Diferencia con el punto de equilibrio:[/b] "
-            f"{paid_diff_be:+,.2f}[/color]\n\n"
-            f"[b]Predicción de Ventas Totales para el Año:[/b] ${paid_pred_sales:,.2f}\n"
-            f"[b]Porcentaje de Ganancia Bruta Promedio:[/b] {gross_margin_paid:.2f}%\n"
-            f"[b]Ganancia Bruta Estimada:[/b] ${paid_gross_profit:,.2f}\n"
-            f"[b]Gastos Totales estimados:[/b] ${expenses_total:,.2f}\n"
-            f"[color=#{paid_net_color}][b]Resultado Neto Estimado para el Año:[/b] "
-            f"{paid_net_result:+,.2f}[/color]"
+        charts.save_service_pies(
+            services_all,
+            services_paid,
+            _cpath(f"chart_tipos_{year}.png"),
+            subtitle,
         )
+        charts.save_behavior_monthly(
+            monthly_all,
+            monthly_paid,
+            _cpath(f"chart_comportamiento_{year}.png"),
+            year,
+        )
+        step(f"Graficas: {(time.perf_counter() - t_g) * 1000:.0f} ms", level="ok")
+        total_ms = (time.perf_counter() - t0) * 1000
+        step(f"Total {year}: {total_ms:.0f} ms", level="ok")
 
-        
-        self.root.ids.metrics_paid.text = metrics_paid_text
+        return {
+            "m_all": m_all,
+            "m_paid": m_paid,
+            "source_note": source_note,
+            "img_vs": _cpath(f"chart_vs_paid_{year}.png"),
+            "img_tipos": _cpath(f"chart_tipos_{year}.png"),
+            "img_comp": _cpath(f"chart_comportamiento_{year}.png"),
+            "closed": closed,
+            "paid_pending": paid_pending,
+            "steps": steps,
+            "elapsed_ms": total_ms,
+            "day_of_year": day_of_year,
+            "days_in_year": days_in_year,
+        }
 
-        # ← Ahora que ya existe paid_daily_avg, sí puedes construir la gráfica:
-        self.build_sales_plot(daily_avg, paid_daily_avg, break_even, today.strftime("%Y-%m-%d"))
+    def _ensure_paid_async(self, year: int):
+        """Carga SOAP pagadas en fondo para años cerrados."""
+        token = self._load_token
+        first_day, last_day, day_of_year, days_in_year = year_data.year_bounds(year)
 
+        def worker():
+            import time
 
-        json_file = "daily_sales_history.json"
-        today_str = datetime.date.today().isoformat()
+            t0 = time.perf_counter()
+            try:
+                df_paid = metrics.prepare_sales_df(
+                    fetch_sales_summary(first_day, last_day, only_paid=True)
+                )
+                sales = metrics.sum_column(df_paid, metrics.SALES_COLS)
+                cost = metrics.sum_column(df_paid, metrics.COST_COLS)
+                bundle = self._year_cache.get(year) or {}
+                exp = (
+                    bundle["m_all"].monthly_expense
+                    if bundle.get("m_all")
+                    else expense.resolve_monthly_expense(year)[0]
+                )
+                m_paid = metrics.compute_year_metrics(
+                    total_sales=sales,
+                    total_cost=cost,
+                    monthly_expense=exp,
+                    day_of_year=day_of_year,
+                    period_days=days_in_year,
+                    days_in_year=days_in_year,
+                )
+                ms = (time.perf_counter() - t0) * 1000
+                charts.save_vs_paid(
+                    bundle["m_all"].total_sales if bundle.get("m_all") else sales,
+                    m_paid.total_sales,
+                    _cpath(f"chart_vs_paid_{year}.png"),
+                    f"01-01-{year} a 31-12-{year}",
+                )
+                charts.save_service_pies(
+                    [],
+                    metrics.service_sales(df_paid),
+                    _cpath(f"chart_tipos_{year}.png"),
+                    f"{year} pagadas",
+                )
+                charts.save_behavior_monthly(
+                    [],
+                    metrics.monthly_sales(df_paid),
+                    _cpath(f"chart_comportamiento_{year}.png"),
+                    year,
+                )
+                Clock.schedule_once(
+                    lambda dt: self._on_paid_ready(year, token, m_paid, ms)
+                )
+            except Exception as exc:
+                Clock.schedule_once(
+                    lambda dt: self.log_activity(f"SOAP pagadas fallo: {exc}", level="err")
+                )
 
-        # Load existing history
+        import threading
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _on_paid_ready(self, year: int, token: int, m_paid, ms: float):
+        if token != self._load_token or year != self.pe_year:
+            return
+        bundle = self._year_cache.get(year)
+        if not bundle:
+            return
+        bundle["m_paid"] = m_paid
+        bundle["paid_pending"] = False
+        bundle["source_note"] = (bundle.get("source_note") or "") + f" · pagadas SOAP {ms:.0f}ms"
+        self._year_cache[year] = bundle
+        self._metrics_paid = m_paid
+        self.log_activity(
+            f"Pagadas {year}: ${m_paid.total_sales:,.0f} · {ms:.0f} ms",
+            level="ok",
+        )
+        if self.metrics_mode == "paid":
+            self._apply_cards()
+        self._reload_image("img_vs", bundle["img_vs"])
+        self._reload_image("img_tipos", bundle["img_tipos"])
+        self._reload_image("img_comp", bundle["img_comp"])
+        self._redraw_pe_chart()
+
+    def _apply_year_bundle(self, year: int, bundle: dict, from_cache: bool = False):
+        today = datetime.date.today()
+        m_all = bundle["m_all"]
+        m_paid = bundle["m_paid"]
+        self._metrics_all = m_all
+        self._metrics_paid = m_paid
+        self._data_source_note = bundle.get("source_note") or ""
+
+        try:
+            self.root.ids.expense_chip.text = (
+                f"Gasto mes: ${m_all.monthly_expense:,.2f}  ·  menú → Editar gasto"
+            )
+            self.root.ids.drawer_version.text = app_version.APP_VERSION_LABEL
+        except Exception:
+            pass
+
+        self._refresh_mode_ui()
+        self._apply_cards()
+        self._refresh_paid_button_state()
+        self._set_loading(False)
+
+        # Historial PE live solo año en curso
+        json_file = str(apaths.live_history_path())
         try:
             with open(json_file, "r", encoding="utf-8") as f:
-                history = json.load(f)
+                live = json.load(f)
+            if not isinstance(live, list):
+                live = []
         except (FileNotFoundError, json.JSONDecodeError):
-            history = []
+            live = []
 
-        # Actualizar o agregar registro para hoy
-        updated = False
-        for entry in history:
-            if entry["date"] == today_str:
-                entry["all_data_avg"] = round(daily_avg, 2)
-                entry["paid_only_avg"] = round(paid_daily_avg, 2)
-                entry["pe_value"] = round(break_even, 2)
-                updated = True
-                break
-        if not updated:
-            history.append({
-                "date": today_str,
-                "all_data_avg": round(daily_avg, 2),
-                "paid_only_avg": round(paid_daily_avg, 2),
-                "pe_value": round(break_even, 2)
-            })
-        with open(json_file, "w", encoding="utf-8") as f:
-            json.dump(history, f, ensure_ascii=False, indent=2)
+        if year == today.year and not from_cache:
+            today_str = today.isoformat()
+            updated = False
+            for entry in live:
+                if entry.get("date") == today_str:
+                    entry["all_data_avg"] = round(m_all.daily_avg, 2)
+                    entry["paid_only_avg"] = round(m_paid.daily_avg, 2)
+                    entry["pe_value"] = round(m_all.breakeven, 2)
+                    entry["pe_value_paid"] = round(m_paid.breakeven, 2)
+                    entry["source"] = "live"
+                    updated = True
+                    break
+            if not updated:
+                live.append(
+                    {
+                        "date": today_str,
+                        "all_data_avg": round(m_all.daily_avg, 2),
+                        "paid_only_avg": round(m_paid.daily_avg, 2),
+                        "pe_value": round(m_all.breakeven, 2),
+                        "pe_value_paid": round(m_paid.breakeven, 2),
+                        "source": "live",
+                    }
+                )
+            with open(json_file, "w", encoding="utf-8") as f:
+                json.dump(live, f, ensure_ascii=False, indent=2)
 
+        history = pe_history.merge_history(pe_history.load_seed_points(), live)
+        self._pe_history = history
+        self._pe_years = pe_history.selectable_years(history)
 
-        self.build_daily_sales_chart()
+        self._refresh_pe_year_ui()
+        self._redraw_pe_chart()
+        self._reload_image("img_vs", bundle["img_vs"])
+        self._reload_image("img_tipos", bundle["img_tipos"])
+        self._reload_image("img_comp", bundle["img_comp"])
 
-        # Forzar recarga de la imagen de la gráfica (por si es la primera vez)
-        if hasattr(self.root.ids, "daily_sales_image"):
-            self.root.ids.daily_sales_image.reload()
+        label = "Solo pagadas" if self.metrics_mode == "paid" else "Todas"
+        note = self._data_source_note
+        try:
+            self.root.ids.mode_subtitle.text = (
+                f"{label} · {year} · {note}"
+                + (" · caché" if from_cache else "")
+            )
+        except Exception:
+            pass
 
+        if not from_cache:
+            m = m_all
+            lines = [
+                f"Fuente: {self._data_source_note}",
+                f"Ventas Todas: ${m.total_sales:,.2f}",
+                f"Coste: ${m.total_cost:,.2f} · Margen {m.margin_pct:.2f}%",
+                f"PE diario: ${m.breakeven:,.2f} · Media ${m.daily_avg:,.2f}",
+                f"Neto est.: ${m.net_est:,.2f}",
+                f"Tiempo total: {bundle.get('elapsed_ms', 0):.0f} ms",
+            ]
+            if bundle.get("paid_pending"):
+                lines.append("Pagadas: pendientes")
+            elif bundle.get("closed"):
+                lines.append("Vista única Todas (conta = cobrado en años pasados)")
+            self.log_activity_block(f"Año {year} listo", lines)
+            try:
+                sb = Snackbar()
+                sb.text = f"{year} listo"
+                sb.open()
+            except Exception:
+                pass
+        else:
+            self.log_activity(f"Año {year} desde caché (instantaneo)", level="ok")
 
-
-        # -----------------------------------------------------------------
-
-    def exit_app(self, *args):
-        import sys
-        from kivy.app import App
-        App.get_running_app().stop()
-        sys.exit()
-
+    def _refresh_mode_ui(self):
+        teal = (0.08, 0.72, 0.65, 1)
+        muted = (0.22, 0.26, 0.34, 1)
+        try:
+            self.root.ids.btn_all.md_bg_color = teal if self.metrics_mode == "all" else muted
+            label = "Solo pagadas" if self.metrics_mode == "paid" else "Todas las reservas"
+            note = getattr(self, "_data_source_note", "") or "SOAP"
+            if not self._paid_allowed():
+                label = "Todas (años pasados = cobrado)"
+            self.root.ids.mode_subtitle.text = (
+                f"{label} · año {self.pe_year} · {note}"
+            )
+        except Exception:
+            pass
+        self._refresh_paid_button_state()
 
 
 if __name__ == "__main__":

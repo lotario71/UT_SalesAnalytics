@@ -1,0 +1,2691 @@
+{
+  "generated_at": "2026-07-31 12:31:27",
+  "sources": [
+    "data_log_all_data.csv",
+    "data_log_only_paid.csv",
+    "gastos_mensuales.json"
+  ],
+  "count": 308,
+  "points": [
+    {
+      "date": "2008-01-31",
+      "all_data_avg": 2621.07,
+      "paid_only_avg": null,
+      "pe_value": 1845.04,
+      "pe_value_paid": 1845.04,
+      "source": "conta_month",
+      "month_sales": 81253.09
+    },
+    {
+      "date": "2008-02-29",
+      "all_data_avg": 3199.87,
+      "paid_only_avg": null,
+      "pe_value": 2289.43,
+      "pe_value_paid": 2289.43,
+      "source": "conta_month",
+      "month_sales": 92796.34
+    },
+    {
+      "date": "2008-03-31",
+      "all_data_avg": 1885.77,
+      "paid_only_avg": null,
+      "pe_value": 2856.9,
+      "pe_value_paid": 2856.9,
+      "source": "conta_month",
+      "month_sales": 58458.92
+    },
+    {
+      "date": "2008-04-30",
+      "all_data_avg": 3031.2,
+      "paid_only_avg": null,
+      "pe_value": 1917.63,
+      "pe_value_paid": 1917.63,
+      "source": "conta_month",
+      "month_sales": 90935.85
+    },
+    {
+      "date": "2008-05-31",
+      "all_data_avg": 1376.44,
+      "paid_only_avg": null,
+      "pe_value": 1711.68,
+      "pe_value_paid": 1711.68,
+      "source": "conta_month",
+      "month_sales": 42669.64
+    },
+    {
+      "date": "2008-06-30",
+      "all_data_avg": 1435.93,
+      "paid_only_avg": null,
+      "pe_value": 2854.78,
+      "pe_value_paid": 2854.78,
+      "source": "conta_month",
+      "month_sales": 43077.96
+    },
+    {
+      "date": "2008-07-31",
+      "all_data_avg": 1784.21,
+      "paid_only_avg": null,
+      "pe_value": 2626.42,
+      "pe_value_paid": 2626.42,
+      "source": "conta_month",
+      "month_sales": 55310.37
+    },
+    {
+      "date": "2008-08-31",
+      "all_data_avg": 1885.6,
+      "paid_only_avg": null,
+      "pe_value": 2342.49,
+      "pe_value_paid": 2342.49,
+      "source": "conta_month",
+      "month_sales": 58453.53
+    },
+    {
+      "date": "2008-09-30",
+      "all_data_avg": 609.22,
+      "paid_only_avg": null,
+      "pe_value": 1950.74,
+      "pe_value_paid": 1950.74,
+      "source": "conta_month",
+      "month_sales": 18276.5
+    },
+    {
+      "date": "2008-10-31",
+      "all_data_avg": 644.42,
+      "paid_only_avg": null,
+      "pe_value": 2213.61,
+      "pe_value_paid": 2213.61,
+      "source": "conta_month",
+      "month_sales": 19977.02
+    },
+    {
+      "date": "2008-11-30",
+      "all_data_avg": 866.08,
+      "paid_only_avg": null,
+      "pe_value": 1153.91,
+      "pe_value_paid": 1153.91,
+      "source": "conta_month",
+      "month_sales": 25982.26
+    },
+    {
+      "date": "2008-12-31",
+      "all_data_avg": 1380.37,
+      "paid_only_avg": null,
+      "pe_value": 8411.23,
+      "pe_value_paid": 8411.23,
+      "source": "conta_month",
+      "month_sales": 42791.33
+    },
+    {
+      "date": "2009-01-31",
+      "all_data_avg": 1220.92,
+      "paid_only_avg": null,
+      "pe_value": 1797.78,
+      "pe_value_paid": 1797.78,
+      "source": "conta_month",
+      "month_sales": 37848.61
+    },
+    {
+      "date": "2009-02-28",
+      "all_data_avg": 807.4,
+      "paid_only_avg": null,
+      "pe_value": 877.31,
+      "pe_value_paid": 877.31,
+      "source": "conta_month",
+      "month_sales": 22607.23
+    },
+    {
+      "date": "2009-03-31",
+      "all_data_avg": 1752.33,
+      "paid_only_avg": null,
+      "pe_value": 1002.33,
+      "pe_value_paid": 1002.33,
+      "source": "conta_month",
+      "month_sales": 54322.26
+    },
+    {
+      "date": "2009-04-30",
+      "all_data_avg": 802.82,
+      "paid_only_avg": null,
+      "pe_value": 1189.66,
+      "pe_value_paid": 1189.66,
+      "source": "conta_month",
+      "month_sales": 24084.55
+    },
+    {
+      "date": "2009-05-31",
+      "all_data_avg": 321.15,
+      "paid_only_avg": null,
+      "pe_value": 760.4,
+      "pe_value_paid": 760.4,
+      "source": "conta_month",
+      "month_sales": 9955.8
+    },
+    {
+      "date": "2009-06-30",
+      "all_data_avg": 1175.68,
+      "paid_only_avg": null,
+      "pe_value": 1259.87,
+      "pe_value_paid": 1259.87,
+      "source": "conta_month",
+      "month_sales": 35270.45
+    },
+    {
+      "date": "2009-07-31",
+      "all_data_avg": 1272.12,
+      "paid_only_avg": null,
+      "pe_value": 1558.74,
+      "pe_value_paid": 1558.74,
+      "source": "conta_month",
+      "month_sales": 39435.84
+    },
+    {
+      "date": "2009-08-31",
+      "all_data_avg": 971.17,
+      "paid_only_avg": null,
+      "pe_value": 1523.64,
+      "pe_value_paid": 1523.64,
+      "source": "conta_month",
+      "month_sales": 30106.32
+    },
+    {
+      "date": "2009-09-30",
+      "all_data_avg": 290.23,
+      "paid_only_avg": null,
+      "pe_value": 1401.44,
+      "pe_value_paid": 1401.44,
+      "source": "conta_month",
+      "month_sales": 8706.8
+    },
+    {
+      "date": "2009-10-31",
+      "all_data_avg": 493.24,
+      "paid_only_avg": null,
+      "pe_value": 1439.29,
+      "pe_value_paid": 1439.29,
+      "source": "conta_month",
+      "month_sales": 15290.48
+    },
+    {
+      "date": "2009-11-30",
+      "all_data_avg": 2854.4,
+      "paid_only_avg": null,
+      "pe_value": 2380.83,
+      "pe_value_paid": 2380.83,
+      "source": "conta_month",
+      "month_sales": 85632.0
+    },
+    {
+      "date": "2009-12-31",
+      "all_data_avg": 1846.06,
+      "paid_only_avg": null,
+      "pe_value": 1983.23,
+      "pe_value_paid": 1983.23,
+      "source": "conta_month",
+      "month_sales": 57227.75
+    },
+    {
+      "date": "2010-01-31",
+      "all_data_avg": 609.77,
+      "paid_only_avg": null,
+      "pe_value": 2694.34,
+      "pe_value_paid": 2694.34,
+      "source": "conta_month",
+      "month_sales": 18902.84
+    },
+    {
+      "date": "2010-02-28",
+      "all_data_avg": 1044.48,
+      "paid_only_avg": null,
+      "pe_value": 1417.23,
+      "pe_value_paid": 1417.23,
+      "source": "conta_month",
+      "month_sales": 29245.44
+    },
+    {
+      "date": "2010-03-31",
+      "all_data_avg": 905.72,
+      "paid_only_avg": null,
+      "pe_value": 1554.15,
+      "pe_value_paid": 1554.15,
+      "source": "conta_month",
+      "month_sales": 28077.4
+    },
+    {
+      "date": "2010-04-30",
+      "all_data_avg": 1270.2,
+      "paid_only_avg": null,
+      "pe_value": 1213.4,
+      "pe_value_paid": 1213.4,
+      "source": "conta_month",
+      "month_sales": 38106.07
+    },
+    {
+      "date": "2010-05-31",
+      "all_data_avg": 529.12,
+      "paid_only_avg": null,
+      "pe_value": 1476.47,
+      "pe_value_paid": 1476.47,
+      "source": "conta_month",
+      "month_sales": 16402.8
+    },
+    {
+      "date": "2010-06-30",
+      "all_data_avg": 815.02,
+      "paid_only_avg": null,
+      "pe_value": 1294.5,
+      "pe_value_paid": 1294.5,
+      "source": "conta_month",
+      "month_sales": 24450.51
+    },
+    {
+      "date": "2010-07-31",
+      "all_data_avg": 2204.17,
+      "paid_only_avg": null,
+      "pe_value": 2409.34,
+      "pe_value_paid": 2409.34,
+      "source": "conta_month",
+      "month_sales": 68329.28
+    },
+    {
+      "date": "2010-08-31",
+      "all_data_avg": 2791.92,
+      "paid_only_avg": null,
+      "pe_value": 2190.73,
+      "pe_value_paid": 2190.73,
+      "source": "conta_month",
+      "month_sales": 86549.58
+    },
+    {
+      "date": "2010-09-30",
+      "all_data_avg": 1045.25,
+      "paid_only_avg": null,
+      "pe_value": 1267.73,
+      "pe_value_paid": 1267.73,
+      "source": "conta_month",
+      "month_sales": 31357.47
+    },
+    {
+      "date": "2010-10-31",
+      "all_data_avg": 912.13,
+      "paid_only_avg": null,
+      "pe_value": 1699.36,
+      "pe_value_paid": 1699.36,
+      "source": "conta_month",
+      "month_sales": 28276.12
+    },
+    {
+      "date": "2010-11-30",
+      "all_data_avg": 1911.0,
+      "paid_only_avg": null,
+      "pe_value": 1637.69,
+      "pe_value_paid": 1637.69,
+      "source": "conta_month",
+      "month_sales": 57329.99
+    },
+    {
+      "date": "2010-12-31",
+      "all_data_avg": 2637.03,
+      "paid_only_avg": null,
+      "pe_value": 2641.04,
+      "pe_value_paid": 2641.04,
+      "source": "conta_month",
+      "month_sales": 81748.0
+    },
+    {
+      "date": "2011-01-31",
+      "all_data_avg": 3681.24,
+      "paid_only_avg": null,
+      "pe_value": 2089.76,
+      "pe_value_paid": 2089.76,
+      "source": "conta_month",
+      "month_sales": 114118.54
+    },
+    {
+      "date": "2011-02-28",
+      "all_data_avg": 2954.16,
+      "paid_only_avg": null,
+      "pe_value": 2873.73,
+      "pe_value_paid": 2873.73,
+      "source": "conta_month",
+      "month_sales": 82716.46
+    },
+    {
+      "date": "2011-03-31",
+      "all_data_avg": 4932.78,
+      "paid_only_avg": null,
+      "pe_value": 2090.69,
+      "pe_value_paid": 2090.69,
+      "source": "conta_month",
+      "month_sales": 152916.24
+    },
+    {
+      "date": "2011-04-30",
+      "all_data_avg": 4528.39,
+      "paid_only_avg": null,
+      "pe_value": 2523.22,
+      "pe_value_paid": 2523.22,
+      "source": "conta_month",
+      "month_sales": 135851.63
+    },
+    {
+      "date": "2011-05-31",
+      "all_data_avg": 2514.94,
+      "paid_only_avg": null,
+      "pe_value": 2376.55,
+      "pe_value_paid": 2376.55,
+      "source": "conta_month",
+      "month_sales": 77963.24
+    },
+    {
+      "date": "2011-06-30",
+      "all_data_avg": 3387.98,
+      "paid_only_avg": null,
+      "pe_value": 2124.76,
+      "pe_value_paid": 2124.76,
+      "source": "conta_month",
+      "month_sales": 101639.54
+    },
+    {
+      "date": "2011-07-31",
+      "all_data_avg": 5025.52,
+      "paid_only_avg": null,
+      "pe_value": 2877.9,
+      "pe_value_paid": 2877.9,
+      "source": "conta_month",
+      "month_sales": 155790.98
+    },
+    {
+      "date": "2011-08-31",
+      "all_data_avg": 6493.92,
+      "paid_only_avg": null,
+      "pe_value": 2882.75,
+      "pe_value_paid": 2882.75,
+      "source": "conta_month",
+      "month_sales": 201311.62
+    },
+    {
+      "date": "2011-09-30",
+      "all_data_avg": 2946.23,
+      "paid_only_avg": null,
+      "pe_value": 2221.17,
+      "pe_value_paid": 2221.17,
+      "source": "conta_month",
+      "month_sales": 88386.84
+    },
+    {
+      "date": "2011-10-31",
+      "all_data_avg": 4186.38,
+      "paid_only_avg": null,
+      "pe_value": 2650.57,
+      "pe_value_paid": 2650.57,
+      "source": "conta_month",
+      "month_sales": 129777.92
+    },
+    {
+      "date": "2011-11-30",
+      "all_data_avg": 6281.26,
+      "paid_only_avg": null,
+      "pe_value": 3270.42,
+      "pe_value_paid": 3270.42,
+      "source": "conta_month",
+      "month_sales": 188437.8
+    },
+    {
+      "date": "2011-12-31",
+      "all_data_avg": 8137.08,
+      "paid_only_avg": null,
+      "pe_value": 5228.23,
+      "pe_value_paid": 5228.23,
+      "source": "conta_month",
+      "month_sales": 252249.44
+    },
+    {
+      "date": "2012-01-31",
+      "all_data_avg": 5172.01,
+      "paid_only_avg": null,
+      "pe_value": 3424.82,
+      "pe_value_paid": 3424.82,
+      "source": "conta_month",
+      "month_sales": 160332.34
+    },
+    {
+      "date": "2012-02-29",
+      "all_data_avg": 6123.32,
+      "paid_only_avg": null,
+      "pe_value": 3388.65,
+      "pe_value_paid": 3388.65,
+      "source": "conta_month",
+      "month_sales": 177576.17
+    },
+    {
+      "date": "2012-03-31",
+      "all_data_avg": 5907.83,
+      "paid_only_avg": null,
+      "pe_value": 3275.98,
+      "pe_value_paid": 3275.98,
+      "source": "conta_month",
+      "month_sales": 183142.66
+    },
+    {
+      "date": "2012-04-30",
+      "all_data_avg": 4630.23,
+      "paid_only_avg": null,
+      "pe_value": 3397.73,
+      "pe_value_paid": 3397.73,
+      "source": "conta_month",
+      "month_sales": 138906.88
+    },
+    {
+      "date": "2012-05-31",
+      "all_data_avg": 3500.84,
+      "paid_only_avg": null,
+      "pe_value": 2863.75,
+      "pe_value_paid": 2863.75,
+      "source": "conta_month",
+      "month_sales": 108526.06
+    },
+    {
+      "date": "2012-06-30",
+      "all_data_avg": 4301.59,
+      "paid_only_avg": null,
+      "pe_value": 2775.23,
+      "pe_value_paid": 2775.23,
+      "source": "conta_month",
+      "month_sales": 129047.56
+    },
+    {
+      "date": "2012-07-31",
+      "all_data_avg": 8624.63,
+      "paid_only_avg": null,
+      "pe_value": 4298.87,
+      "pe_value_paid": 4298.87,
+      "source": "conta_month",
+      "month_sales": 267363.54
+    },
+    {
+      "date": "2012-08-31",
+      "all_data_avg": 8542.76,
+      "paid_only_avg": null,
+      "pe_value": 4141.81,
+      "pe_value_paid": 4141.81,
+      "source": "conta_month",
+      "month_sales": 264825.42
+    },
+    {
+      "date": "2012-09-30",
+      "all_data_avg": 3334.57,
+      "paid_only_avg": null,
+      "pe_value": 3039.85,
+      "pe_value_paid": 3039.85,
+      "source": "conta_month",
+      "month_sales": 100037.2
+    },
+    {
+      "date": "2012-10-31",
+      "all_data_avg": 4159.14,
+      "paid_only_avg": null,
+      "pe_value": 3166.69,
+      "pe_value_paid": 3166.69,
+      "source": "conta_month",
+      "month_sales": 128933.4
+    },
+    {
+      "date": "2012-11-30",
+      "all_data_avg": 6917.68,
+      "paid_only_avg": null,
+      "pe_value": 4224.29,
+      "pe_value_paid": 4224.29,
+      "source": "conta_month",
+      "month_sales": 207530.53
+    },
+    {
+      "date": "2012-12-31",
+      "all_data_avg": 8878.32,
+      "paid_only_avg": null,
+      "pe_value": 5234.42,
+      "pe_value_paid": 5234.42,
+      "source": "conta_month",
+      "month_sales": 275227.78
+    },
+    {
+      "date": "2013-01-31",
+      "all_data_avg": 4948.95,
+      "paid_only_avg": null,
+      "pe_value": 2784.88,
+      "pe_value_paid": 2784.88,
+      "source": "conta_month",
+      "month_sales": 153417.47
+    },
+    {
+      "date": "2013-02-28",
+      "all_data_avg": 6247.35,
+      "paid_only_avg": null,
+      "pe_value": 3613.36,
+      "pe_value_paid": 3613.36,
+      "source": "conta_month",
+      "month_sales": 174925.88
+    },
+    {
+      "date": "2013-03-31",
+      "all_data_avg": 4971.87,
+      "paid_only_avg": null,
+      "pe_value": 3576.16,
+      "pe_value_paid": 3576.16,
+      "source": "conta_month",
+      "month_sales": 154128.12
+    },
+    {
+      "date": "2013-04-30",
+      "all_data_avg": 3678.52,
+      "paid_only_avg": null,
+      "pe_value": 3991.32,
+      "pe_value_paid": 3991.32,
+      "source": "conta_month",
+      "month_sales": 110355.6
+    },
+    {
+      "date": "2013-05-31",
+      "all_data_avg": 2934.11,
+      "paid_only_avg": null,
+      "pe_value": 3266.16,
+      "pe_value_paid": 3266.16,
+      "source": "conta_month",
+      "month_sales": 90957.26
+    },
+    {
+      "date": "2013-06-30",
+      "all_data_avg": 3492.02,
+      "paid_only_avg": null,
+      "pe_value": 3163.24,
+      "pe_value_paid": 3163.24,
+      "source": "conta_month",
+      "month_sales": 104760.74
+    },
+    {
+      "date": "2013-07-31",
+      "all_data_avg": 7072.01,
+      "paid_only_avg": null,
+      "pe_value": 4495.32,
+      "pe_value_paid": 4495.32,
+      "source": "conta_month",
+      "month_sales": 219232.27
+    },
+    {
+      "date": "2013-08-31",
+      "all_data_avg": 6588.08,
+      "paid_only_avg": null,
+      "pe_value": 3498.18,
+      "pe_value_paid": 3498.18,
+      "source": "conta_month",
+      "month_sales": 204230.41
+    },
+    {
+      "date": "2013-09-30",
+      "all_data_avg": 2659.64,
+      "paid_only_avg": null,
+      "pe_value": 3640.36,
+      "pe_value_paid": 3640.36,
+      "source": "conta_month",
+      "month_sales": 79789.31
+    },
+    {
+      "date": "2013-10-31",
+      "all_data_avg": 3425.24,
+      "paid_only_avg": null,
+      "pe_value": 3752.28,
+      "pe_value_paid": 3752.28,
+      "source": "conta_month",
+      "month_sales": 106182.4
+    },
+    {
+      "date": "2013-11-30",
+      "all_data_avg": 4402.41,
+      "paid_only_avg": null,
+      "pe_value": 4195.63,
+      "pe_value_paid": 4195.63,
+      "source": "conta_month",
+      "month_sales": 132072.45
+    },
+    {
+      "date": "2013-12-31",
+      "all_data_avg": 8576.01,
+      "paid_only_avg": null,
+      "pe_value": 4768.69,
+      "pe_value_paid": 4768.69,
+      "source": "conta_month",
+      "month_sales": 265856.41
+    },
+    {
+      "date": "2014-01-31",
+      "all_data_avg": 3283.91,
+      "paid_only_avg": null,
+      "pe_value": 3628.71,
+      "pe_value_paid": 3628.71,
+      "source": "conta_month",
+      "month_sales": 101801.06
+    },
+    {
+      "date": "2014-02-28",
+      "all_data_avg": 5970.03,
+      "paid_only_avg": null,
+      "pe_value": 4053.82,
+      "pe_value_paid": 4053.82,
+      "source": "conta_month",
+      "month_sales": 167160.84
+    },
+    {
+      "date": "2014-03-31",
+      "all_data_avg": 5014.17,
+      "paid_only_avg": null,
+      "pe_value": 4100.93,
+      "pe_value_paid": 4100.93,
+      "source": "conta_month",
+      "month_sales": 155439.29
+    },
+    {
+      "date": "2014-04-30",
+      "all_data_avg": 4677.52,
+      "paid_only_avg": null,
+      "pe_value": 2597.52,
+      "pe_value_paid": 2597.52,
+      "source": "conta_month",
+      "month_sales": 140325.46
+    },
+    {
+      "date": "2014-05-31",
+      "all_data_avg": 4574.48,
+      "paid_only_avg": null,
+      "pe_value": 3384.89,
+      "pe_value_paid": 3384.89,
+      "source": "conta_month",
+      "month_sales": 141808.82
+    },
+    {
+      "date": "2014-06-30",
+      "all_data_avg": 5347.68,
+      "paid_only_avg": null,
+      "pe_value": 3286.59,
+      "pe_value_paid": 3286.59,
+      "source": "conta_month",
+      "month_sales": 160430.45
+    },
+    {
+      "date": "2014-07-31",
+      "all_data_avg": 7654.6,
+      "paid_only_avg": null,
+      "pe_value": 4022.79,
+      "pe_value_paid": 4022.79,
+      "source": "conta_month",
+      "month_sales": 237292.46
+    },
+    {
+      "date": "2014-08-31",
+      "all_data_avg": 6924.75,
+      "paid_only_avg": null,
+      "pe_value": 4628.92,
+      "pe_value_paid": 4628.92,
+      "source": "conta_month",
+      "month_sales": 214667.22
+    },
+    {
+      "date": "2014-09-30",
+      "all_data_avg": 3956.48,
+      "paid_only_avg": null,
+      "pe_value": 4581.37,
+      "pe_value_paid": 4581.37,
+      "source": "conta_month",
+      "month_sales": 118694.26
+    },
+    {
+      "date": "2014-10-31",
+      "all_data_avg": 3492.35,
+      "paid_only_avg": null,
+      "pe_value": 5215.17,
+      "pe_value_paid": 5215.17,
+      "source": "conta_month",
+      "month_sales": 108262.77
+    },
+    {
+      "date": "2014-11-30",
+      "all_data_avg": 6010.84,
+      "paid_only_avg": null,
+      "pe_value": 4143.21,
+      "pe_value_paid": 4143.21,
+      "source": "conta_month",
+      "month_sales": 180325.31
+    },
+    {
+      "date": "2014-12-31",
+      "all_data_avg": 6595.55,
+      "paid_only_avg": null,
+      "pe_value": 5237.23,
+      "pe_value_paid": 5237.23,
+      "source": "conta_month",
+      "month_sales": 204462.18
+    },
+    {
+      "date": "2015-01-31",
+      "all_data_avg": 4410.85,
+      "paid_only_avg": null,
+      "pe_value": 5411.28,
+      "pe_value_paid": 5411.28,
+      "source": "conta_month",
+      "month_sales": 136736.24
+    },
+    {
+      "date": "2015-02-28",
+      "all_data_avg": 3989.66,
+      "paid_only_avg": null,
+      "pe_value": 7164.5,
+      "pe_value_paid": 7164.5,
+      "source": "conta_month",
+      "month_sales": 111710.42
+    },
+    {
+      "date": "2015-03-31",
+      "all_data_avg": 3470.38,
+      "paid_only_avg": null,
+      "pe_value": 5564.01,
+      "pe_value_paid": 5564.01,
+      "source": "conta_month",
+      "month_sales": 107581.85
+    },
+    {
+      "date": "2015-04-30",
+      "all_data_avg": 6311.13,
+      "paid_only_avg": null,
+      "pe_value": 3339.97,
+      "pe_value_paid": 3339.97,
+      "source": "conta_month",
+      "month_sales": 189333.83
+    },
+    {
+      "date": "2015-05-31",
+      "all_data_avg": 4774.64,
+      "paid_only_avg": null,
+      "pe_value": 5315.39,
+      "pe_value_paid": 5315.39,
+      "source": "conta_month",
+      "month_sales": 148013.87
+    },
+    {
+      "date": "2015-06-30",
+      "all_data_avg": 6474.7,
+      "paid_only_avg": null,
+      "pe_value": 4422.47,
+      "pe_value_paid": 4422.47,
+      "source": "conta_month",
+      "month_sales": 194240.91
+    },
+    {
+      "date": "2015-07-31",
+      "all_data_avg": 7844.91,
+      "paid_only_avg": null,
+      "pe_value": 4169.96,
+      "pe_value_paid": 4169.96,
+      "source": "conta_month",
+      "month_sales": 243192.14
+    },
+    {
+      "date": "2015-08-31",
+      "all_data_avg": 7433.68,
+      "paid_only_avg": null,
+      "pe_value": 4239.26,
+      "pe_value_paid": 4239.26,
+      "source": "conta_month",
+      "month_sales": 230444.22
+    },
+    {
+      "date": "2015-09-30",
+      "all_data_avg": 4454.49,
+      "paid_only_avg": null,
+      "pe_value": 3719.27,
+      "pe_value_paid": 3719.27,
+      "source": "conta_month",
+      "month_sales": 133634.74
+    },
+    {
+      "date": "2015-10-31",
+      "all_data_avg": 3817.26,
+      "paid_only_avg": null,
+      "pe_value": 5304.36,
+      "pe_value_paid": 5304.36,
+      "source": "conta_month",
+      "month_sales": 118335.07
+    },
+    {
+      "date": "2015-11-30",
+      "all_data_avg": 7075.15,
+      "paid_only_avg": null,
+      "pe_value": 4767.08,
+      "pe_value_paid": 4767.08,
+      "source": "conta_month",
+      "month_sales": 212254.53
+    },
+    {
+      "date": "2015-12-31",
+      "all_data_avg": 7910.73,
+      "paid_only_avg": null,
+      "pe_value": 7868.72,
+      "pe_value_paid": 7868.72,
+      "source": "conta_month",
+      "month_sales": 245232.59
+    },
+    {
+      "date": "2016-01-31",
+      "all_data_avg": 5327.94,
+      "paid_only_avg": null,
+      "pe_value": 3731.13,
+      "pe_value_paid": 3731.13,
+      "source": "conta_month",
+      "month_sales": 165166.07
+    },
+    {
+      "date": "2016-02-29",
+      "all_data_avg": 4383.99,
+      "paid_only_avg": null,
+      "pe_value": 5299.53,
+      "pe_value_paid": 5299.53,
+      "source": "conta_month",
+      "month_sales": 127135.62
+    },
+    {
+      "date": "2016-03-31",
+      "all_data_avg": 5643.08,
+      "paid_only_avg": null,
+      "pe_value": 2889.17,
+      "pe_value_paid": 2889.17,
+      "source": "conta_month",
+      "month_sales": 174935.46
+    },
+    {
+      "date": "2016-04-30",
+      "all_data_avg": 3488.05,
+      "paid_only_avg": null,
+      "pe_value": 3238.85,
+      "pe_value_paid": 3238.85,
+      "source": "conta_month",
+      "month_sales": 104641.54
+    },
+    {
+      "date": "2016-05-31",
+      "all_data_avg": 4708.77,
+      "paid_only_avg": null,
+      "pe_value": 3243.84,
+      "pe_value_paid": 3243.84,
+      "source": "conta_month",
+      "month_sales": 145971.73
+    },
+    {
+      "date": "2016-06-30",
+      "all_data_avg": 6128.5,
+      "paid_only_avg": null,
+      "pe_value": 3803.8,
+      "pe_value_paid": 3803.8,
+      "source": "conta_month",
+      "month_sales": 183855.08
+    },
+    {
+      "date": "2016-07-31",
+      "all_data_avg": 8274.35,
+      "paid_only_avg": null,
+      "pe_value": 4082.3,
+      "pe_value_paid": 4082.3,
+      "source": "conta_month",
+      "month_sales": 256504.72
+    },
+    {
+      "date": "2016-08-31",
+      "all_data_avg": 7451.77,
+      "paid_only_avg": null,
+      "pe_value": 3774.31,
+      "pe_value_paid": 3774.31,
+      "source": "conta_month",
+      "month_sales": 231004.76
+    },
+    {
+      "date": "2016-09-30",
+      "all_data_avg": 5609.36,
+      "paid_only_avg": null,
+      "pe_value": 3387.58,
+      "pe_value_paid": 3387.58,
+      "source": "conta_month",
+      "month_sales": 168280.78
+    },
+    {
+      "date": "2016-10-31",
+      "all_data_avg": 5073.74,
+      "paid_only_avg": null,
+      "pe_value": 3850.31,
+      "pe_value_paid": 3850.31,
+      "source": "conta_month",
+      "month_sales": 157285.93
+    },
+    {
+      "date": "2016-11-30",
+      "all_data_avg": 5897.43,
+      "paid_only_avg": null,
+      "pe_value": 3255.63,
+      "pe_value_paid": 3255.63,
+      "source": "conta_month",
+      "month_sales": 176922.99
+    },
+    {
+      "date": "2016-12-31",
+      "all_data_avg": 9391.78,
+      "paid_only_avg": null,
+      "pe_value": 5812.46,
+      "pe_value_paid": 5812.46,
+      "source": "conta_month",
+      "month_sales": 291145.16
+    },
+    {
+      "date": "2017-01-31",
+      "all_data_avg": 6396.66,
+      "paid_only_avg": null,
+      "pe_value": 4180.03,
+      "pe_value_paid": 4180.03,
+      "source": "conta_month",
+      "month_sales": 198296.4
+    },
+    {
+      "date": "2017-02-28",
+      "all_data_avg": 7901.87,
+      "paid_only_avg": null,
+      "pe_value": 3498.86,
+      "pe_value_paid": 3498.86,
+      "source": "conta_month",
+      "month_sales": 221252.26
+    },
+    {
+      "date": "2017-03-31",
+      "all_data_avg": 8159.44,
+      "paid_only_avg": null,
+      "pe_value": 4681.18,
+      "pe_value_paid": 4681.18,
+      "source": "conta_month",
+      "month_sales": 252942.61
+    },
+    {
+      "date": "2017-04-30",
+      "all_data_avg": 10124.65,
+      "paid_only_avg": null,
+      "pe_value": 5230.37,
+      "pe_value_paid": 5230.37,
+      "source": "conta_month",
+      "month_sales": 303739.36
+    },
+    {
+      "date": "2017-05-31",
+      "all_data_avg": 7708.15,
+      "paid_only_avg": null,
+      "pe_value": 4893.34,
+      "pe_value_paid": 4893.34,
+      "source": "conta_month",
+      "month_sales": 238952.62
+    },
+    {
+      "date": "2017-06-30",
+      "all_data_avg": 9306.29,
+      "paid_only_avg": null,
+      "pe_value": 5519.08,
+      "pe_value_paid": 5519.08,
+      "source": "conta_month",
+      "month_sales": 279188.82
+    },
+    {
+      "date": "2017-07-31",
+      "all_data_avg": 11162.27,
+      "paid_only_avg": null,
+      "pe_value": 6235.24,
+      "pe_value_paid": 6235.24,
+      "source": "conta_month",
+      "month_sales": 346030.25
+    },
+    {
+      "date": "2017-08-31",
+      "all_data_avg": 12134.67,
+      "paid_only_avg": null,
+      "pe_value": 6116.8,
+      "pe_value_paid": 6116.8,
+      "source": "conta_month",
+      "month_sales": 376174.92
+    },
+    {
+      "date": "2017-09-30",
+      "all_data_avg": 4329.39,
+      "paid_only_avg": null,
+      "pe_value": 3520.92,
+      "pe_value_paid": 3520.92,
+      "source": "conta_month",
+      "month_sales": 129881.6
+    },
+    {
+      "date": "2017-10-31",
+      "all_data_avg": 5048.17,
+      "paid_only_avg": null,
+      "pe_value": 5264.33,
+      "pe_value_paid": 5264.33,
+      "source": "conta_month",
+      "month_sales": 156493.25
+    },
+    {
+      "date": "2017-11-30",
+      "all_data_avg": 3542.06,
+      "paid_only_avg": null,
+      "pe_value": 3569.89,
+      "pe_value_paid": 3569.89,
+      "source": "conta_month",
+      "month_sales": 106261.68
+    },
+    {
+      "date": "2017-12-31",
+      "all_data_avg": 6834.7,
+      "paid_only_avg": null,
+      "pe_value": 6798.88,
+      "pe_value_paid": 6798.88,
+      "source": "conta_month",
+      "month_sales": 211875.58
+    },
+    {
+      "date": "2018-01-31",
+      "all_data_avg": 4899.05,
+      "paid_only_avg": null,
+      "pe_value": 4647.51,
+      "pe_value_paid": 4647.51,
+      "source": "conta_month",
+      "month_sales": 151870.46
+    },
+    {
+      "date": "2018-02-28",
+      "all_data_avg": 6102.01,
+      "paid_only_avg": null,
+      "pe_value": 4583.56,
+      "pe_value_paid": 4583.56,
+      "source": "conta_month",
+      "month_sales": 170856.22
+    },
+    {
+      "date": "2018-03-31",
+      "all_data_avg": 8923.64,
+      "paid_only_avg": null,
+      "pe_value": 5264.58,
+      "pe_value_paid": 5264.58,
+      "source": "conta_month",
+      "month_sales": 276632.95
+    },
+    {
+      "date": "2018-04-30",
+      "all_data_avg": 6405.63,
+      "paid_only_avg": null,
+      "pe_value": 4795.5,
+      "pe_value_paid": 4795.5,
+      "source": "conta_month",
+      "month_sales": 192168.94
+    },
+    {
+      "date": "2018-05-31",
+      "all_data_avg": 5255.37,
+      "paid_only_avg": null,
+      "pe_value": 5958.63,
+      "pe_value_paid": 5958.63,
+      "source": "conta_month",
+      "month_sales": 162916.53
+    },
+    {
+      "date": "2018-06-30",
+      "all_data_avg": 6580.19,
+      "paid_only_avg": null,
+      "pe_value": 6741.97,
+      "pe_value_paid": 6741.97,
+      "source": "conta_month",
+      "month_sales": 197405.8
+    },
+    {
+      "date": "2018-07-31",
+      "all_data_avg": 8701.18,
+      "paid_only_avg": null,
+      "pe_value": 5464.85,
+      "pe_value_paid": 5464.85,
+      "source": "conta_month",
+      "month_sales": 269736.58
+    },
+    {
+      "date": "2018-08-31",
+      "all_data_avg": 8839.08,
+      "paid_only_avg": null,
+      "pe_value": 6569.05,
+      "pe_value_paid": 6569.05,
+      "source": "conta_month",
+      "month_sales": 274011.41
+    },
+    {
+      "date": "2018-09-30",
+      "all_data_avg": 4934.88,
+      "paid_only_avg": null,
+      "pe_value": 4107.14,
+      "pe_value_paid": 4107.14,
+      "source": "conta_month",
+      "month_sales": 148046.34
+    },
+    {
+      "date": "2018-10-31",
+      "all_data_avg": 3516.22,
+      "paid_only_avg": null,
+      "pe_value": 3505.41,
+      "pe_value_paid": 3505.41,
+      "source": "conta_month",
+      "month_sales": 109002.82
+    },
+    {
+      "date": "2018-11-30",
+      "all_data_avg": 3739.54,
+      "paid_only_avg": null,
+      "pe_value": 3843.34,
+      "pe_value_paid": 3843.34,
+      "source": "conta_month",
+      "month_sales": 112186.13
+    },
+    {
+      "date": "2018-12-31",
+      "all_data_avg": 3804.16,
+      "paid_only_avg": null,
+      "pe_value": 5034.6,
+      "pe_value_paid": 5034.6,
+      "source": "conta_month",
+      "month_sales": 117928.98
+    },
+    {
+      "date": "2019-01-31",
+      "all_data_avg": 2664.9,
+      "paid_only_avg": null,
+      "pe_value": 6132.35,
+      "pe_value_paid": 6132.35,
+      "source": "conta_month",
+      "month_sales": 82611.9
+    },
+    {
+      "date": "2019-02-28",
+      "all_data_avg": 4734.55,
+      "paid_only_avg": null,
+      "pe_value": 3772.56,
+      "pe_value_paid": 3772.56,
+      "source": "conta_month",
+      "month_sales": 132567.43
+    },
+    {
+      "date": "2019-03-31",
+      "all_data_avg": 5084.0,
+      "paid_only_avg": null,
+      "pe_value": 4333.87,
+      "pe_value_paid": 4333.87,
+      "source": "conta_month",
+      "month_sales": 157604.06
+    },
+    {
+      "date": "2019-04-30",
+      "all_data_avg": 4473.88,
+      "paid_only_avg": null,
+      "pe_value": 4713.17,
+      "pe_value_paid": 4713.17,
+      "source": "conta_month",
+      "month_sales": 134216.51
+    },
+    {
+      "date": "2019-05-31",
+      "all_data_avg": 5442.7,
+      "paid_only_avg": null,
+      "pe_value": 3837.07,
+      "pe_value_paid": 3837.07,
+      "source": "conta_month",
+      "month_sales": 168723.71
+    },
+    {
+      "date": "2019-06-30",
+      "all_data_avg": 7191.75,
+      "paid_only_avg": null,
+      "pe_value": 3948.29,
+      "pe_value_paid": 3948.29,
+      "source": "conta_month",
+      "month_sales": 215752.47
+    },
+    {
+      "date": "2019-07-31",
+      "all_data_avg": 8277.07,
+      "paid_only_avg": null,
+      "pe_value": 4470.06,
+      "pe_value_paid": 4470.06,
+      "source": "conta_month",
+      "month_sales": 256589.31
+    },
+    {
+      "date": "2019-08-31",
+      "all_data_avg": 6294.66,
+      "paid_only_avg": null,
+      "pe_value": 3259.52,
+      "pe_value_paid": 3259.52,
+      "source": "conta_month",
+      "month_sales": 195134.4
+    },
+    {
+      "date": "2019-09-30",
+      "all_data_avg": 3820.5,
+      "paid_only_avg": null,
+      "pe_value": 2495.57,
+      "pe_value_paid": 2495.57,
+      "source": "conta_month",
+      "month_sales": 114615.04
+    },
+    {
+      "date": "2019-10-31",
+      "all_data_avg": 3497.41,
+      "paid_only_avg": null,
+      "pe_value": 2901.36,
+      "pe_value_paid": 2901.36,
+      "source": "conta_month",
+      "month_sales": 108419.66
+    },
+    {
+      "date": "2019-11-30",
+      "all_data_avg": 3249.49,
+      "paid_only_avg": null,
+      "pe_value": 2033.06,
+      "pe_value_paid": 2033.06,
+      "source": "conta_month",
+      "month_sales": 97484.63
+    },
+    {
+      "date": "2019-12-31",
+      "all_data_avg": 4009.71,
+      "paid_only_avg": null,
+      "pe_value": 2730.1,
+      "pe_value_paid": 2730.1,
+      "source": "conta_month",
+      "month_sales": 124301.1
+    },
+    {
+      "date": "2020-01-31",
+      "all_data_avg": 2802.14,
+      "paid_only_avg": null,
+      "pe_value": 2205.09,
+      "pe_value_paid": 2205.09,
+      "source": "conta_month",
+      "month_sales": 86866.39
+    },
+    {
+      "date": "2020-02-29",
+      "all_data_avg": 3281.34,
+      "paid_only_avg": null,
+      "pe_value": 2598.1,
+      "pe_value_paid": 2598.1,
+      "source": "conta_month",
+      "month_sales": 95158.95
+    },
+    {
+      "date": "2020-03-31",
+      "all_data_avg": 2005.44,
+      "paid_only_avg": null,
+      "pe_value": 2785.76,
+      "pe_value_paid": 2785.76,
+      "source": "conta_month",
+      "month_sales": 62168.78
+    },
+    {
+      "date": "2020-04-30",
+      "all_data_avg": 6.3,
+      "paid_only_avg": null,
+      "pe_value": 222.32,
+      "pe_value_paid": 222.32,
+      "source": "conta_month",
+      "month_sales": 189.09
+    },
+    {
+      "date": "2020-05-31",
+      "all_data_avg": 3.54,
+      "paid_only_avg": null,
+      "pe_value": 202.98,
+      "pe_value_paid": 202.98,
+      "source": "conta_month",
+      "month_sales": 109.63
+    },
+    {
+      "date": "2020-06-30",
+      "all_data_avg": 3.61,
+      "paid_only_avg": null,
+      "pe_value": 186.5,
+      "pe_value_paid": 186.5,
+      "source": "conta_month",
+      "month_sales": 108.38
+    },
+    {
+      "date": "2020-07-31",
+      "all_data_avg": 31.23,
+      "paid_only_avg": null,
+      "pe_value": 616.53,
+      "pe_value_paid": 616.53,
+      "source": "conta_month",
+      "month_sales": 968.24
+    },
+    {
+      "date": "2020-08-31",
+      "all_data_avg": 49.54,
+      "paid_only_avg": null,
+      "pe_value": 2501.55,
+      "pe_value_paid": 2501.55,
+      "source": "conta_month",
+      "month_sales": 1535.86
+    },
+    {
+      "date": "2020-09-30",
+      "all_data_avg": 4.74,
+      "paid_only_avg": null,
+      "pe_value": 363.02,
+      "pe_value_paid": 363.02,
+      "source": "conta_month",
+      "month_sales": 142.11
+    },
+    {
+      "date": "2020-10-31",
+      "all_data_avg": 52.2,
+      "paid_only_avg": null,
+      "pe_value": 902.99,
+      "pe_value_paid": 902.99,
+      "source": "conta_month",
+      "month_sales": 1618.21
+    },
+    {
+      "date": "2020-11-30",
+      "all_data_avg": 1366.49,
+      "paid_only_avg": null,
+      "pe_value": 431.46,
+      "pe_value_paid": 431.46,
+      "source": "conta_month",
+      "month_sales": 40994.64
+    },
+    {
+      "date": "2020-12-31",
+      "all_data_avg": 3654.79,
+      "paid_only_avg": null,
+      "pe_value": 1395.71,
+      "pe_value_paid": 1395.71,
+      "source": "conta_month",
+      "month_sales": 113298.35
+    },
+    {
+      "date": "2021-01-31",
+      "all_data_avg": 533.62,
+      "paid_only_avg": null,
+      "pe_value": 1166.27,
+      "pe_value_paid": 1166.27,
+      "source": "conta_month",
+      "month_sales": 16542.17
+    },
+    {
+      "date": "2021-02-28",
+      "all_data_avg": 148.34,
+      "paid_only_avg": null,
+      "pe_value": 767.41,
+      "pe_value_paid": 767.41,
+      "source": "conta_month",
+      "month_sales": 4153.57
+    },
+    {
+      "date": "2021-03-31",
+      "all_data_avg": 119.55,
+      "paid_only_avg": null,
+      "pe_value": 480.58,
+      "pe_value_paid": 480.58,
+      "source": "conta_month",
+      "month_sales": 3706.04
+    },
+    {
+      "date": "2021-04-30",
+      "all_data_avg": 316.17,
+      "paid_only_avg": null,
+      "pe_value": 2016.23,
+      "pe_value_paid": 2016.23,
+      "source": "conta_month",
+      "month_sales": 9484.96
+    },
+    {
+      "date": "2021-05-31",
+      "all_data_avg": 393.14,
+      "paid_only_avg": null,
+      "pe_value": 396.44,
+      "pe_value_paid": 396.44,
+      "source": "conta_month",
+      "month_sales": 12187.45
+    },
+    {
+      "date": "2021-06-30",
+      "all_data_avg": 525.74,
+      "paid_only_avg": null,
+      "pe_value": 1091.08,
+      "pe_value_paid": 1091.08,
+      "source": "conta_month",
+      "month_sales": 15772.07
+    },
+    {
+      "date": "2021-07-31",
+      "all_data_avg": 768.83,
+      "paid_only_avg": null,
+      "pe_value": 1072.66,
+      "pe_value_paid": 1072.66,
+      "source": "conta_month",
+      "month_sales": 23833.84
+    },
+    {
+      "date": "2021-08-31",
+      "all_data_avg": 223.06,
+      "paid_only_avg": null,
+      "pe_value": 1007.43,
+      "pe_value_paid": 1007.43,
+      "source": "conta_month",
+      "month_sales": 6914.94
+    },
+    {
+      "date": "2021-09-30",
+      "all_data_avg": 280.7,
+      "paid_only_avg": null,
+      "pe_value": 1097.91,
+      "pe_value_paid": 1097.91,
+      "source": "conta_month",
+      "month_sales": 8420.99
+    },
+    {
+      "date": "2021-10-31",
+      "all_data_avg": 392.84,
+      "paid_only_avg": null,
+      "pe_value": 1493.18,
+      "pe_value_paid": 1493.18,
+      "source": "conta_month",
+      "month_sales": 12177.97
+    },
+    {
+      "date": "2021-11-30",
+      "all_data_avg": 1960.64,
+      "paid_only_avg": null,
+      "pe_value": 2237.11,
+      "pe_value_paid": 2237.11,
+      "source": "conta_month",
+      "month_sales": 58819.32
+    },
+    {
+      "date": "2021-12-31",
+      "all_data_avg": 4741.68,
+      "paid_only_avg": null,
+      "pe_value": 3914.19,
+      "pe_value_paid": 3914.19,
+      "source": "conta_month",
+      "month_sales": 146991.98
+    },
+    {
+      "date": "2022-01-31",
+      "all_data_avg": 1698.38,
+      "paid_only_avg": null,
+      "pe_value": 1383.37,
+      "pe_value_paid": 1383.37,
+      "source": "conta_month",
+      "month_sales": 52649.7
+    },
+    {
+      "date": "2022-02-28",
+      "all_data_avg": 2104.11,
+      "paid_only_avg": null,
+      "pe_value": 2107.94,
+      "pe_value_paid": 2107.94,
+      "source": "conta_month",
+      "month_sales": 58915.19
+    },
+    {
+      "date": "2022-03-31",
+      "all_data_avg": 2153.65,
+      "paid_only_avg": null,
+      "pe_value": 2458.8,
+      "pe_value_paid": 2458.8,
+      "source": "conta_month",
+      "month_sales": 66763.04
+    },
+    {
+      "date": "2022-04-30",
+      "all_data_avg": 3054.29,
+      "paid_only_avg": null,
+      "pe_value": 3952.08,
+      "pe_value_paid": 3952.08,
+      "source": "conta_month",
+      "month_sales": 91628.81
+    },
+    {
+      "date": "2022-05-31",
+      "all_data_avg": 2940.62,
+      "paid_only_avg": null,
+      "pe_value": 2498.17,
+      "pe_value_paid": 2498.17,
+      "source": "conta_month",
+      "month_sales": 91159.22
+    },
+    {
+      "date": "2022-06-30",
+      "all_data_avg": 4717.38,
+      "paid_only_avg": null,
+      "pe_value": 4925.95,
+      "pe_value_paid": 4925.95,
+      "source": "conta_month",
+      "month_sales": 141521.26
+    },
+    {
+      "date": "2022-07-31",
+      "all_data_avg": 4948.94,
+      "paid_only_avg": null,
+      "pe_value": 4004.28,
+      "pe_value_paid": 4004.28,
+      "source": "conta_month",
+      "month_sales": 153417.19
+    },
+    {
+      "date": "2022-08-31",
+      "all_data_avg": 5344.16,
+      "paid_only_avg": null,
+      "pe_value": 4518.61,
+      "pe_value_paid": 4518.61,
+      "source": "conta_month",
+      "month_sales": 165669.04
+    },
+    {
+      "date": "2022-09-30",
+      "all_data_avg": 2815.31,
+      "paid_only_avg": null,
+      "pe_value": 2576.87,
+      "pe_value_paid": 2576.87,
+      "source": "conta_month",
+      "month_sales": 84459.25
+    },
+    {
+      "date": "2022-10-31",
+      "all_data_avg": 1528.54,
+      "paid_only_avg": null,
+      "pe_value": 4024.41,
+      "pe_value_paid": 4024.41,
+      "source": "conta_month",
+      "month_sales": 47384.59
+    },
+    {
+      "date": "2022-11-30",
+      "all_data_avg": 2385.29,
+      "paid_only_avg": null,
+      "pe_value": 2553.14,
+      "pe_value_paid": 2553.14,
+      "source": "conta_month",
+      "month_sales": 71558.61
+    },
+    {
+      "date": "2022-12-31",
+      "all_data_avg": 3847.75,
+      "paid_only_avg": null,
+      "pe_value": 2864.93,
+      "pe_value_paid": 2864.93,
+      "source": "conta_month",
+      "month_sales": 119280.24
+    },
+    {
+      "date": "2023-01-31",
+      "all_data_avg": 1388.23,
+      "paid_only_avg": null,
+      "pe_value": 2156.37,
+      "pe_value_paid": 2156.37,
+      "source": "conta_month",
+      "month_sales": 43035.19
+    },
+    {
+      "date": "2023-02-28",
+      "all_data_avg": 1757.33,
+      "paid_only_avg": null,
+      "pe_value": 2020.54,
+      "pe_value_paid": 2020.54,
+      "source": "conta_month",
+      "month_sales": 49205.31
+    },
+    {
+      "date": "2023-03-31",
+      "all_data_avg": 1502.4,
+      "paid_only_avg": null,
+      "pe_value": 2029.58,
+      "pe_value_paid": 2029.58,
+      "source": "conta_month",
+      "month_sales": 46574.32
+    },
+    {
+      "date": "2023-04-30",
+      "all_data_avg": 2486.5,
+      "paid_only_avg": null,
+      "pe_value": 1558.6,
+      "pe_value_paid": 1558.6,
+      "source": "conta_month",
+      "month_sales": 74595.07
+    },
+    {
+      "date": "2023-05-31",
+      "all_data_avg": 1945.96,
+      "paid_only_avg": null,
+      "pe_value": 1867.66,
+      "pe_value_paid": 1867.66,
+      "source": "conta_month",
+      "month_sales": 60324.82
+    },
+    {
+      "date": "2023-06-30",
+      "all_data_avg": 2246.13,
+      "paid_only_avg": null,
+      "pe_value": 1916.93,
+      "pe_value_paid": 1916.93,
+      "source": "conta_month",
+      "month_sales": 67383.88
+    },
+    {
+      "date": "2023-07-31",
+      "all_data_avg": 4052.16,
+      "paid_only_avg": null,
+      "pe_value": 2392.61,
+      "pe_value_paid": 2392.61,
+      "source": "conta_month",
+      "month_sales": 125617.0
+    },
+    {
+      "date": "2023-08-31",
+      "all_data_avg": 4152.54,
+      "paid_only_avg": null,
+      "pe_value": 2080.7,
+      "pe_value_paid": 2080.7,
+      "source": "conta_month",
+      "month_sales": 128728.89
+    },
+    {
+      "date": "2023-09-30",
+      "all_data_avg": 2362.11,
+      "paid_only_avg": null,
+      "pe_value": 2511.87,
+      "pe_value_paid": 2511.87,
+      "source": "conta_month",
+      "month_sales": 70863.42
+    },
+    {
+      "date": "2023-10-31",
+      "all_data_avg": 974.09,
+      "paid_only_avg": null,
+      "pe_value": 2341.87,
+      "pe_value_paid": 2341.87,
+      "source": "conta_month",
+      "month_sales": 30196.93
+    },
+    {
+      "date": "2023-11-30",
+      "all_data_avg": 1839.04,
+      "paid_only_avg": null,
+      "pe_value": 2341.56,
+      "pe_value_paid": 2341.56,
+      "source": "conta_month",
+      "month_sales": 55171.08
+    },
+    {
+      "date": "2023-12-31",
+      "all_data_avg": 2259.57,
+      "paid_only_avg": null,
+      "pe_value": 2838.71,
+      "pe_value_paid": 2838.71,
+      "source": "conta_month",
+      "month_sales": 70046.53
+    },
+    {
+      "date": "2024-01-31",
+      "all_data_avg": 917.47,
+      "paid_only_avg": null,
+      "pe_value": 3231.47,
+      "pe_value_paid": 3231.47,
+      "source": "conta_month",
+      "month_sales": 28441.55
+    },
+    {
+      "date": "2024-02-29",
+      "all_data_avg": 1115.89,
+      "paid_only_avg": null,
+      "pe_value": 6958.75,
+      "pe_value_paid": 6958.75,
+      "source": "conta_month",
+      "month_sales": 32360.78
+    },
+    {
+      "date": "2024-03-31",
+      "all_data_avg": 755.23,
+      "paid_only_avg": null,
+      "pe_value": 2533.84,
+      "pe_value_paid": 2533.84,
+      "source": "conta_month",
+      "month_sales": 23412.0
+    },
+    {
+      "date": "2024-04-30",
+      "all_data_avg": 1626.81,
+      "paid_only_avg": null,
+      "pe_value": 2748.03,
+      "pe_value_paid": 2748.03,
+      "source": "conta_month",
+      "month_sales": 48804.38
+    },
+    {
+      "date": "2024-05-31",
+      "all_data_avg": 1128.47,
+      "paid_only_avg": null,
+      "pe_value": 2776.22,
+      "pe_value_paid": 2776.22,
+      "source": "conta_month",
+      "month_sales": 34982.65
+    },
+    {
+      "date": "2024-06-30",
+      "all_data_avg": 2206.54,
+      "paid_only_avg": null,
+      "pe_value": 2374.44,
+      "pe_value_paid": 2374.44,
+      "source": "conta_month",
+      "month_sales": 66196.29
+    },
+    {
+      "date": "2024-07-31",
+      "all_data_avg": 3021.34,
+      "paid_only_avg": null,
+      "pe_value": 3067.08,
+      "pe_value_paid": 3067.08,
+      "source": "conta_month",
+      "month_sales": 93661.64
+    },
+    {
+      "date": "2024-08-31",
+      "all_data_avg": 2424.42,
+      "paid_only_avg": null,
+      "pe_value": 2093.96,
+      "pe_value_paid": 2093.96,
+      "source": "conta_month",
+      "month_sales": 75157.06
+    },
+    {
+      "date": "2024-09-30",
+      "all_data_avg": 1418.97,
+      "paid_only_avg": null,
+      "pe_value": 2445.06,
+      "pe_value_paid": 2445.06,
+      "source": "conta_month",
+      "month_sales": 42568.96
+    },
+    {
+      "date": "2024-10-31",
+      "all_data_avg": 1217.84,
+      "paid_only_avg": null,
+      "pe_value": 2472.65,
+      "pe_value_paid": 2472.65,
+      "source": "conta_month",
+      "month_sales": 37753.08
+    },
+    {
+      "date": "2024-11-30",
+      "all_data_avg": 1159.56,
+      "paid_only_avg": null,
+      "pe_value": 2307.27,
+      "pe_value_paid": 2307.27,
+      "source": "conta_month",
+      "month_sales": 34786.9
+    },
+    {
+      "date": "2024-12-31",
+      "all_data_avg": 1463.67,
+      "paid_only_avg": null,
+      "pe_value": 2380.19,
+      "pe_value_paid": 2380.19,
+      "source": "conta_month",
+      "month_sales": 45373.77
+    },
+    {
+      "date": "2025-01-31",
+      "all_data_avg": 659.52,
+      "paid_only_avg": null,
+      "pe_value": 2588.85,
+      "pe_value_paid": 2588.85,
+      "source": "conta_month",
+      "month_sales": 20445.21
+    },
+    {
+      "date": "2025-02-28",
+      "all_data_avg": 687.7,
+      "paid_only_avg": null,
+      "pe_value": 2532.01,
+      "pe_value_paid": 2532.01,
+      "source": "conta_month",
+      "month_sales": 19255.68
+    },
+    {
+      "date": "2025-03-31",
+      "all_data_avg": 1000.25,
+      "paid_only_avg": null,
+      "pe_value": 2384.46,
+      "pe_value_paid": 2384.46,
+      "source": "conta_month",
+      "month_sales": 31007.64
+    },
+    {
+      "date": "2025-04-30",
+      "all_data_avg": 1330.46,
+      "paid_only_avg": null,
+      "pe_value": 2595.0,
+      "pe_value_paid": 2595.0,
+      "source": "conta_month",
+      "month_sales": 39913.86
+    },
+    {
+      "date": "2025-05-31",
+      "all_data_avg": 1081.12,
+      "paid_only_avg": null,
+      "pe_value": 2534.96,
+      "pe_value_paid": 2534.96,
+      "source": "conta_month",
+      "month_sales": 33514.87
+    },
+    {
+      "date": "2025-06-30",
+      "all_data_avg": 2026.13,
+      "paid_only_avg": null,
+      "pe_value": 2628.7,
+      "pe_value_paid": 2628.7,
+      "source": "conta_month",
+      "month_sales": 60783.99
+    },
+    {
+      "date": "2025-07-31",
+      "all_data_avg": 2980.16,
+      "paid_only_avg": null,
+      "pe_value": 3427.03,
+      "pe_value_paid": 3427.03,
+      "source": "conta_month",
+      "month_sales": 92384.96
+    },
+    {
+      "date": "2025-08-31",
+      "all_data_avg": 2610.47,
+      "paid_only_avg": null,
+      "pe_value": 2581.02,
+      "pe_value_paid": 2581.02,
+      "source": "conta_month",
+      "month_sales": 80924.45
+    },
+    {
+      "date": "2025-09-30",
+      "all_data_avg": 586.28,
+      "paid_only_avg": null,
+      "pe_value": 1726.88,
+      "pe_value_paid": 1726.88,
+      "source": "conta_month",
+      "month_sales": 17588.3
+    },
+    {
+      "date": "2025-10-31",
+      "all_data_avg": 722.09,
+      "paid_only_avg": null,
+      "pe_value": 1795.93,
+      "pe_value_paid": 1795.93,
+      "source": "conta_month",
+      "month_sales": 22384.77
+    },
+    {
+      "date": "2025-11-30",
+      "all_data_avg": 872.56,
+      "paid_only_avg": null,
+      "pe_value": 1481.11,
+      "pe_value_paid": 1481.11,
+      "source": "conta_month",
+      "month_sales": 26176.66
+    },
+    {
+      "date": "2025-12-31",
+      "all_data_avg": 629.42,
+      "paid_only_avg": null,
+      "pe_value": 1487.37,
+      "pe_value_paid": 1487.37,
+      "source": "conta_month",
+      "month_sales": 19512.12
+    },
+    {
+      "date": "2026-01-02",
+      "all_data_avg": 26615.42,
+      "paid_only_avg": 9240.22,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-03",
+      "all_data_avg": 17873.07,
+      "paid_only_avg": 6389.12,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-08",
+      "all_data_avg": 7027.79,
+      "paid_only_avg": 2645.7,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-09",
+      "all_data_avg": 6398.7,
+      "paid_only_avg": null,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-12",
+      "all_data_avg": 4843.66,
+      "paid_only_avg": 1880.33,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-16",
+      "all_data_avg": 3876.01,
+      "paid_only_avg": 1454.68,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-18",
+      "all_data_avg": 3463.56,
+      "paid_only_avg": null,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-20",
+      "all_data_avg": 3451.21,
+      "paid_only_avg": 1208.39,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-21",
+      "all_data_avg": 3313.93,
+      "paid_only_avg": 1165.68,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-23",
+      "all_data_avg": 3130.43,
+      "paid_only_avg": 1085.13,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-24",
+      "all_data_avg": 3004.24,
+      "paid_only_avg": null,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-25",
+      "all_data_avg": 2884.57,
+      "paid_only_avg": 1021.66,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-27",
+      "all_data_avg": 2700.87,
+      "paid_only_avg": 966.67,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-01-28",
+      "all_data_avg": 2603.0,
+      "paid_only_avg": 948.92,
+      "pe_value": 1557.67,
+      "pe_value_paid": 1557.67,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-02-01",
+      "all_data_avg": 2138.57,
+      "paid_only_avg": 874.09,
+      "pe_value": 922.94,
+      "pe_value_paid": 922.94,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-02-07",
+      "all_data_avg": 1737.35,
+      "paid_only_avg": 728.1,
+      "pe_value": 922.94,
+      "pe_value_paid": 922.94,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-02-13",
+      "all_data_avg": 1412.53,
+      "paid_only_avg": 612.72,
+      "pe_value": 922.94,
+      "pe_value_paid": 922.94,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-02-15",
+      "all_data_avg": 1364.81,
+      "paid_only_avg": null,
+      "pe_value": 922.94,
+      "pe_value_paid": 922.94,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-02-23",
+      "all_data_avg": 1181.51,
+      "paid_only_avg": 501.63,
+      "pe_value": 922.94,
+      "pe_value_paid": 922.94,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-03-02",
+      "all_data_avg": 1106.8,
+      "paid_only_avg": 481.76,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-03-05",
+      "all_data_avg": 1063.9,
+      "paid_only_avg": 458.53,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-06",
+      "all_data_avg": 738.92,
+      "paid_only_avg": 358.04,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-08",
+      "all_data_avg": 744.18,
+      "paid_only_avg": 358.06,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-13",
+      "all_data_avg": 712.45,
+      "paid_only_avg": 352.01,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-14",
+      "all_data_avg": 697.57,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-16",
+      "all_data_avg": 723.87,
+      "paid_only_avg": 358.52,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-18",
+      "all_data_avg": 771.21,
+      "paid_only_avg": 372.62,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-21",
+      "all_data_avg": 756.44,
+      "paid_only_avg": 379.07,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-22",
+      "all_data_avg": 770.72,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-23",
+      "all_data_avg": 771.25,
+      "paid_only_avg": 374.4,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-24",
+      "all_data_avg": 769.86,
+      "paid_only_avg": 381.75,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-27",
+      "all_data_avg": 760.56,
+      "paid_only_avg": 372.59,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-04-30",
+      "all_data_avg": 768.12,
+      "paid_only_avg": 376.68,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-01",
+      "all_data_avg": 785.24,
+      "paid_only_avg": 389.77,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-02",
+      "all_data_avg": 778.11,
+      "paid_only_avg": 392.88,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-03",
+      "all_data_avg": 769.13,
+      "paid_only_avg": 393.37,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-04",
+      "all_data_avg": 0.0,
+      "paid_only_avg": 391.84,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-05",
+      "all_data_avg": 744.18,
+      "paid_only_avg": 392.58,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-06",
+      "all_data_avg": 737.85,
+      "paid_only_avg": 393.33,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-08",
+      "all_data_avg": 776.39,
+      "paid_only_avg": 396.24,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-10",
+      "all_data_avg": 770.57,
+      "paid_only_avg": 401.51,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-11",
+      "all_data_avg": 776.54,
+      "paid_only_avg": 415.33,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-13",
+      "all_data_avg": 806.72,
+      "paid_only_avg": 431.4,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-14",
+      "all_data_avg": 789.81,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-15",
+      "all_data_avg": 787.2,
+      "paid_only_avg": 412.82,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-17",
+      "all_data_avg": 801.81,
+      "paid_only_avg": 412.16,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-18",
+      "all_data_avg": 783.08,
+      "paid_only_avg": 417.93,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-19",
+      "all_data_avg": 777.66,
+      "paid_only_avg": 415.4,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-20",
+      "all_data_avg": 780.57,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-21",
+      "all_data_avg": 757.81,
+      "paid_only_avg": 410.89,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-22",
+      "all_data_avg": 769.17,
+      "paid_only_avg": 416.13,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-23",
+      "all_data_avg": 773.86,
+      "paid_only_avg": 417.75,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-25",
+      "all_data_avg": 793.79,
+      "paid_only_avg": 412.62,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-27",
+      "all_data_avg": 760.57,
+      "paid_only_avg": 409.33,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-30",
+      "all_data_avg": 752.02,
+      "paid_only_avg": 405.63,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-05-31",
+      "all_data_avg": 745.65,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-01",
+      "all_data_avg": 750.58,
+      "paid_only_avg": 402.96,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-02",
+      "all_data_avg": 730.34,
+      "paid_only_avg": 402.09,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-03",
+      "all_data_avg": 723.03,
+      "paid_only_avg": 398.57,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-08",
+      "all_data_avg": 690.14,
+      "paid_only_avg": 403.77,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-09",
+      "all_data_avg": 692.66,
+      "paid_only_avg": 401.18,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-10",
+      "all_data_avg": 685.86,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-11",
+      "all_data_avg": 682.12,
+      "paid_only_avg": 410.05,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-12",
+      "all_data_avg": 671.84,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-14",
+      "all_data_avg": 669.58,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-15",
+      "all_data_avg": 668.08,
+      "paid_only_avg": 402.23,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-16",
+      "all_data_avg": 671.06,
+      "paid_only_avg": 403.44,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-17",
+      "all_data_avg": 673.28,
+      "paid_only_avg": 405.38,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-21",
+      "all_data_avg": 644.72,
+      "paid_only_avg": 407.96,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-22",
+      "all_data_avg": 639.19,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-24",
+      "all_data_avg": 663.44,
+      "paid_only_avg": 411.55,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-25",
+      "all_data_avg": 655.95,
+      "paid_only_avg": 405.55,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-26",
+      "all_data_avg": 644.07,
+      "paid_only_avg": 433.02,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-06-29",
+      "all_data_avg": 625.92,
+      "paid_only_avg": 428.49,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-01",
+      "all_data_avg": 624.73,
+      "paid_only_avg": 423.98,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-02",
+      "all_data_avg": 639.3,
+      "paid_only_avg": 432.26,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-04",
+      "all_data_avg": 644.23,
+      "paid_only_avg": 431.27,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-05",
+      "all_data_avg": 645.89,
+      "paid_only_avg": 439.22,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-06",
+      "all_data_avg": 637.14,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-07",
+      "all_data_avg": 632.28,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-08",
+      "all_data_avg": 633.21,
+      "paid_only_avg": 435.19,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-10",
+      "all_data_avg": 619.67,
+      "paid_only_avg": 436.38,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-11",
+      "all_data_avg": 614.13,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-12",
+      "all_data_avg": 615.74,
+      "paid_only_avg": 441.19,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-13",
+      "all_data_avg": 615.27,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-16",
+      "all_data_avg": 594.75,
+      "paid_only_avg": 438.9,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-20",
+      "all_data_avg": 597.42,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-21",
+      "all_data_avg": 610.6,
+      "paid_only_avg": null,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-23",
+      "all_data_avg": 599.11,
+      "paid_only_avg": 423.99,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-24",
+      "all_data_avg": 603.72,
+      "paid_only_avg": 431.01,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-26",
+      "all_data_avg": 601.09,
+      "paid_only_avg": 442.58,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    },
+    {
+      "date": "2026-07-27",
+      "all_data_avg": 598.2,
+      "paid_only_avg": 440.45,
+      "pe_value": 1625.86,
+      "pe_value_paid": 1625.86,
+      "source": "data_log+conta"
+    }
+  ]
+}

@@ -1,0 +1,1757 @@
+{
+  "updated_at": "2026-07-31 12:16:19",
+  "months": {
+    "2008-01": {
+      "sales": 81253.09,
+      "cost": 68473.47,
+      "gross_profit": 12779.62,
+      "expense": 8706.76,
+      "other_income": 1433.43,
+      "net": 5506.29
+    },
+    "2008-02": {
+      "sales": 92796.34,
+      "cost": 76485.59,
+      "gross_profit": 16310.75,
+      "expense": 12074.46,
+      "other_income": 781.38,
+      "net": 5017.67
+    },
+    "2008-03": {
+      "sales": 58458.92,
+      "cost": 50353.1,
+      "gross_profit": 8105.82,
+      "expense": 11887.56,
+      "other_income": 745.99,
+      "net": -3035.75
+    },
+    "2008-04": {
+      "sales": 90935.85,
+      "cost": 69714.61,
+      "gross_profit": 21221.24,
+      "expense": 13427.25,
+      "other_income": 756.96,
+      "net": 8550.95
+    },
+    "2008-05": {
+      "sales": 42669.64,
+      "cost": 34394.58,
+      "gross_profit": 8275.06,
+      "expense": 9956.83,
+      "other_income": 691.7,
+      "net": -990.07
+    },
+    "2008-06": {
+      "sales": 43077.96,
+      "cost": 38318.67,
+      "gross_profit": 4759.29,
+      "expense": 9463.59,
+      "other_income": 712.45,
+      "net": -3991.85
+    },
+    "2008-07": {
+      "sales": 55310.37,
+      "cost": 47430.17,
+      "gross_profit": 7880.2,
+      "expense": 11227.95,
+      "other_income": 727.28,
+      "net": -2620.47
+    },
+    "2008-08": {
+      "sales": 58453.53,
+      "cost": 49814.83,
+      "gross_profit": 8638.7,
+      "expense": 10386.58,
+      "other_income": 750.77,
+      "net": -997.11
+    },
+    "2008-09": {
+      "sales": 18276.5,
+      "cost": 15590.25,
+      "gross_profit": 2686.25,
+      "expense": 8602.77,
+      "other_income": 60.99,
+      "net": -5855.53
+    },
+    "2008-10": {
+      "sales": 19977.02,
+      "cost": 17484.74,
+      "gross_profit": 2492.28,
+      "expense": 8287.75,
+      "other_income": 0.0,
+      "net": -5795.47
+    },
+    "2008-11": {
+      "sales": 25982.26,
+      "cost": 22044.28,
+      "gross_profit": 3937.98,
+      "expense": 5247.99,
+      "other_income": 28.65,
+      "net": -1281.36
+    },
+    "2008-12": {
+      "sales": 42791.33,
+      "cost": 40559.27,
+      "gross_profit": 2232.06,
+      "expense": 13171.99,
+      "other_income": 169.6,
+      "net": -10770.33
+    },
+    "2009-01": {
+      "sales": 37848.61,
+      "cost": 32230.4,
+      "gross_profit": 5618.21,
+      "expense": 8003.7,
+      "other_income": 72.84,
+      "net": -2312.65
+    },
+    "2009-02": {
+      "sales": 22607.23,
+      "cost": 18094.18,
+      "gross_profit": 4513.05,
+      "expense": 5253.36,
+      "other_income": 0.0,
+      "net": -740.31
+    },
+    "2009-03": {
+      "sales": 54322.26,
+      "cost": 38514.89,
+      "gross_profit": 15807.37,
+      "expense": 8750.35,
+      "other_income": 49.83,
+      "net": 7106.85
+    },
+    "2009-04": {
+      "sales": 24084.55,
+      "cost": 20434.42,
+      "gross_profit": 3650.13,
+      "expense": 5410.57,
+      "other_income": 0.0,
+      "net": -1760.44
+    },
+    "2009-05": {
+      "sales": 9955.8,
+      "cost": 7970.3,
+      "gross_profit": 1985.5,
+      "expense": 4548.74,
+      "other_income": 5.23,
+      "net": -2558.01
+    },
+    "2009-06": {
+      "sales": 35270.45,
+      "cost": 29722.6,
+      "gross_profit": 5547.85,
+      "expense": 5945.35,
+      "other_income": 86.9,
+      "net": -310.6
+    },
+    "2009-07": {
+      "sales": 39435.84,
+      "cost": 34507.39,
+      "gross_profit": 4928.45,
+      "expense": 5845.29,
+      "other_income": 0.0,
+      "net": -916.84
+    },
+    "2009-08": {
+      "sales": 30106.32,
+      "cost": 26551.6,
+      "gross_profit": 3554.72,
+      "expense": 5398.25,
+      "other_income": 0.0,
+      "net": -1843.53
+    },
+    "2009-09": {
+      "sales": 8706.8,
+      "cost": 7669.8,
+      "gross_profit": 1037.0,
+      "expense": 5007.35,
+      "other_income": 0.0,
+      "net": -3970.35
+    },
+    "2009-10": {
+      "sales": 15290.48,
+      "cost": 13379.65,
+      "gross_profit": 1910.83,
+      "expense": 5397.32,
+      "other_income": 0.0,
+      "net": -3486.49
+    },
+    "2009-11": {
+      "sales": 85632.0,
+      "cost": 48549.22,
+      "gross_profit": 37082.78,
+      "expense": 30926.92,
+      "other_income": 0.0,
+      "net": 6155.86
+    },
+    "2009-12": {
+      "sales": 57227.75,
+      "cost": 47906.12,
+      "gross_profit": 9321.63,
+      "expense": 9692.06,
+      "other_income": 0.0,
+      "net": -370.43
+    },
+    "2010-01": {
+      "sales": 18902.84,
+      "cost": 17595.24,
+      "gross_profit": 1307.6,
+      "expense": 5593.46,
+      "other_income": 0.0,
+      "net": -4285.86
+    },
+    "2010-02": {
+      "sales": 29245.44,
+      "cost": 25204.4,
+      "gross_profit": 4041.04,
+      "expense": 5875.83,
+      "other_income": 0.0,
+      "net": -1834.79
+    },
+    "2010-03": {
+      "sales": 28077.4,
+      "cost": 24276.67,
+      "gross_profit": 3800.73,
+      "expense": 6312.96,
+      "other_income": 0.0,
+      "net": -2512.23
+    },
+    "2010-04": {
+      "sales": 38106.07,
+      "cost": 31786.51,
+      "gross_profit": 6319.56,
+      "expense": 6035.45,
+      "other_income": 0.0,
+      "net": 284.11
+    },
+    "2010-05": {
+      "sales": 16402.8,
+      "cost": 14423.1,
+      "gross_profit": 1979.7,
+      "expense": 5346.29,
+      "other_income": 0.0,
+      "net": -3366.59
+    },
+    "2010-06": {
+      "sales": 24450.51,
+      "cost": 19817.85,
+      "gross_profit": 4632.66,
+      "expense": 7359.22,
+      "other_income": 280.86,
+      "net": -2445.7
+    },
+    "2010-07": {
+      "sales": 68329.28,
+      "cost": 60981.45,
+      "gross_profit": 7347.83,
+      "expense": 7770.13,
+      "other_income": 76.84,
+      "net": -345.46
+    },
+    "2010-08": {
+      "sales": 86549.58,
+      "cost": 76130.4,
+      "gross_profit": 10419.18,
+      "expense": 7912.93,
+      "other_income": 548.07,
+      "net": 3054.32
+    },
+    "2010-09": {
+      "sales": 31357.47,
+      "cost": 25723.74,
+      "gross_profit": 5633.73,
+      "expense": 6834.34,
+      "other_income": 0.0,
+      "net": -1200.61
+    },
+    "2010-10": {
+      "sales": 28276.12,
+      "cost": 24801.15,
+      "gross_profit": 3474.97,
+      "expense": 6265.55,
+      "other_income": 788.7,
+      "net": -2001.88
+    },
+    "2010-11": {
+      "sales": 57329.99,
+      "cost": 49758.7,
+      "gross_profit": 7571.29,
+      "expense": 6490.15,
+      "other_income": 546.32,
+      "net": 1627.46
+    },
+    "2010-12": {
+      "sales": 81748.0,
+      "cost": 70388.04,
+      "gross_profit": 11359.96,
+      "expense": 11013.13,
+      "other_income": 601.56,
+      "net": 948.39
+    },
+    "2011-01": {
+      "sales": 114118.54,
+      "cost": 100778.3,
+      "gross_profit": 13340.24,
+      "expense": 7328.78,
+      "other_income": 1213.35,
+      "net": 7224.81
+    },
+    "2011-02": {
+      "sales": 82716.46,
+      "cost": 72758.75,
+      "gross_profit": 9957.71,
+      "expense": 10379.9,
+      "other_income": 756.17,
+      "net": 333.98
+    },
+    "2011-03": {
+      "sales": 152916.24,
+      "cost": 126229.04,
+      "gross_profit": 26687.2,
+      "expense": 10944.78,
+      "other_income": 938.08,
+      "net": 16680.5
+    },
+    "2011-04": {
+      "sales": 135851.63,
+      "cost": 117663.5,
+      "gross_profit": 18188.13,
+      "expense": 10135.79,
+      "other_income": 1083.89,
+      "net": 9136.23
+    },
+    "2011-05": {
+      "sales": 77963.24,
+      "cost": 67978.9,
+      "gross_profit": 9984.34,
+      "expense": 9133.1,
+      "other_income": 866.34,
+      "net": 1717.58
+    },
+    "2011-06": {
+      "sales": 101639.54,
+      "cost": 88578.55,
+      "gross_profit": 13060.99,
+      "expense": 8190.94,
+      "other_income": 703.92,
+      "net": 5573.97
+    },
+    "2011-07": {
+      "sales": 155790.98,
+      "cost": 136805.7,
+      "gross_profit": 18985.28,
+      "expense": 10524.49,
+      "other_income": 534.64,
+      "net": 8995.43
+    },
+    "2011-08": {
+      "sales": 201311.62,
+      "cost": 177088.55,
+      "gross_profit": 24223.07,
+      "expense": 10403.85,
+      "other_income": 836.48,
+      "net": 14655.7
+    },
+    "2011-09": {
+      "sales": 88386.84,
+      "cost": 78329.1,
+      "gross_profit": 10057.74,
+      "expense": 7583.07,
+      "other_income": 508.64,
+      "net": 2983.31
+    },
+    "2011-10": {
+      "sales": 129777.92,
+      "cost": 113610.25,
+      "gross_profit": 16167.67,
+      "expense": 9907.84,
+      "other_income": 450.0,
+      "net": 6709.83
+    },
+    "2011-11": {
+      "sales": 188437.8,
+      "cost": 168340.05,
+      "gross_profit": 20097.75,
+      "expense": 10468.6,
+      "other_income": 564.81,
+      "net": 10193.96
+    },
+    "2011-12": {
+      "sales": 252249.44,
+      "cost": 229264.05,
+      "gross_profit": 22985.39,
+      "expense": 14288.76,
+      "other_income": 460.4,
+      "net": 9157.03
+    },
+    "2012-01": {
+      "sales": 160332.34,
+      "cost": 141898.1,
+      "gross_profit": 18434.24,
+      "expense": 11815.62,
+      "other_income": 519.75,
+      "net": 7138.37
+    },
+    "2012-02": {
+      "sales": 177576.17,
+      "cost": 159240.35,
+      "gross_profit": 18335.82,
+      "expense": 10501.43,
+      "other_income": 556.22,
+      "net": 8390.61
+    },
+    "2012-03": {
+      "sales": 183142.66,
+      "cost": 162273.75,
+      "gross_profit": 20868.91,
+      "expense": 11194.04,
+      "other_income": 728.13,
+      "net": 10403.0
+    },
+    "2012-04": {
+      "sales": 138906.88,
+      "cost": 122930.65,
+      "gross_profit": 15976.23,
+      "expense": 11722.18,
+      "other_income": 596.7,
+      "net": 4850.75
+    },
+    "2012-05": {
+      "sales": 108526.06,
+      "cost": 96008.1,
+      "gross_profit": 12517.96,
+      "expense": 9905.71,
+      "other_income": 679.13,
+      "net": 3291.38
+    },
+    "2012-06": {
+      "sales": 129047.56,
+      "cost": 110229.7,
+      "gross_profit": 18817.86,
+      "expense": 12138.87,
+      "other_income": 486.58,
+      "net": 7165.57
+    },
+    "2012-07": {
+      "sales": 267363.54,
+      "cost": 236221.85,
+      "gross_profit": 31141.69,
+      "expense": 15024.55,
+      "other_income": 667.06,
+      "net": 16784.2
+    },
+    "2012-08": {
+      "sales": 264825.42,
+      "cost": 234026.8,
+      "gross_profit": 30798.62,
+      "expense": 14450.77,
+      "other_income": 593.71,
+      "net": 16941.56
+    },
+    "2012-09": {
+      "sales": 100037.2,
+      "cost": 89916.8,
+      "gross_profit": 10120.4,
+      "expense": 9228.97,
+      "other_income": 726.96,
+      "net": 1618.39
+    },
+    "2012-10": {
+      "sales": 128933.4,
+      "cost": 114745.6,
+      "gross_profit": 14187.8,
+      "expense": 10450.07,
+      "other_income": 800.78,
+      "net": 4538.51
+    },
+    "2012-11": {
+      "sales": 207530.53,
+      "cost": 187173.55,
+      "gross_profit": 20356.98,
+      "expense": 12432.08,
+      "other_income": 818.14,
+      "net": 8743.04
+    },
+    "2012-12": {
+      "sales": 275227.78,
+      "cost": 245883.92,
+      "gross_profit": 29343.86,
+      "expense": 16739.66,
+      "other_income": 655.52,
+      "net": 13259.72
+    },
+    "2013-01": {
+      "sales": 153417.47,
+      "cost": 133764.1,
+      "gross_profit": 19653.37,
+      "expense": 10702.3,
+      "other_income": 632.43,
+      "net": 9583.5
+    },
+    "2013-02": {
+      "sales": 174925.88,
+      "cost": 155860.55,
+      "gross_profit": 19065.33,
+      "expense": 11815.69,
+      "other_income": 514.52,
+      "net": 7764.16
+    },
+    "2013-03": {
+      "sales": 154128.12,
+      "cost": 137447.0,
+      "gross_profit": 16681.12,
+      "expense": 11608.22,
+      "other_income": 474.59,
+      "net": 5547.49
+    },
+    "2013-04": {
+      "sales": 110355.6,
+      "cost": 99563.7,
+      "gross_profit": 10791.9,
+      "expense": 11710.52,
+      "other_income": 1053.59,
+      "net": 134.97
+    },
+    "2013-05": {
+      "sales": 90957.26,
+      "cost": 79587.4,
+      "gross_profit": 11369.86,
+      "expense": 12248.09,
+      "other_income": 478.13,
+      "net": -400.1
+    },
+    "2013-06": {
+      "sales": 104760.74,
+      "cost": 92365.7,
+      "gross_profit": 12395.04,
+      "expense": 11226.34,
+      "other_income": 620.3,
+      "net": 1789.0
+    },
+    "2013-07": {
+      "sales": 219232.27,
+      "cost": 190509.1,
+      "gross_profit": 28723.17,
+      "expense": 17666.59,
+      "other_income": 1753.18,
+      "net": 12809.76
+    },
+    "2013-08": {
+      "sales": 204230.41,
+      "cost": 176386.55,
+      "gross_profit": 27843.86,
+      "expense": 14304.06,
+      "other_income": 992.93,
+      "net": 14532.73
+    },
+    "2013-09": {
+      "sales": 79789.31,
+      "cost": 70524.65,
+      "gross_profit": 9264.66,
+      "expense": 12679.39,
+      "other_income": 552.62,
+      "net": -2862.11
+    },
+    "2013-10": {
+      "sales": 106182.4,
+      "cost": 91972.21,
+      "gross_profit": 14210.19,
+      "expense": 15061.66,
+      "other_income": 577.31,
+      "net": -274.16
+    },
+    "2013-11": {
+      "sales": 132072.45,
+      "cost": 122171.35,
+      "gross_profit": 9901.1,
+      "expense": 9440.16,
+      "other_income": 645.01,
+      "net": 1105.95
+    },
+    "2013-12": {
+      "sales": 265856.41,
+      "cost": 236179.05,
+      "gross_profit": 29677.36,
+      "expense": 15965.57,
+      "other_income": 671.28,
+      "net": 14383.07
+    },
+    "2014-01": {
+      "sales": 101801.06,
+      "cost": 90891.31,
+      "gross_profit": 10909.75,
+      "expense": 11669.92,
+      "other_income": 636.59,
+      "net": -123.58
+    },
+    "2014-02": {
+      "sales": 167160.84,
+      "cost": 153686.54,
+      "gross_profit": 13474.3,
+      "expense": 9802.13,
+      "other_income": 619.91,
+      "net": 4292.08
+    },
+    "2014-03": {
+      "sales": 155439.29,
+      "cost": 142356.11,
+      "gross_profit": 13083.18,
+      "expense": 10358.96,
+      "other_income": 578.78,
+      "net": 3303.0
+    },
+    "2014-04": {
+      "sales": 140325.46,
+      "cost": 122581.4,
+      "gross_profit": 17744.06,
+      "expense": 9849.79,
+      "other_income": 588.12,
+      "net": 8482.39
+    },
+    "2014-05": {
+      "sales": 141808.82,
+      "cost": 127134.22,
+      "gross_profit": 14674.6,
+      "expense": 10510.07,
+      "other_income": 672.62,
+      "net": 4837.15
+    },
+    "2014-06": {
+      "sales": 160430.45,
+      "cost": 141522.18,
+      "gross_profit": 18908.27,
+      "expense": 11624.68,
+      "other_income": 557.16,
+      "net": 7840.75
+    },
+    "2014-07": {
+      "sales": 237292.46,
+      "cost": 210881.93,
+      "gross_profit": 26410.53,
+      "expense": 13432.11,
+      "other_income": 645.18,
+      "net": 13623.6
+    },
+    "2014-08": {
+      "sales": 214667.22,
+      "cost": 192742.6,
+      "gross_profit": 21924.62,
+      "expense": 14178.39,
+      "other_income": 702.47,
+      "net": 8448.7
+    },
+    "2014-09": {
+      "sales": 118694.26,
+      "cost": 107239.45,
+      "gross_profit": 11454.81,
+      "expense": 13263.08,
+      "other_income": 565.44,
+      "net": -1242.83
+    },
+    "2014-10": {
+      "sales": 108262.77,
+      "cost": 99038.49,
+      "gross_profit": 9224.28,
+      "expense": 13329.97,
+      "other_income": 587.66,
+      "net": -3518.03
+    },
+    "2014-11": {
+      "sales": 180325.31,
+      "cost": 160736.97,
+      "gross_profit": 19588.34,
+      "expense": 13498.58,
+      "other_income": 569.71,
+      "net": 6659.47
+    },
+    "2014-12": {
+      "sales": 204462.18,
+      "cost": 181912.32,
+      "gross_profit": 22549.86,
+      "expense": 17330.0,
+      "other_income": 995.92,
+      "net": 6215.78
+    },
+    "2015-01": {
+      "sales": 136736.24,
+      "cost": 123342.21,
+      "gross_profit": 13394.03,
+      "expense": 15909.17,
+      "other_income": 645.35,
+      "net": -1869.79
+    },
+    "2015-02": {
+      "sales": 111710.42,
+      "cost": 101654.6,
+      "gross_profit": 10055.82,
+      "expense": 19344.14,
+      "other_income": 606.21,
+      "net": -8682.11
+    },
+    "2015-03": {
+      "sales": 107581.85,
+      "cost": 97823.55,
+      "gross_profit": 9758.3,
+      "expense": 15139.67,
+      "other_income": 578.73,
+      "net": -4802.64
+    },
+    "2015-04": {
+      "sales": 189333.83,
+      "cost": 166627.89,
+      "gross_profit": 22705.94,
+      "expense": 12013.89,
+      "other_income": 531.47,
+      "net": 11223.52
+    },
+    "2015-05": {
+      "sales": 148013.87,
+      "cost": 134106.15,
+      "gross_profit": 13907.72,
+      "expense": 14989.4,
+      "other_income": 450.0,
+      "net": -631.68
+    },
+    "2015-06": {
+      "sales": 194240.91,
+      "cost": 172217.52,
+      "gross_profit": 22023.39,
+      "expense": 15045.25,
+      "other_income": 470.9,
+      "net": 7449.04
+    },
+    "2015-07": {
+      "sales": 243192.14,
+      "cost": 213740.76,
+      "gross_profit": 29451.38,
+      "expense": 15149.48,
+      "other_income": 467.21,
+      "net": 14769.11
+    },
+    "2015-08": {
+      "sales": 230444.22,
+      "cost": 203609.04,
+      "gross_profit": 26835.18,
+      "expense": 14803.48,
+      "other_income": 539.44,
+      "net": 12571.14
+    },
+    "2015-09": {
+      "sales": 133634.74,
+      "cost": 121060.38,
+      "gross_profit": 12574.36,
+      "expense": 10499.49,
+      "other_income": 450.0,
+      "net": 2524.87
+    },
+    "2015-10": {
+      "sales": 118335.07,
+      "cost": 106887.27,
+      "gross_profit": 11447.8,
+      "expense": 15387.95,
+      "other_income": 450.0,
+      "net": -3490.15
+    },
+    "2015-11": {
+      "sales": 212254.53,
+      "cost": 193574.8,
+      "gross_profit": 18679.73,
+      "expense": 12585.08,
+      "other_income": 450.0,
+      "net": 6544.65
+    },
+    "2015-12": {
+      "sales": 245232.59,
+      "cost": 224389.94,
+      "gross_profit": 20842.65,
+      "expense": 20065.24,
+      "other_income": 457.93,
+      "net": 1235.34
+    },
+    "2016-01": {
+      "sales": 165166.07,
+      "cost": 146017.95,
+      "gross_profit": 19148.12,
+      "expense": 12973.13,
+      "other_income": 700.71,
+      "net": 6875.7
+    },
+    "2016-02": {
+      "sales": 127135.62,
+      "cost": 114906.1,
+      "gross_profit": 12229.52,
+      "expense": 15294.45,
+      "other_income": 453.24,
+      "net": -2611.69
+    },
+    "2016-03": {
+      "sales": 174935.46,
+      "cost": 151900.25,
+      "gross_profit": 23035.21,
+      "expense": 11415.12,
+      "other_income": 450.0,
+      "net": 12070.09
+    },
+    "2016-04": {
+      "sales": 104641.54,
+      "cost": 91286.3,
+      "gross_profit": 13355.24,
+      "expense": 12398.32,
+      "other_income": 451.38,
+      "net": 1408.3
+    },
+    "2016-05": {
+      "sales": 145971.73,
+      "cost": 127181.45,
+      "gross_profit": 18790.28,
+      "expense": 12524.46,
+      "other_income": 1637.96,
+      "net": 7903.78
+    },
+    "2016-06": {
+      "sales": 183855.08,
+      "cost": 158282.0,
+      "gross_profit": 25573.08,
+      "expense": 15873.26,
+      "other_income": 450.0,
+      "net": 10149.82
+    },
+    "2016-07": {
+      "sales": 256504.72,
+      "cost": 217956.55,
+      "gross_profit": 38548.17,
+      "expense": 18407.08,
+      "other_income": 450.0,
+      "net": 20591.09
+    },
+    "2016-08": {
+      "sales": 231004.76,
+      "cost": 197324.5,
+      "gross_profit": 33680.26,
+      "expense": 16508.85,
+      "other_income": 450.0,
+      "net": 17621.41
+    },
+    "2016-09": {
+      "sales": 168280.78,
+      "cost": 146434.2,
+      "gross_profit": 21846.58,
+      "expense": 13191.22,
+      "other_income": 450.0,
+      "net": 9105.36
+    },
+    "2016-10": {
+      "sales": 157285.93,
+      "cost": 139828.31,
+      "gross_profit": 17457.62,
+      "expense": 12821.52,
+      "other_income": 1547.38,
+      "net": 6183.48
+    },
+    "2016-11": {
+      "sales": 176922.99,
+      "cost": 149392.12,
+      "gross_profit": 27530.87,
+      "expense": 15197.27,
+      "other_income": 659.82,
+      "net": 12993.42
+    },
+    "2016-12": {
+      "sales": 291145.16,
+      "cost": 254514.56,
+      "gross_profit": 36630.6,
+      "expense": 21936.24,
+      "other_income": 450.0,
+      "net": 15144.36
+    },
+    "2017-01": {
+      "sales": 198296.4,
+      "cost": 170893.85,
+      "gross_profit": 27402.55,
+      "expense": 17330.41,
+      "other_income": 0.0,
+      "net": 10072.14
+    },
+    "2017-02": {
+      "sales": 221252.26,
+      "cost": 190989.85,
+      "gross_profit": 30262.41,
+      "expense": 14359.31,
+      "other_income": 1504.53,
+      "net": 17407.63
+    },
+    "2017-03": {
+      "sales": 252942.61,
+      "cost": 218959.05,
+      "gross_profit": 33983.56,
+      "expense": 18874.51,
+      "other_income": 0.0,
+      "net": 15109.05
+    },
+    "2017-04": {
+      "sales": 303739.36,
+      "cost": 268229.92,
+      "gross_profit": 35509.44,
+      "expense": 18342.92,
+      "other_income": 9.75,
+      "net": 17176.27
+    },
+    "2017-05": {
+      "sales": 238952.62,
+      "cost": 210895.78,
+      "gross_profit": 28056.84,
+      "expense": 17234.35,
+      "other_income": 91.87,
+      "net": 10914.36
+    },
+    "2017-06": {
+      "sales": 279188.82,
+      "cost": 244058.66,
+      "gross_profit": 35130.16,
+      "expense": 20828.99,
+      "other_income": 0.0,
+      "net": 14301.17
+    },
+    "2017-07": {
+      "sales": 346030.25,
+      "cost": 304911.86,
+      "gross_profit": 41118.39,
+      "expense": 22222.41,
+      "other_income": 119.22,
+      "net": 19015.2
+    },
+    "2017-08": {
+      "sales": 376174.92,
+      "cost": 334859.21,
+      "gross_profit": 41315.71,
+      "expense": 20148.74,
+      "other_income": 37.93,
+      "net": 21204.9
+    },
+    "2017-09": {
+      "sales": 129881.6,
+      "cost": 110580.75,
+      "gross_profit": 19300.85,
+      "expense": 15696.28,
+      "other_income": 0.0,
+      "net": 3604.57
+    },
+    "2017-10": {
+      "sales": 156493.25,
+      "cost": 139311.0,
+      "gross_profit": 17182.25,
+      "expense": 17340.7,
+      "other_income": 0.0,
+      "net": -158.45
+    },
+    "2017-11": {
+      "sales": 106261.68,
+      "cost": 90926.93,
+      "gross_profit": 15334.75,
+      "expense": 15454.06,
+      "other_income": 46.32,
+      "net": -72.99
+    },
+    "2017-12": {
+      "sales": 211875.58,
+      "cost": 185991.79,
+      "gross_profit": 25883.79,
+      "expense": 24924.71,
+      "other_income": 12.98,
+      "net": 972.06
+    },
+    "2018-01": {
+      "sales": 151870.46,
+      "cost": 135327.93,
+      "gross_profit": 16542.53,
+      "expense": 15183.4,
+      "other_income": 0.0,
+      "net": 1359.13
+    },
+    "2018-02": {
+      "sales": 170856.22,
+      "cost": 151724.12,
+      "gross_profit": 19132.1,
+      "expense": 15400.75,
+      "other_income": 0.0,
+      "net": 3731.35
+    },
+    "2018-03": {
+      "sales": 276632.95,
+      "cost": 245822.56,
+      "gross_profit": 30810.39,
+      "expense": 17594.22,
+      "other_income": 0.0,
+      "net": 13216.17
+    },
+    "2018-04": {
+      "sales": 192168.94,
+      "cost": 168859.4,
+      "gross_profit": 23309.54,
+      "expense": 17450.81,
+      "other_income": 0.0,
+      "net": 5858.73
+    },
+    "2018-05": {
+      "sales": 162916.53,
+      "cost": 143539.58,
+      "gross_profit": 19376.95,
+      "expense": 21254.42,
+      "other_income": 0.0,
+      "net": -1877.47
+    },
+    "2018-06": {
+      "sales": 197405.8,
+      "cost": 173260.42,
+      "gross_profit": 24145.38,
+      "expense": 24736.27,
+      "other_income": 0.0,
+      "net": -590.89
+    },
+    "2018-07": {
+      "sales": 269736.58,
+      "cost": 236967.99,
+      "gross_profit": 32768.59,
+      "expense": 19919.38,
+      "other_income": 0.0,
+      "net": 12849.21
+    },
+    "2018-08": {
+      "sales": 274011.41,
+      "cost": 237511.73,
+      "gross_profit": 36499.68,
+      "expense": 26249.93,
+      "other_income": 0.0,
+      "net": 10249.75
+    },
+    "2018-09": {
+      "sales": 148046.34,
+      "cost": 125516.64,
+      "gross_profit": 22529.7,
+      "expense": 18753.22,
+      "other_income": 0.0,
+      "net": 3776.48
+    },
+    "2018-10": {
+      "sales": 109002.82,
+      "cost": 91177.21,
+      "gross_profit": 17825.61,
+      "expense": 17194.04,
+      "other_income": 0.0,
+      "net": 631.57
+    },
+    "2018-11": {
+      "sales": 112186.13,
+      "cost": 94483.08,
+      "gross_profit": 17703.05,
+      "expense": 18194.38,
+      "other_income": 0.0,
+      "net": -491.33
+    },
+    "2018-12": {
+      "sales": 117928.98,
+      "cost": 103797.8,
+      "gross_profit": 14131.18,
+      "expense": 18094.34,
+      "other_income": 0.0,
+      "net": -3963.16
+    },
+    "2019-01": {
+      "sales": 82611.9,
+      "cost": 76096.46,
+      "gross_profit": 6515.44,
+      "expense": 14515.27,
+      "other_income": 0.0,
+      "net": -7999.83
+    },
+    "2019-02": {
+      "sales": 132567.43,
+      "cost": 115942.77,
+      "gross_profit": 16624.66,
+      "expense": 14192.36,
+      "other_income": 0.0,
+      "net": 2432.3
+    },
+    "2019-03": {
+      "sales": 157604.06,
+      "cost": 137220.24,
+      "gross_profit": 20383.82,
+      "expense": 16811.08,
+      "other_income": 0.0,
+      "net": 3572.74
+    },
+    "2019-04": {
+      "sales": 134216.51,
+      "cost": 119032.75,
+      "gross_profit": 15183.76,
+      "expense": 15991.78,
+      "other_income": 0.0,
+      "net": -808.02
+    },
+    "2019-05": {
+      "sales": 168723.71,
+      "cost": 141722.13,
+      "gross_profit": 27001.58,
+      "expense": 18417.93,
+      "other_income": 0.0,
+      "net": 8583.65
+    },
+    "2019-06": {
+      "sales": 215752.47,
+      "cost": 182039.73,
+      "gross_profit": 33712.74,
+      "expense": 18513.55,
+      "other_income": 0.0,
+      "net": 15199.19
+    },
+    "2019-07": {
+      "sales": 256589.31,
+      "cost": 215856.7,
+      "gross_profit": 40732.61,
+      "expense": 21281.94,
+      "other_income": 0.0,
+      "net": 19450.67
+    },
+    "2019-08": {
+      "sales": 195134.4,
+      "cost": 164034.59,
+      "gross_profit": 31099.81,
+      "expense": 15587.01,
+      "other_income": 0.0,
+      "net": 15512.8
+    },
+    "2019-09": {
+      "sales": 114615.04,
+      "cost": 94009.03,
+      "gross_profit": 20606.01,
+      "expense": 13461.13,
+      "other_income": 0.0,
+      "net": 7144.88
+    },
+    "2019-10": {
+      "sales": 108419.66,
+      "cost": 88470.05,
+      "gross_profit": 19949.61,
+      "expense": 16015.5,
+      "other_income": 0.0,
+      "net": 3934.11
+    },
+    "2019-11": {
+      "sales": 97484.63,
+      "cost": 74813.85,
+      "gross_profit": 22670.78,
+      "expense": 14186.72,
+      "other_income": 0.0,
+      "net": 8484.06
+    },
+    "2019-12": {
+      "sales": 124301.1,
+      "cost": 97853.55,
+      "gross_profit": 26447.55,
+      "expense": 17428.96,
+      "other_income": 0.0,
+      "net": 9018.59
+    },
+    "2020-01": {
+      "sales": 86866.39,
+      "cost": 71308.18,
+      "gross_profit": 15558.21,
+      "expense": 11847.97,
+      "other_income": 0.0,
+      "net": 3710.24
+    },
+    "2020-02": {
+      "sales": 95158.95,
+      "cost": 79396.66,
+      "gross_profit": 15762.29,
+      "expense": 12907.34,
+      "other_income": 0.0,
+      "net": 2854.95
+    },
+    "2020-03": {
+      "sales": 62168.78,
+      "cost": 52055.1,
+      "gross_profit": 10113.68,
+      "expense": 13597.29,
+      "other_income": 0.0,
+      "net": -3483.61
+    },
+    "2020-04": {
+      "sales": 189.09,
+      "cost": 0.0,
+      "gross_profit": 189.09,
+      "expense": 6669.71,
+      "other_income": 0.0,
+      "net": -6480.62
+    },
+    "2020-05": {
+      "sales": 109.63,
+      "cost": 0.0,
+      "gross_profit": 109.63,
+      "expense": 6089.28,
+      "other_income": 0.0,
+      "net": -5979.65
+    },
+    "2020-06": {
+      "sales": 108.38,
+      "cost": 0.0,
+      "gross_profit": 108.38,
+      "expense": 5594.93,
+      "other_income": 0.0,
+      "net": -5486.55
+    },
+    "2020-07": {
+      "sales": 968.24,
+      "cost": 684.0,
+      "gross_profit": 284.24,
+      "expense": 5430.39,
+      "other_income": 0.0,
+      "net": -5146.15
+    },
+    "2020-08": {
+      "sales": 1535.86,
+      "cost": 1432.5,
+      "gross_profit": 103.36,
+      "expense": 5050.63,
+      "other_income": 0.0,
+      "net": -4947.27
+    },
+    "2020-09": {
+      "sales": 142.11,
+      "cost": 0.0,
+      "gross_profit": 142.11,
+      "expense": 10890.64,
+      "other_income": 0.0,
+      "net": -10748.53
+    },
+    "2020-10": {
+      "sales": 1618.21,
+      "cost": 1304.45,
+      "gross_profit": 313.76,
+      "expense": 5252.71,
+      "other_income": 0.0,
+      "net": -4938.95
+    },
+    "2020-11": {
+      "sales": 40994.64,
+      "cost": 23870.95,
+      "gross_profit": 17123.69,
+      "expense": 5406.57,
+      "other_income": 0.0,
+      "net": 11717.12
+    },
+    "2020-12": {
+      "sales": 113298.35,
+      "cost": 91622.75,
+      "gross_profit": 21675.6,
+      "expense": 8009.96,
+      "other_income": 0.0,
+      "net": 13665.64
+    },
+    "2021-01": {
+      "sales": 16542.17,
+      "cost": 13225.65,
+      "gross_profit": 3316.52,
+      "expense": 7015.12,
+      "other_income": 0.0,
+      "net": -3698.6
+    },
+    "2021-02": {
+      "sales": 4153.57,
+      "cost": 3280.15,
+      "gross_profit": 873.42,
+      "expense": 4841.57,
+      "other_income": 0.0,
+      "net": -3968.15
+    },
+    "2021-03": {
+      "sales": 3706.04,
+      "cost": 2443.5,
+      "gross_profit": 1262.54,
+      "expense": 4911.96,
+      "other_income": 0.0,
+      "net": -3649.42
+    },
+    "2021-04": {
+      "sales": 9484.96,
+      "cost": 8681.5,
+      "gross_profit": 803.46,
+      "expense": 5123.24,
+      "other_income": 0.0,
+      "net": -4319.78
+    },
+    "2021-05": {
+      "sales": 12187.45,
+      "cost": 6960.2,
+      "gross_profit": 5227.25,
+      "expense": 5100.95,
+      "other_income": 0.0,
+      "net": 126.3
+    },
+    "2021-06": {
+      "sales": 15772.07,
+      "cost": 13046.5,
+      "gross_profit": 2725.57,
+      "expense": 5656.16,
+      "other_income": 0.0,
+      "net": -2930.59
+    },
+    "2021-07": {
+      "sales": 23833.84,
+      "cost": 19628.3,
+      "gross_profit": 4205.54,
+      "expense": 5679.74,
+      "other_income": 0.0,
+      "net": -1474.2
+    },
+    "2021-08": {
+      "sales": 6914.94,
+      "cost": 5913.9,
+      "gross_profit": 1001.04,
+      "expense": 4376.28,
+      "other_income": 0.0,
+      "net": -3375.24
+    },
+    "2021-09": {
+      "sales": 8420.99,
+      "cost": 7093.85,
+      "gross_profit": 1327.14,
+      "expense": 5190.94,
+      "other_income": 0.0,
+      "net": -3863.8
+    },
+    "2021-10": {
+      "sales": 12177.97,
+      "cost": 10325.6,
+      "gross_profit": 1852.37,
+      "expense": 6813.4,
+      "other_income": 0.0,
+      "net": -4961.03
+    },
+    "2021-11": {
+      "sales": 58819.32,
+      "cost": 47648.79,
+      "gross_profit": 11170.53,
+      "expense": 12744.84,
+      "other_income": 0.0,
+      "net": -1574.31
+    },
+    "2021-12": {
+      "sales": 146991.98,
+      "cost": 123051.87,
+      "gross_profit": 23940.11,
+      "expense": 19128.66,
+      "other_income": 0.0,
+      "net": 4811.45
+    },
+    "2022-01": {
+      "sales": 52649.7,
+      "cost": 42854.57,
+      "gross_profit": 9795.13,
+      "expense": 7719.19,
+      "other_income": 0.0,
+      "net": 2075.94
+    },
+    "2022-02": {
+      "sales": 58915.19,
+      "cost": 50228.1,
+      "gross_profit": 8687.09,
+      "expense": 9327.65,
+      "other_income": 0.0,
+      "net": -640.56
+    },
+    "2022-03": {
+      "sales": 66763.04,
+      "cost": 57563.2,
+      "gross_profit": 9199.84,
+      "expense": 10164.66,
+      "other_income": 0.0,
+      "net": -964.82
+    },
+    "2022-04": {
+      "sales": 91628.81,
+      "cost": 80989.17,
+      "gross_profit": 10639.64,
+      "expense": 13765.11,
+      "other_income": 0.0,
+      "net": -3125.47
+    },
+    "2022-05": {
+      "sales": 91159.22,
+      "cost": 80242.53,
+      "gross_profit": 10916.69,
+      "expense": 8978.42,
+      "other_income": 0.0,
+      "net": 1938.27
+    },
+    "2022-06": {
+      "sales": 141521.26,
+      "cost": 126433.84,
+      "gross_profit": 15087.42,
+      "expense": 15753.2,
+      "other_income": 0.0,
+      "net": -665.78
+    },
+    "2022-07": {
+      "sales": 153417.19,
+      "cost": 132642.73,
+      "gross_profit": 20774.46,
+      "expense": 16265.39,
+      "other_income": 0.0,
+      "net": 4509.07
+    },
+    "2022-08": {
+      "sales": 165669.04,
+      "cost": 144526.25,
+      "gross_profit": 21142.79,
+      "expense": 17297.23,
+      "other_income": 0.0,
+      "net": 3845.56
+    },
+    "2022-09": {
+      "sales": 84459.25,
+      "cost": 73741.04,
+      "gross_profit": 10718.21,
+      "expense": 9810.14,
+      "other_income": 0.0,
+      "net": 908.07
+    },
+    "2022-10": {
+      "sales": 47384.59,
+      "cost": 42269.86,
+      "gross_profit": 5114.73,
+      "expense": 13027.0,
+      "other_income": 0.0,
+      "net": -7912.27
+    },
+    "2022-11": {
+      "sales": 71558.61,
+      "cost": 61817.12,
+      "gross_profit": 9741.49,
+      "expense": 10424.47,
+      "other_income": 0.0,
+      "net": -682.98
+    },
+    "2022-12": {
+      "sales": 119280.24,
+      "cost": 103254.47,
+      "gross_profit": 16025.77,
+      "expense": 11551.4,
+      "other_income": 0.0,
+      "net": 4474.37
+    },
+    "2023-01": {
+      "sales": 43035.19,
+      "cost": 36904.39,
+      "gross_profit": 6130.8,
+      "expense": 9218.5,
+      "other_income": 0.0,
+      "net": -3087.7
+    },
+    "2023-02": {
+      "sales": 49205.31,
+      "cost": 42813.98,
+      "gross_profit": 6391.33,
+      "expense": 7874.06,
+      "other_income": 0.0,
+      "net": -1482.73
+    },
+    "2023-03": {
+      "sales": 46574.32,
+      "cost": 39535.38,
+      "gross_profit": 7038.94,
+      "expense": 9200.07,
+      "other_income": 0.0,
+      "net": -2161.13
+    },
+    "2023-04": {
+      "sales": 74595.07,
+      "cost": 59954.25,
+      "gross_profit": 14640.82,
+      "expense": 9178.6,
+      "other_income": 0.0,
+      "net": 5462.22
+    },
+    "2023-05": {
+      "sales": 60324.82,
+      "cost": 51019.21,
+      "gross_profit": 9305.61,
+      "expense": 8645.4,
+      "other_income": 0.0,
+      "net": 660.21
+    },
+    "2023-06": {
+      "sales": 67383.88,
+      "cost": 54824.17,
+      "gross_profit": 12559.71,
+      "expense": 10719.46,
+      "other_income": 0.0,
+      "net": 1840.25
+    },
+    "2023-07": {
+      "sales": 125617.0,
+      "cost": 105920.47,
+      "gross_profit": 19696.53,
+      "expense": 11254.86,
+      "other_income": 0.0,
+      "net": 8441.67
+    },
+    "2023-08": {
+      "sales": 128728.89,
+      "cost": 98531.35,
+      "gross_profit": 30197.54,
+      "expense": 14644.0,
+      "other_income": 0.0,
+      "net": 15553.54
+    },
+    "2023-09": {
+      "sales": 70863.42,
+      "cost": 60648.17,
+      "gross_profit": 10215.25,
+      "expense": 10866.34,
+      "other_income": 0.0,
+      "net": -651.09
+    },
+    "2023-10": {
+      "sales": 30196.93,
+      "cost": 26203.59,
+      "gross_profit": 3993.34,
+      "expense": 9287.85,
+      "other_income": 0.0,
+      "net": -5294.51
+    },
+    "2023-11": {
+      "sales": 55171.08,
+      "cost": 47198.85,
+      "gross_profit": 7972.23,
+      "expense": 10150.65,
+      "other_income": 0.0,
+      "net": -2178.42
+    },
+    "2023-12": {
+      "sales": 70046.53,
+      "cost": 59914.2,
+      "gross_profit": 10132.33,
+      "expense": 12322.86,
+      "other_income": 0.0,
+      "net": -2190.53
+    },
+    "2024-01": {
+      "sales": 28441.55,
+      "cost": 26023.32,
+      "gross_profit": 2418.23,
+      "expense": 8240.26,
+      "other_income": 0.0,
+      "net": -5822.03
+    },
+    "2024-02": {
+      "sales": 32360.78,
+      "cost": 31260.57,
+      "gross_profit": 1100.21,
+      "expense": 7097.92,
+      "other_income": 0.0,
+      "net": -5997.71
+    },
+    "2024-03": {
+      "sales": 23412.0,
+      "cost": 20365.24,
+      "gross_profit": 3046.76,
+      "expense": 9889.57,
+      "other_income": 0.0,
+      "net": -6842.81
+    },
+    "2024-04": {
+      "sales": 48804.38,
+      "cost": 43145.83,
+      "gross_profit": 5658.55,
+      "expense": 9554.9,
+      "other_income": 0.0,
+      "net": -3896.35
+    },
+    "2024-05": {
+      "sales": 34982.65,
+      "cost": 30957.16,
+      "gross_profit": 4025.49,
+      "expense": 9586.29,
+      "other_income": 0.0,
+      "net": -5560.8
+    },
+    "2024-06": {
+      "sales": 66196.29,
+      "cost": 57411.36,
+      "gross_profit": 8784.93,
+      "expense": 9452.63,
+      "other_income": 0.0,
+      "net": -667.7
+    },
+    "2024-07": {
+      "sales": 93661.64,
+      "cost": 81889.58,
+      "gross_profit": 11772.06,
+      "expense": 11565.95,
+      "other_income": 0.0,
+      "net": 206.11
+    },
+    "2024-08": {
+      "sales": 75157.06,
+      "cost": 64236.56,
+      "gross_profit": 10920.5,
+      "expense": 9127.56,
+      "other_income": 0.0,
+      "net": 1792.94
+    },
+    "2024-09": {
+      "sales": 42568.96,
+      "cost": 37214.3,
+      "gross_profit": 5354.66,
+      "expense": 9227.64,
+      "other_income": 0.0,
+      "net": -3872.98
+    },
+    "2024-10": {
+      "sales": 37753.08,
+      "cost": 32750.21,
+      "gross_profit": 5002.87,
+      "expense": 9828.77,
+      "other_income": 0.0,
+      "net": -4825.9
+    },
+    "2024-11": {
+      "sales": 34786.9,
+      "cost": 30208.86,
+      "gross_profit": 4578.04,
+      "expense": 9109.1,
+      "other_income": 0.0,
+      "net": -4531.06
+    },
+    "2024-12": {
+      "sales": 45373.77,
+      "cost": 39603.0,
+      "gross_profit": 5770.77,
+      "expense": 9082.82,
+      "other_income": 0.0,
+      "net": -3312.05
+    },
+    "2025-01": {
+      "sales": 20445.21,
+      "cost": 17899.61,
+      "gross_profit": 2545.6,
+      "expense": 9669.36,
+      "other_income": 0.0,
+      "net": -7123.76
+    },
+    "2025-02": {
+      "sales": 19255.68,
+      "cost": 16923.13,
+      "gross_profit": 2332.55,
+      "expense": 9198.78,
+      "other_income": 0.0,
+      "net": -6866.23
+    },
+    "2025-03": {
+      "sales": 31007.64,
+      "cost": 26802.62,
+      "gross_profit": 4205.02,
+      "expense": 9699.97,
+      "other_income": 0.0,
+      "net": -5494.95
+    },
+    "2025-04": {
+      "sales": 39913.86,
+      "cost": 34766.23,
+      "gross_profit": 5147.63,
+      "expense": 10042.64,
+      "other_income": 0.0,
+      "net": -4895.01
+    },
+    "2025-05": {
+      "sales": 33514.87,
+      "cost": 29143.69,
+      "gross_profit": 4371.18,
+      "expense": 9916.78,
+      "other_income": 0.0,
+      "net": -5545.6
+    },
+    "2025-06": {
+      "sales": 60783.99,
+      "cost": 52789.85,
+      "gross_profit": 7994.14,
+      "expense": 10370.24,
+      "other_income": 0.0,
+      "net": -2376.1
+    },
+    "2025-07": {
+      "sales": 92384.96,
+      "cost": 79047.69,
+      "gross_profit": 13337.27,
+      "expense": 14845.88,
+      "other_income": 0.0,
+      "net": -1508.61
+    },
+    "2025-08": {
+      "sales": 80924.45,
+      "cost": 67520.28,
+      "gross_profit": 13404.17,
+      "expense": 12822.53,
+      "other_income": 0.0,
+      "net": 581.64
+    },
+    "2025-09": {
+      "sales": 17588.3,
+      "cost": 14949.08,
+      "gross_profit": 2639.22,
+      "expense": 7776.14,
+      "other_income": 0.0,
+      "net": -5136.92
+    },
+    "2025-10": {
+      "sales": 22384.77,
+      "cost": 18840.03,
+      "gross_profit": 3544.74,
+      "expense": 8534.25,
+      "other_income": 0.0,
+      "net": -4989.51
+    },
+    "2025-11": {
+      "sales": 26176.66,
+      "cost": 21635.83,
+      "gross_profit": 4540.83,
+      "expense": 7709.18,
+      "other_income": 0.0,
+      "net": -3168.35
+    },
+    "2025-12": {
+      "sales": 19512.12,
+      "cost": 16313.3,
+      "gross_profit": 3198.82,
+      "expense": 7313.42,
+      "other_income": 0.0,
+      "net": -4114.6
+    },
+    "2026-01": {
+      "sales": 10559.43,
+      "cost": 8967.47,
+      "gross_profit": 1591.96,
+      "expense": 7046.89,
+      "other_income": 0.0,
+      "net": -5454.93
+    },
+    "2026-02": {
+      "sales": 7106.16,
+      "cost": 5362.13,
+      "gross_profit": 1744.03,
+      "expense": 6794.66,
+      "other_income": 0.0,
+      "net": -5050.63
+    },
+    "2026-03": {
+      "sales": 11735.15,
+      "cost": 9894.89,
+      "gross_profit": 1840.26,
+      "expense": 7648.05,
+      "other_income": 0.0,
+      "net": -5807.79
+    }
+  }
+}
