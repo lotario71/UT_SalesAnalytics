@@ -43,8 +43,17 @@ jobs:
       - name: Build debug APK
         run: |
           source .venv/bin/activate
-          buildozer -v android debug 2>&1 | tee buildozer-ci.log
-          exit ${PIPESTATUS[0]}
+          set -o pipefail
+          # Reintentos: descargas externas (freetype, NDK mirrors) a veces dan 502
+          for attempt in 1 2 3; do
+            echo "=== Build attempt ${attempt}/3 ==="
+            if buildozer -v android debug 2>&1 | tee -a buildozer-ci.log; then
+              exit 0
+            fi
+            echo "Attempt ${attempt} failed; waiting before retry..."
+            sleep $((attempt * 45))
+          done
+          exit 1
 
       - name: Upload build log on failure
         if: failure()

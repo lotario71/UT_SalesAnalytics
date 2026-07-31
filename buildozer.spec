@@ -32,6 +32,9 @@ android.ndk = 25b
 android.accept_sdk_license = True
 android.presplash_color = #111827
 
+# Recetas locales (freetype por SourceForge; evita 502 de savannah.gnu.org)
+p4a.local_recipes = ./p4a-recipes
+
 # Icono (opcional)
 # icon.filename = %(source.dir)s/assets/icon.png
 
