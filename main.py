@@ -15,7 +15,9 @@ import requests
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.uix.anchorlayout import AnchorLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.modalview import ModalView
 from kivy.uix.scrollview import ScrollView
@@ -95,8 +97,10 @@ MDNavigationLayout:
         MainScreen:
             name: "main"
             MDBoxLayout:
+                id: main_column
                 orientation: "vertical"
                 md_bg_color: 0.067, 0.094, 0.153, 1
+                padding: "0dp", "0dp", "0dp", "12dp"
 
                 MDTopAppBar:
                     id: top_bar
@@ -108,6 +112,7 @@ MDNavigationLayout:
                     right_action_items: [["refresh", lambda x: app.refresh_data()]]
 
                 MDBoxLayout:
+                    id: row_mode
                     orientation: "horizontal"
                     size_hint_y: None
                     height: "44dp"
@@ -127,6 +132,7 @@ MDNavigationLayout:
                         on_release: app.set_metrics_mode("paid")
 
                 MDBoxLayout:
+                    id: row_year
                     orientation: "horizontal"
                     size_hint_y: None
                     height: "52dp"
@@ -562,10 +568,9 @@ class SalesAnalyticsApp(MDApp):
     def build(self):
         # Xiaomi 14T / pantallas altas: teclado y densidad mas comodos
         try:
-            from kivy.core.window import Window
+            Window.softinput_mode = "below_target"
             from kivy.utils import platform
 
-            Window.softinput_mode = "below_target"
             if platform == "android":
                 try:
                     from android.permissions import Permission, request_permissions
@@ -580,7 +585,81 @@ class SalesAnalyticsApp(MDApp):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.primary_hue = "400"
-        return Builder.load_string(kv)
+        root = Builder.load_string(kv)
+        Clock.schedule_once(lambda dt: self._setup_display(), 0)
+        return root
+
+    def _setup_display(self):
+        """Safe-area Android + reaccion al girar pantalla."""
+        self._apply_system_insets()
+        self._apply_orientation_layout()
+        try:
+            Window.bind(size=lambda *_: self._apply_orientation_layout())
+        except Exception:
+            pass
+
+    def _apply_system_insets(self):
+        """Evita que la barra de navegacion Android tape botones de la app."""
+        bottom = dp(18)
+        try:
+            from kivy.utils import platform
+
+            if platform == "android":
+                from jnius import autoclass
+
+                PythonActivity = autoclass("org.kivy.android.PythonActivity")
+                activity = PythonActivity.mActivity
+                # Preferir layout clasico (contenido no debajo de la nav bar)
+                try:
+                    WindowCompat = autoclass("androidx.core.view.WindowCompat")
+                    WindowCompat.setDecorFitsSystemWindows(activity.getWindow(), True)
+                except Exception:
+                    pass
+                try:
+                    resources = activity.getResources()
+                    res_id = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+                    if res_id > 0:
+                        bottom = max(bottom, float(resources.getDimensionPixelSize(res_id)))
+                except Exception:
+                    bottom = dp(28)
+        except Exception:
+            bottom = dp(18)
+        try:
+            col = self.root.ids.main_column
+            # padding: left, top, right, bottom
+            col.padding = (0, 0, 0, bottom)
+        except Exception:
+            pass
+        self._nav_pad_bottom = bottom
+
+    def _is_landscape(self) -> bool:
+        try:
+            return Window.width > Window.height
+        except Exception:
+            return False
+
+    def _apply_orientation_layout(self, *_):
+        """Compacta cabecera en horizontal para dejar sitio al contenido."""
+        land = self._is_landscape()
+        try:
+            ids = self.root.ids
+            # En horizontal: menos textos secundarios, mas espacio util
+            ids.mode_subtitle.height = dp(0) if land else dp(44)
+            ids.mode_subtitle.opacity = 0 if land else 1
+            ids.expense_chip.height = dp(0) if land else dp(32)
+            ids.expense_chip.opacity = 0 if land else 1
+            ids.row_mode.height = dp(36) if land else dp(44)
+            ids.row_year.height = dp(40) if land else dp(52)
+            # Padding inferior siempre (nav Android)
+            pad = getattr(self, "_nav_pad_bottom", dp(18))
+            ids.main_column.padding = (0, 0, 0, pad)
+        except Exception:
+            pass
+        # Si hay grafica ampliada abierta, reajusta
+        modal = getattr(self, "_chart_modal", None)
+        if modal and getattr(self, "_chart_img", None):
+            self._fit_chart_image()
+
 
     def open_drawer(self, *_):
         try:
@@ -675,7 +754,8 @@ class SalesAnalyticsApp(MDApp):
             pass
         self._goto_resumen_tab()
         self.log_activity(f"▸ Cambio de año → {year}")
-        self.reload_dashboard()
+        # Sin SOAP automatico: solo local/cache; red con ↻
+        self.reload_dashboard(force=False, allow_network=False)
 
     def _paid_allowed(self) -> bool:
         """Solo pagadas tiene sentido en el año en curso (SOAP)."""
@@ -765,7 +845,7 @@ class SalesAnalyticsApp(MDApp):
             pass
         self._set_loading(True, f"Actualizando {self.pe_year}…")
         self.log_activity(f"Actualizar manual · año {self.pe_year}")
-        self.reload_dashboard(force=True)
+        self.reload_dashboard(force=True, allow_network=True)
 
     def _set_loading(self, active: bool, message: str = "Actualizando…"):
         self._is_loading = bool(active)
@@ -1055,96 +1135,197 @@ class SalesAnalyticsApp(MDApp):
         return True
 
     def enlarge_chart(self, path: str):
-        """Grafica centrada a pantalla casi completa; se adapta al girar el movil."""
+        """Grafica a pantalla completa, centrada; al girar ocupa el espacio util."""
         if getattr(self, "_chart_modal", None):
             try:
                 self._chart_modal.dismiss()
             except Exception:
                 pass
 
-        body = MDBoxLayout(
-            orientation="vertical",
-            padding="12dp",
-            spacing="8dp",
-            md_bg_color=(0.06, 0.09, 0.14, 1),
-        )
-        tip = MDLabel(
-            text="Centrada · gira el telefono para ver mas ancha · toca fuera o Cerrar",
-            font_style="Caption",
-            size_hint_y=None,
-            height="28dp",
-            halign="center",
-            valign="middle",
-            theme_text_color="Custom",
-            text_color=(0.70, 0.75, 0.82, 1),
-        )
-        tip.bind(size=tip.setter("text_size"))
+        pad = float(getattr(self, "_nav_pad_bottom", dp(24)))
+        root = FloatLayout()
 
         img = Image(
             source=path,
             allow_stretch=True,
             keep_ratio=True,
             size_hint=(1, 1),
+            pos_hint={"x": 0, "y": 0},
         )
         try:
             img.reload()
         except Exception:
             pass
-        # AnchorLayout centra la imagen al cambiar vertical/horizontal
-        holder = AnchorLayout(anchor_x="center", anchor_y="center", size_hint=(1, 1))
-        holder.add_widget(img)
+        self._chart_img = img
+        self._chart_path = path
+
+        tip = MDLabel(
+            text="",
+            font_style="Caption",
+            size_hint=(1, None),
+            height=dp(26),
+            pos_hint={"top": 1, "x": 0},
+            halign="center",
+            valign="middle",
+            theme_text_color="Custom",
+            text_color=(0.75, 0.80, 0.86, 1),
+        )
+        tip.bind(size=tip.setter("text_size"))
 
         btn = MDRaisedButton(
             text="Cerrar",
-            size_hint=(1, None),
-            height="48dp",
+            size_hint=(None, None),
+            size=(dp(160), dp(46)),
+            pos_hint={"center_x": 0.5, "y": 0},
             md_bg_color=(0.08, 0.72, 0.65, 1),
         )
 
-        body.add_widget(tip)
-        body.add_widget(holder)
-        body.add_widget(btn)
+        # Contenedor de imagen con margen para tip + boton + nav Android
+        holder = AnchorLayout(
+            anchor_x="center",
+            anchor_y="center",
+            size_hint=(1, 1),
+            pos_hint={"x": 0, "y": 0},
+            padding=(dp(8), dp(36), dp(8), dp(56) + pad),
+        )
+        holder.add_widget(img)
+        root.add_widget(holder)
+        root.add_widget(tip)
+        root.add_widget(btn)
 
         modal = ModalView(
             auto_dismiss=True,
-            size_hint=(0.96, 0.92),
-            pos_hint={"center_x": 0.5, "center_y": 0.5},
+            size_hint=(1, 1),
+            pos_hint={"x": 0, "y": 0},
             background="",
-            background_color=(0.05, 0.07, 0.12, 0.98),
-            overlay_color=(0, 0, 0, 0.72),
+            background_color=(0.04, 0.06, 0.10, 1),
+            overlay_color=(0, 0, 0, 0.85),
         )
-        modal.add_widget(body)
+        modal.add_widget(root)
         self._chart_modal = modal
-
-        def _fit_tip(*_args):
-            w, h = Window.size
-            if w >= h:
-                tip.text = "Horizontal · grafica centrada · Cerrar o toca fuera"
-            else:
-                tip.text = "Vertical · gira el telefono para ver mas ancha · Cerrar"
-
-        def _on_win_size(*_args):
-            _fit_tip()
+        self._chart_tip = tip
+        self._chart_btn = btn
+        self._chart_holder = holder
 
         def _cleanup(*_args):
             try:
-                Window.unbind(size=_on_win_size)
+                Window.unbind(size=_on_win)
             except Exception:
                 pass
             if getattr(self, "_chart_modal", None) is modal:
                 self._chart_modal = None
+                self._chart_img = None
+
+        def _on_win(*_args):
+            self._fit_chart_image()
 
         btn.bind(on_release=lambda *_: modal.dismiss())
         modal.bind(on_dismiss=_cleanup)
-        Window.bind(size=_on_win_size)
-        _fit_tip()
+        Window.bind(size=_on_win)
+        self._fit_chart_image()
         modal.open()
 
-    def on_start(self):
-        self.reload_dashboard()
+    def _fit_chart_image(self):
+        """Ajusta tip/boton/padding segun vertical u horizontal."""
+        tip = getattr(self, "_chart_tip", None)
+        btn = getattr(self, "_chart_btn", None)
+        holder = getattr(self, "_chart_holder", None)
+        img = getattr(self, "_chart_img", None)
+        if not tip or not holder:
+            return
+        land = self._is_landscape()
+        pad = float(getattr(self, "_nav_pad_bottom", dp(24)))
+        if land:
+            tip.text = "Pantalla completa · gira o Cerrar"
+            tip.height = dp(22)
+            tip.pos_hint = {"top": 1, "x": 0}
+            if btn:
+                btn.pos_hint = {"right": 0.98, "y": 0.02}
+                btn.size = (dp(120), dp(42))
+            holder.padding = (dp(10), dp(28), dp(10) + pad, dp(12))
+        else:
+            tip.text = "Pantalla completa · gira el telefono · Cerrar"
+            tip.height = dp(26)
+            tip.pos_hint = {"top": 1, "x": 0}
+            if btn:
+                btn.pos_hint = {"center_x": 0.5, "y": 0.01}
+                btn.size = (dp(160), dp(46))
+            holder.padding = (dp(6), dp(34), dp(6), dp(58) + pad)
+        if img is not None:
+            img.allow_stretch = True
+            img.keep_ratio = True
 
-    def reload_dashboard(self, force: bool = False):
-        """Carga el año seleccionado. Usa caché; años cerrados desde conta (rapido)."""
+    def on_start(self):
+        # UI inmediata con datos locales; SOAP solo con ↻
+        Clock.schedule_once(lambda dt: self._bootstrap_local(), 0)
+
+    def _bootstrap_local(self):
+        """Arranque rapido: tarjetas + historial local, sin SOAP automatico."""
+        self._setup_display()
+        self._ensure_cards()
+        try:
+            self._pe_history = pe_history.load_merged_history()
+            self._pe_years = pe_history.selectable_years(self._pe_history)
+        except Exception:
+            self._pe_history = []
+            self._pe_years = []
+        today = datetime.date.today()
+        year = int(self.pe_year or today.year)
+        try:
+            self.root.ids.year_header.text = f"{year}  v"
+            self.root.ids.top_bar.title = f"Sales Analytics  {app_version.APP_VERSION_LABEL}"
+        except Exception:
+            pass
+
+        # 1) Cache en memoria
+        cached = self._year_cache.get(year)
+        if cached:
+            self._apply_year_bundle(year, cached, from_cache=True)
+            try:
+                self.root.ids.mode_subtitle.text = (
+                    f"Cache local {year}. Toca ↻ para actualizar."
+                )
+            except Exception:
+                pass
+            self.log_activity(f"Arranque con cache {year}")
+            return
+
+        # 2) Conta empaquetada (offline, inmediata)
+        for y in (year, year - 1 if year == today.year else year):
+            if self._apply_conta_year_offline(y):
+                self.pe_year = y
+                try:
+                    self.root.ids.year_header.text = f"{y}  v"
+                except Exception:
+                    pass
+                self.log_activity(f"Arranque conta local {y} (sin SOAP)")
+                return
+
+        # 3) Sin datos: tarjetas vacias pero visibles
+        monthly_expense, _ = expense.resolve_monthly_expense(year)
+        empty = metrics.compute_year_metrics(
+            total_sales=0.0,
+            total_cost=0.0,
+            day_of_year=1,
+            period_days=365,
+            monthly_expense=monthly_expense,
+        )
+        self._metrics_all = empty
+        self._metrics_paid = empty
+        self._apply_cards()
+        self._refresh_pe_year_ui()
+        self._redraw_pe_chart()
+        try:
+            self.root.ids.mode_subtitle.text = "Listo. Toca ↻ para cargar datos."
+            self.root.ids.expense_chip.text = (
+                f"Gasto mes: ${monthly_expense:,.2f}  ·  menu > Editar gasto"
+            )
+        except Exception:
+            pass
+        self.log_activity("Arranque sin red · espera actualizacion manual")
+
+    def reload_dashboard(self, force: bool = False, allow_network: bool = True):
+        """Carga el año seleccionado. Red (SOAP) solo si allow_network=True."""
         today = datetime.date.today()
         year = int(self.pe_year or today.year)
 
@@ -1158,6 +1339,30 @@ class SalesAnalyticsApp(MDApp):
         cached = None if force else self._year_cache.get(year)
         if cached:
             self._apply_year_bundle(year, cached, from_cache=True)
+            return
+
+        if not allow_network:
+            if self._apply_conta_year_offline(year):
+                return
+            monthly_expense, _ = expense.resolve_monthly_expense(year)
+            empty = metrics.compute_year_metrics(
+                total_sales=0.0,
+                total_cost=0.0,
+                day_of_year=1,
+                period_days=365,
+                monthly_expense=monthly_expense,
+            )
+            self._metrics_all = empty
+            self._metrics_paid = empty
+            self._apply_cards()
+            self._refresh_pe_year_ui()
+            self._redraw_pe_chart()
+            try:
+                self.root.ids.mode_subtitle.text = (
+                    f"Sin datos locales {year}. Toca ↻ para cargar."
+                )
+            except Exception:
+                pass
             return
 
         self._set_loading(True, f"Cargando {year}…")
@@ -1177,6 +1382,52 @@ class SalesAnalyticsApp(MDApp):
         import threading
 
         threading.Thread(target=worker, daemon=True).start()
+
+    def _apply_conta_year_offline(self, year: int) -> bool:
+        """Aplica conta local al año. True si habia datos."""
+        try:
+            pack = year_data.metrics_from_conta(year)
+        except Exception:
+            pack = None
+        if not pack:
+            return False
+        m_all, monthly, note = pack
+        monthly_expense, _exp_note = expense.resolve_monthly_expense(year)
+        try:
+            charts.save_vs_paid(
+                m_all.total_sales, m_all.total_sales, _cpath(f"chart_vs_paid_{year}.png"), f"{year} conta"
+            )
+            charts.save_service_pies([], [], _cpath(f"chart_tipos_{year}.png"), f"{year}")
+            charts.save_behavior_monthly(
+                monthly, [], _cpath(f"chart_comportamiento_{year}.png"), year
+            )
+        except Exception:
+            traceback.print_exc()
+        bundle = {
+            "m_all": m_all,
+            "m_paid": m_all,
+            "monthly_all": monthly,
+            "monthly_paid": [],
+            "services_all": [],
+            "services_paid": [],
+            "source_note": f"Conta local · {note}",
+            "img_vs": _cpath(f"chart_vs_paid_{year}.png"),
+            "img_tipos": _cpath(f"chart_tipos_{year}.png"),
+            "img_comp": _cpath(f"chart_comportamiento_{year}.png"),
+            "paid_pending": False,
+        }
+        self._year_cache[year] = bundle
+        self._apply_year_bundle(year, bundle, from_cache=True)
+        try:
+            self.root.ids.mode_subtitle.text = (
+                f"Conta local {year}. Toca ↻ para SOAP / actualizar."
+            )
+            self.root.ids.expense_chip.text = (
+                f"Gasto mes: ${monthly_expense:,.2f}  ·  menu > Editar gasto"
+            )
+        except Exception:
+            pass
+        return True
 
     def _on_load_error(self, year: int, token: int, msg: str):
         if token != self._load_token or year != self.pe_year:
