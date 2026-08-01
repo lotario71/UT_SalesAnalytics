@@ -16,10 +16,6 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.metrics import dp
-from kivy.uix.anchorlayout import AnchorLayout
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.image import Image
-from kivy.uix.modalview import ModalView
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 from kivymd.app import MDApp
@@ -230,22 +226,13 @@ MDNavigationLayout:
                         icon: "chart-bar"
                         MDBoxLayout:
                             orientation: "vertical"
-                            padding: "6dp"
-                            MDLabel:
-                                text: "Toca la grafica para ampliar"
-                                font_style: "Caption"
-                                halign: "center"
-                                size_hint_y: None
-                                height: "22dp"
-                                theme_text_color: "Custom"
-                                text_color: 0.58, 0.64, 0.72, 1
+                            padding: "4dp"
                             Image:
                                 id: img_vs
                                 source: "chart_vs_paid.png"
                                 allow_stretch: True
                                 keep_ratio: True
                                 size_hint: 1, 1
-                                on_touch_up: app.on_chart_touch(self, args[1])
 
                     MDBottomNavigationItem:
                         name: "tipos"
@@ -253,26 +240,13 @@ MDNavigationLayout:
                         icon: "chart-pie"
                         MDBoxLayout:
                             orientation: "vertical"
-                            padding: "6dp"
-                            MDLabel:
-                                text: "Toca / desliza · toca para ampliar"
-                                font_style: "Caption"
-                                halign: "center"
-                                size_hint_y: None
-                                height: "22dp"
-                                theme_text_color: "Custom"
-                                text_color: 0.58, 0.64, 0.72, 1
-                            ScrollView:
-                                do_scroll_x: False
-                                Image:
-                                    id: img_tipos
-                                    source: "chart_tipos.png"
-                                    allow_stretch: True
-                                    keep_ratio: True
-                                    size_hint_x: 1
-                                    size_hint_y: None
-                                    height: (self.texture_size[1] * self.width / self.texture_size[0]) if self.texture_size[0] else 900
-                                    on_touch_up: app.on_chart_touch(self, args[1])
+                            padding: "4dp"
+                            Image:
+                                id: img_tipos
+                                source: "chart_tipos.png"
+                                allow_stretch: True
+                                keep_ratio: True
+                                size_hint: 1, 1
 
                     MDBottomNavigationItem:
                         name: "comp"
@@ -280,22 +254,13 @@ MDNavigationLayout:
                         icon: "chart-line"
                         MDBoxLayout:
                             orientation: "vertical"
-                            padding: "6dp"
-                            MDLabel:
-                                text: "Toca la grafica para ampliar"
-                                font_style: "Caption"
-                                halign: "center"
-                                size_hint_y: None
-                                height: "22dp"
-                                theme_text_color: "Custom"
-                                text_color: 0.58, 0.64, 0.72, 1
+                            padding: "4dp"
                             Image:
                                 id: img_comp
                                 source: "chart_comportamiento.png"
                                 allow_stretch: True
                                 keep_ratio: True
                                 size_hint: 1, 1
-                                on_touch_up: app.on_chart_touch(self, args[1])
 
                     MDBottomNavigationItem:
                         name: "pe"
@@ -303,24 +268,13 @@ MDNavigationLayout:
                         icon: "finance"
                         MDBoxLayout:
                             orientation: "vertical"
-                            padding: "8dp", "4dp"
-                            spacing: "4dp"
-                            MDLabel:
-                                id: pe_hint
-                                text: "Mismo anio que arriba · toca para ampliar"
-                                font_style: "Caption"
-                                halign: "center"
-                                size_hint_y: None
-                                height: "22dp"
-                                theme_text_color: "Custom"
-                                text_color: 0.58, 0.64, 0.72, 1
+                            padding: "4dp"
                             Image:
                                 id: img_pe
                                 source: "chart_pe_hist.png"
                                 allow_stretch: True
                                 keep_ratio: True
                                 size_hint: 1, 1
-                                on_touch_up: app.on_chart_touch(self, args[1])
 
                     MDBottomNavigationItem:
                         name: "actividad"
@@ -590,13 +544,8 @@ class SalesAnalyticsApp(MDApp):
         return root
 
     def _setup_display(self):
-        """Safe-area Android + reaccion al girar pantalla."""
+        """Safe-area Android (solo vertical)."""
         self._apply_system_insets()
-        self._apply_orientation_layout()
-        try:
-            Window.bind(size=lambda *_: self._apply_orientation_layout())
-        except Exception:
-            pass
 
     def _apply_system_insets(self):
         """Evita que la barra de navegacion Android tape botones de la app."""
@@ -631,34 +580,6 @@ class SalesAnalyticsApp(MDApp):
         except Exception:
             pass
         self._nav_pad_bottom = bottom
-
-    def _is_landscape(self) -> bool:
-        try:
-            return Window.width > Window.height
-        except Exception:
-            return False
-
-    def _apply_orientation_layout(self, *_):
-        """Compacta cabecera en horizontal para dejar sitio al contenido."""
-        land = self._is_landscape()
-        try:
-            ids = self.root.ids
-            # En horizontal: menos textos secundarios, mas espacio util
-            ids.mode_subtitle.height = dp(0) if land else dp(44)
-            ids.mode_subtitle.opacity = 0 if land else 1
-            ids.expense_chip.height = dp(0) if land else dp(32)
-            ids.expense_chip.opacity = 0 if land else 1
-            ids.row_mode.height = dp(36) if land else dp(44)
-            ids.row_year.height = dp(40) if land else dp(52)
-            # Padding inferior siempre (nav Android)
-            pad = getattr(self, "_nav_pad_bottom", dp(18))
-            ids.main_column.padding = (0, 0, 0, pad)
-        except Exception:
-            pass
-        # Si hay grafica ampliada abierta, reajusta
-        modal = getattr(self, "_chart_modal", None)
-        if modal and getattr(self, "_chart_img", None):
-            self._fit_chart_image()
 
 
     def open_drawer(self, *_):
@@ -870,15 +791,6 @@ class SalesAnalyticsApp(MDApp):
     def _refresh_pe_year_ui(self):
         try:
             self.root.ids.year_header.text = f"{self.pe_year}  v"
-            n = sum(
-                1
-                for e in self._pe_history
-                if str(e.get("date", "")).startswith(str(self.pe_year))
-            )
-            mode = "Pagadas" if self.metrics_mode == "paid" else "Todas"
-            self.root.ids.pe_hint.text = (
-                f"Evol. PE {self.pe_year}: {n} puntos · vista {mode}"
-            )
         except Exception:
             pass
 
@@ -1115,145 +1027,6 @@ class SalesAnalyticsApp(MDApp):
             w.reload()
         except Exception:
             pass
-
-    def on_chart_touch(self, widget, touch):
-        """Un toque en la grafica la abre ampliada."""
-        if not widget.collide_point(*touch.pos):
-            return False
-        if getattr(touch, "is_mouse_scrolling", False):
-            return False
-        src = getattr(widget, "source", None) or ""
-        if not src:
-            return False
-        # Ignora arrastres largos (scroll)
-        try:
-            if abs(touch.dx) + abs(touch.dy) > 12:
-                return False
-        except Exception:
-            pass
-        self.enlarge_chart(src)
-        return True
-
-    def enlarge_chart(self, path: str):
-        """Grafica a pantalla completa, centrada; al girar ocupa el espacio util."""
-        if getattr(self, "_chart_modal", None):
-            try:
-                self._chart_modal.dismiss()
-            except Exception:
-                pass
-
-        pad = float(getattr(self, "_nav_pad_bottom", dp(24)))
-        root = FloatLayout()
-
-        img = Image(
-            source=path,
-            allow_stretch=True,
-            keep_ratio=True,
-            size_hint=(1, 1),
-            pos_hint={"x": 0, "y": 0},
-        )
-        try:
-            img.reload()
-        except Exception:
-            pass
-        self._chart_img = img
-        self._chart_path = path
-
-        tip = MDLabel(
-            text="",
-            font_style="Caption",
-            size_hint=(1, None),
-            height=dp(26),
-            pos_hint={"top": 1, "x": 0},
-            halign="center",
-            valign="middle",
-            theme_text_color="Custom",
-            text_color=(0.75, 0.80, 0.86, 1),
-        )
-        tip.bind(size=tip.setter("text_size"))
-
-        btn = MDRaisedButton(
-            text="Cerrar",
-            size_hint=(None, None),
-            size=(dp(160), dp(46)),
-            pos_hint={"center_x": 0.5, "y": 0},
-            md_bg_color=(0.08, 0.72, 0.65, 1),
-        )
-
-        # Contenedor de imagen con margen para tip + boton + nav Android
-        holder = AnchorLayout(
-            anchor_x="center",
-            anchor_y="center",
-            size_hint=(1, 1),
-            pos_hint={"x": 0, "y": 0},
-            padding=(dp(8), dp(36), dp(8), dp(56) + pad),
-        )
-        holder.add_widget(img)
-        root.add_widget(holder)
-        root.add_widget(tip)
-        root.add_widget(btn)
-
-        modal = ModalView(
-            auto_dismiss=True,
-            size_hint=(1, 1),
-            pos_hint={"x": 0, "y": 0},
-            background="",
-            background_color=(0.04, 0.06, 0.10, 1),
-            overlay_color=(0, 0, 0, 0.85),
-        )
-        modal.add_widget(root)
-        self._chart_modal = modal
-        self._chart_tip = tip
-        self._chart_btn = btn
-        self._chart_holder = holder
-
-        def _cleanup(*_args):
-            try:
-                Window.unbind(size=_on_win)
-            except Exception:
-                pass
-            if getattr(self, "_chart_modal", None) is modal:
-                self._chart_modal = None
-                self._chart_img = None
-
-        def _on_win(*_args):
-            self._fit_chart_image()
-
-        btn.bind(on_release=lambda *_: modal.dismiss())
-        modal.bind(on_dismiss=_cleanup)
-        Window.bind(size=_on_win)
-        self._fit_chart_image()
-        modal.open()
-
-    def _fit_chart_image(self):
-        """Ajusta tip/boton/padding segun vertical u horizontal."""
-        tip = getattr(self, "_chart_tip", None)
-        btn = getattr(self, "_chart_btn", None)
-        holder = getattr(self, "_chart_holder", None)
-        img = getattr(self, "_chart_img", None)
-        if not tip or not holder:
-            return
-        land = self._is_landscape()
-        pad = float(getattr(self, "_nav_pad_bottom", dp(24)))
-        if land:
-            tip.text = "Pantalla completa · gira o Cerrar"
-            tip.height = dp(22)
-            tip.pos_hint = {"top": 1, "x": 0}
-            if btn:
-                btn.pos_hint = {"right": 0.98, "y": 0.02}
-                btn.size = (dp(120), dp(42))
-            holder.padding = (dp(10), dp(28), dp(10) + pad, dp(12))
-        else:
-            tip.text = "Pantalla completa · gira el telefono · Cerrar"
-            tip.height = dp(26)
-            tip.pos_hint = {"top": 1, "x": 0}
-            if btn:
-                btn.pos_hint = {"center_x": 0.5, "y": 0.01}
-                btn.size = (dp(160), dp(46))
-            holder.padding = (dp(6), dp(34), dp(6), dp(58) + pad)
-        if img is not None:
-            img.allow_stretch = True
-            img.keep_ratio = True
 
     def on_start(self):
         # UI inmediata con datos locales; SOAP solo con ↻
@@ -1518,6 +1291,18 @@ class SalesAnalyticsApp(MDApp):
                 m_paid = m_all
                 paid_pending = False
                 step("Solo pagadas: N/D en años cerrados (se asume cobrado)", level="ok")
+                # Tipos / comportamiento: conta no trae desglose → 1 SOAP "todas"
+                try:
+                    df_all = _soap(False)
+                    services_all = metrics.service_sales(df_all)
+                    services_paid = services_all
+                    soap_monthly = metrics.monthly_sales(df_all)
+                    if soap_monthly:
+                        monthly_all = soap_monthly
+                        monthly_paid = soap_monthly
+                    step("SOAP tipos/meses para graficas", level="ok")
+                except Exception as exc:
+                    step(f"SOAP tipos no disponible: {exc}", level="warn")
         else:
             monthly_expense, exp_note = expense.resolve_monthly_expense(year)
             source_note = f"SOAP en vivo · {exp_note.split(chr(183))[0].strip()}"
@@ -1576,6 +1361,10 @@ class SalesAnalyticsApp(MDApp):
             "m_all": m_all,
             "m_paid": m_paid,
             "source_note": source_note,
+            "monthly_all": monthly_all,
+            "monthly_paid": monthly_paid,
+            "services_all": services_all,
+            "services_paid": services_paid,
             "img_vs": _cpath(f"chart_vs_paid_{year}.png"),
             "img_tipos": _cpath(f"chart_tipos_{year}.png"),
             "img_comp": _cpath(f"chart_comportamiento_{year}.png"),
@@ -1623,18 +1412,24 @@ class SalesAnalyticsApp(MDApp):
                     _cpath(f"chart_vs_paid_{year}.png"),
                     f"01-01-{year} a 31-12-{year}",
                 )
+                services_all = bundle.get("services_all") or []
+                services_paid = metrics.service_sales(df_paid)
+                monthly_all = bundle.get("monthly_all") or []
+                monthly_paid = metrics.monthly_sales(df_paid)
                 charts.save_service_pies(
-                    [],
-                    metrics.service_sales(df_paid),
+                    services_all,
+                    services_paid,
                     _cpath(f"chart_tipos_{year}.png"),
-                    f"{year} pagadas",
+                    f"{year}",
                 )
                 charts.save_behavior_monthly(
-                    [],
-                    metrics.monthly_sales(df_paid),
+                    monthly_all,
+                    monthly_paid,
                     _cpath(f"chart_comportamiento_{year}.png"),
                     year,
                 )
+                bundle["services_paid"] = services_paid
+                bundle["monthly_paid"] = monthly_paid
                 Clock.schedule_once(
                     lambda dt: self._on_paid_ready(year, token, m_paid, ms)
                 )

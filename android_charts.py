@@ -1,4 +1,4 @@
-"""Graficas con Pillow (tema oscuro), pensadas para pantallas movil alta densidad."""
+"""Graficas con Pillow (tema oscuro), verticales a pantalla completa para movil."""
 from __future__ import annotations
 
 from datetime import date, datetime
@@ -6,36 +6,41 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-BG = (17, 24, 39)
-PANEL = (31, 41, 55)
-TEXT = (229, 231, 235)
-MUTED = (148, 163, 184)
+BG = (10, 14, 22)
+PANEL = (22, 30, 42)
+TEXT = (236, 240, 245)
+MUTED = (160, 174, 192)
 GRID = (51, 65, 85)
 BLUE = (59, 130, 246)
 TEAL = (20, 184, 166)
 GREEN = (34, 197, 94)
 RED = (239, 68, 68)
+ORANGE = (245, 158, 11)
+PURPLE = (168, 85, 247)
+CYAN = (6, 182, 212)
+SLATE = (100, 116, 139)
 
 SERVICE_COLORS = {
     "Hotel Services": TEAL,
     "Transfer Services": BLUE,
-    "Car Services": (245, 158, 11),
-    "Tour Services": (168, 85, 247),
-    "Miscellaneous Services": (100, 116, 139),
-    "Flight Services": (6, 182, 212),
+    "Car Services": ORANGE,
+    "Tour Services": PURPLE,
+    "Miscellaneous Services": SLATE,
+    "Flight Services": CYAN,
     "Other": (107, 114, 128),
 }
 
 _MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
 
-# Escala para Xiaomi / pantallas densas (PNG nítido al estirar)
-_S = 2
+# Lienzo vertical (casi todo el hueco entre cabecera y bottom nav)
+_CW, _CH = 1080, 1680
+_S = 2  # PNG nitido al estirar
 _ASSETS = Path(__file__).resolve().parent / "assets"
 _FONT_FILE = _ASSETS / "chart_font.ttf"
 
 
 def _font(size: int):
-    px = max(10, int(size * _S))
+    px = max(12, int(size * _S))
     try:
         if _FONT_FILE.exists():
             return ImageFont.truetype(str(_FONT_FILE), px)
@@ -63,74 +68,91 @@ def _hex_to_rgb(h: str) -> tuple[int, int, int]:
     return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
 
 
-def _new(w: int, h: int) -> tuple[Image.Image, ImageDraw.ImageDraw]:
+def _new(w: int = _CW, h: int = _CH) -> tuple[Image.Image, ImageDraw.ImageDraw]:
     img = Image.new("RGB", (int(w * _S), int(h * _S)), BG)
     return img, ImageDraw.Draw(img)
 
 
-def _title(draw, text: str, w: int, y: int = 14):
-    font = _font(22)
+def _title(draw, text: str, w: int, y: int = 22):
+    font = _font(32)
     tw, _ = _text_size(draw, text, font)
     draw.text(((w * _S - tw) // 2, y * _S), text, fill=TEXT, font=font)
 
 
+def _money(n: float) -> str:
+    return f"${n:,.0f}"
+
+
 def save_vs_paid(all_total: float, paid_total: float, path: str | Path, subtitle: str = ""):
-    w, h = 1080, 720
+    w, h = _CW, _CH
     img, draw = _new(w, h)
     W, H = img.size
     title = "Todas vs pagadas" + (f" · {subtitle}" if subtitle else "")
     _title(draw, title, w)
 
-    left, right, top, bottom = 100 * _S, W - 50 * _S, 90 * _S, H - 70 * _S
-    draw.rectangle([left, top, right, bottom], fill=PANEL)
+    left, right = 70 * _S, W - 70 * _S
+    top, bottom = 110 * _S, H - 80 * _S
+    draw.rounded_rectangle([left, top, right, bottom], radius=24 * _S, fill=PANEL)
     values = [float(all_total or 0), float(paid_total or 0)]
     vmax = max(values + [1.0])
     labels = ["Todas", "Pagadas"]
     colors = [BLUE, TEAL]
-    bar_w = 160 * _S
-    gap = 220 * _S
-    base_x = left + 140 * _S
+    bar_w = 200 * _S
+    gap = 260 * _S
+    base_x = left + 150 * _S
+    usable = bottom - top - 160 * _S
     for i, (lab, val, col) in enumerate(zip(labels, values, colors)):
         x0 = base_x + i * gap
-        bh = int((val / vmax) * (bottom - top - 80 * _S))
-        y0 = bottom - 30 * _S - bh
-        draw.rectangle([x0, y0, x0 + bar_w, bottom - 30 * _S], fill=col)
-        f = _font(20)
-        t = f"${val:,.0f}"
+        bh = int((val / vmax) * usable)
+        y0 = bottom - 90 * _S - bh
+        draw.rounded_rectangle(
+            [x0, y0, x0 + bar_w, bottom - 90 * _S], radius=14 * _S, fill=col
+        )
+        f = _font(28)
+        t = _money(val)
         tw, _ = _text_size(draw, t, f)
-        draw.text((x0 + (bar_w - tw) // 2, y0 - 36 * _S), t, fill=TEXT, font=f)
-        lw, _ = _text_size(draw, lab, f)
-        draw.text((x0 + (bar_w - lw) // 2, bottom - 24 * _S), lab, fill=MUTED, font=f)
+        draw.text((x0 + (bar_w - tw) // 2, y0 - 48 * _S), t, fill=TEXT, font=f)
+        f2 = _font(26)
+        lw, _ = _text_size(draw, lab, f2)
+        draw.text((x0 + (bar_w - lw) // 2, bottom - 60 * _S), lab, fill=MUTED, font=f2)
         if i == 1 and values[0] > 0:
             pct = values[1] / values[0] * 100
             pt = f"{pct:.1f}%"
-            pw, ph = _text_size(draw, pt, _font(22))
+            pf = _font(34)
+            pw, ph = _text_size(draw, pt, pf)
             draw.text(
-                (x0 + (bar_w - pw) // 2, y0 + max(bh // 2 - ph // 2, 8)),
+                (x0 + (bar_w - pw) // 2, y0 + max(bh // 2 - ph // 2, 10 * _S)),
                 pt,
                 fill=(255, 255, 255),
-                font=_font(22),
+                font=pf,
             )
     img.save(path, "PNG")
 
 
 def save_service_pies(all_items, paid_items, path: str | Path, subtitle: str = ""):
-    # Una encima de otra: mas legible en movil vertical
-    w, h = 1080, 1400
+    w, h = _CW, _CH
     img, draw = _new(w, h)
     W, H = img.size
     _title(draw, "Tipos de servicio" + (f" · {subtitle}" if subtitle else ""), w)
 
     def _pie(cy: int, items, title: str):
         cx = W // 2
-        r = 160 * _S
-        draw.text((cx - 90 * _S, cy - r - 40 * _S), title, fill=TEXT, font=_font(20))
+        r = 220 * _S
+        tf = _font(26)
+        tw, _ = _text_size(draw, title, tf)
+        draw.text((cx - tw // 2, cy - r - 55 * _S), title, fill=TEXT, font=tf)
         if not items:
-            draw.text((cx - 50 * _S, cy - 10 * _S), "Sin datos", fill=MUTED, font=_font(18))
+            msg = "Sin desglose por tipo"
+            hint = "(necesita SOAP · toca ↻)"
+            mf = _font(24)
+            hf = _font(20)
+            mw, _ = _text_size(draw, msg, mf)
+            hw, _ = _text_size(draw, hint, hf)
+            draw.text((cx - mw // 2, cy - 20 * _S), msg, fill=MUTED, font=mf)
+            draw.text((cx - hw // 2, cy + 20 * _S), hint, fill=MUTED, font=hf)
             return
         total = sum(v for _, v in items) or 1.0
         ang = -90.0
-        legend_y = cy + r + 16 * _S
         for name, val in items:
             sweep = 360.0 * (val / total)
             color = SERVICE_COLORS.get(name, (107, 114, 128))
@@ -144,23 +166,35 @@ def save_service_pies(all_items, paid_items, path: str | Path, subtitle: str = "
                 outline=BG,
             )
             ang += sweep
-            short = name.replace(" Services", "")
-            line = f"{short}: ${val:,.0f} ({val/total*100:.1f}%)"
-            draw.text((80 * _S, legend_y), line[:48], fill=MUTED, font=_font(16))
-            legend_y += 28 * _S
 
-    _pie(int(0.28 * H), all_items or [], "Todas (SOAP)")
+        legend_y = cy + r + 28 * _S
+        lf = _font(22)
+        for name, val in items:
+            color = SERVICE_COLORS.get(name, (107, 114, 128))
+            if isinstance(color, str):
+                color = _hex_to_rgb(color)
+            short = name.replace(" Services", "")
+            line = f"{short}: {_money(val)} ({val / total * 100:.1f}%)"
+            draw.ellipse(
+                [70 * _S, legend_y + 4 * _S, 94 * _S, legend_y + 28 * _S],
+                fill=color,
+            )
+            draw.text((110 * _S, legend_y), line[:52], fill=MUTED, font=lf)
+            legend_y += 40 * _S
+
+    _pie(int(0.30 * H), all_items or [], "Todas (SOAP)")
     _pie(int(0.72 * H), paid_items or [], "Pagadas (SOAP)")
     img.save(path, "PNG")
 
 
 def save_behavior_monthly(all_months, paid_months, path: str | Path, year: int):
-    w, h = 1080, 720
+    w, h = _CW, _CH
     img, draw = _new(w, h)
     W, H = img.size
-    _title(draw, f"Comportamiento · {year} · Meses (SOAP)", w)
-    left, right, top, bottom = 70 * _S, W - 40 * _S, 90 * _S, H - 70 * _S
-    draw.rectangle([left, top, right, bottom], fill=PANEL)
+    _title(draw, f"Comportamiento · {year}", w)
+    left, right = 90 * _S, W - 50 * _S
+    top, bottom = 120 * _S, H - 90 * _S
+    draw.rounded_rectangle([left, top, right, bottom], radius=24 * _S, fill=PANEL)
 
     all_map = dict(all_months or [])
     paid_map = dict(paid_months or [])
@@ -169,30 +203,42 @@ def save_behavior_monthly(all_months, paid_months, path: str | Path, year: int):
     y_paid = [float(paid_map.get(m, 0.0)) for m in months]
     vmax = max(y_all + y_paid + [1.0])
 
+    # Escala Y (3 marcas)
+    yf = _font(18)
+    for frac, label_v in ((0.0, vmax), (0.5, vmax / 2), (1.0, 0.0)):
+        yy = top + 50 * _S + frac * (bottom - top - 130 * _S)
+        draw.line([(left + 8 * _S, yy), (right - 8 * _S, yy)], fill=GRID, width=_S)
+        lab = _money(label_v) if label_v >= 1000 else f"{label_v:,.0f}"
+        draw.text((left + 14 * _S, yy - 14 * _S), lab, fill=MUTED, font=yf)
+
     def _pts(vals):
         pts = []
         for i, v in enumerate(vals):
-            x = left + 30 * _S + i * ((right - left - 60 * _S) / 11)
-            y = bottom - 35 * _S - (v / vmax) * (bottom - top - 70 * _S)
+            x = left + 50 * _S + i * ((right - left - 90 * _S) / 11)
+            y = bottom - 70 * _S - (v / vmax) * (bottom - top - 130 * _S)
             pts.append((x, y))
         return pts
 
     def _polyline(pts, color):
         if len(pts) >= 2:
-            draw.line(pts, fill=color, width=4 * _S)
+            draw.line(pts, fill=color, width=6 * _S)
         for x, y in pts:
-            draw.ellipse([x - 6 * _S, y - 6 * _S, x + 6 * _S, y + 6 * _S], fill=color)
+            draw.ellipse(
+                [x - 9 * _S, y - 9 * _S, x + 9 * _S, y + 9 * _S],
+                fill=color,
+            )
 
     _polyline(_pts(y_all), BLUE)
     _polyline(_pts(y_paid), TEAL)
-    f = _font(15)
+    f = _font(20)
     for i, m in enumerate(months):
-        x = left + 30 * _S + i * ((right - left - 60 * _S) / 11)
+        x = left + 50 * _S + i * ((right - left - 90 * _S) / 11)
         lab = _MONTHS[m - 1]
         tw, _ = _text_size(draw, lab, f)
-        draw.text((x - tw / 2, bottom - 26 * _S), lab, fill=MUTED, font=f)
-    draw.text((left + 16 * _S, top + 12 * _S), "Todas", fill=BLUE, font=f)
-    draw.text((left + 110 * _S, top + 12 * _S), "Pagadas", fill=TEAL, font=f)
+        draw.text((x - tw / 2, bottom - 48 * _S), lab, fill=MUTED, font=f)
+    lf = _font(24)
+    draw.text((left + 20 * _S, top + 16 * _S), "Todas", fill=BLUE, font=lf)
+    draw.text((left + 160 * _S, top + 16 * _S), "Pagadas", fill=TEAL, font=lf)
     img.save(path, "PNG")
 
 
@@ -261,7 +307,7 @@ def save_pe_history(
     year: int | None = None,
     series: str = "all",
 ):
-    """Una sola grafica (movil). series: all | paid."""
+    """Una sola grafica vertical. series: all | paid."""
     rows, scope = _filter_pe_history(history, year)
     use_paid = series == "paid"
     key = "paid_only_avg" if use_paid else "all_data_avg"
@@ -275,19 +321,25 @@ def save_pe_history(
         pe = pe_live if pe_live > 0 else (pe_hist[-1] if pe_hist else 0.0)
 
     label = "Pagadas" if use_paid else "Todas"
-    w, h = 1080, 900
+    w, h = _CW, _CH
     img, draw = _new(w, h)
     W, H = img.size
-    _title(draw, f"Evolucion PE · {scope}", w, y=10)
+    _title(draw, f"Evolucion PE · {scope}", w, y=18)
     sub = f"{label} · ritmo diario"
-    sw, _ = _text_size(draw, sub, _font(16))
-    draw.text(((W - sw) // 2, 48 * _S), sub, fill=MUTED, font=_font(16))
+    sw, _ = _text_size(draw, sub, _font(22))
+    draw.text(((W - sw) // 2, 70 * _S), sub, fill=MUTED, font=_font(22))
 
-    left, right, top, bottom = 70 * _S, W - 35 * _S, 100 * _S, H - 60 * _S
-    draw.rectangle([left, top, right, bottom], fill=PANEL)
+    left, right = 90 * _S, W - 45 * _S
+    top, bottom = 130 * _S, H - 85 * _S
+    draw.rounded_rectangle([left, top, right, bottom], radius=24 * _S, fill=PANEL)
 
     if not rows:
-        draw.text((W // 2 - 80 * _S, H // 2), "Sin historial", fill=MUTED, font=_font(20))
+        draw.text(
+            (W // 2 - 100 * _S, H // 2),
+            "Sin historial",
+            fill=MUTED,
+            font=_font(26),
+        )
         img.save(path, "PNG")
         return
 
@@ -300,10 +352,10 @@ def save_pe_history(
     plot_v = [v for v in vals if v is not None]
     if not plot_v:
         draw.text(
-            (W // 2 - 160 * _S, H // 2 - 10 * _S),
+            (W // 2 - 180 * _S, H // 2 - 10 * _S),
             "Sin datos en esta serie",
             fill=MUTED,
-            font=_font(18),
+            font=_font(24),
         )
         img.save(path, "PNG")
         return
@@ -315,44 +367,52 @@ def save_pe_history(
         if len(plot_d) == 1:
             x = (left + right) / 2
         else:
-            x = left + 20 * _S + i * ((right - left - 40 * _S) / (len(plot_d) - 1))
-        y = bottom - 30 * _S - ((v - lo) / span) * (bottom - top - 55 * _S)
+            x = left + 30 * _S + i * ((right - left - 60 * _S) / (len(plot_d) - 1))
+        y = bottom - 55 * _S - ((v - lo) / span) * (bottom - top - 100 * _S)
         return x, y
 
-    pe_y = bottom - 30 * _S - ((pe - lo) / span) * (bottom - top - 55 * _S)
-    draw.line([(left + 12 * _S, pe_y), (right - 12 * _S, pe_y)], fill=TEAL, width=3 * _S)
+    # Escala Y
+    yf = _font(18)
+    for frac, label_v in ((0.0, hi), (0.5, (hi + lo) / 2), (1.0, lo)):
+        yy = top + 55 * _S + frac * (bottom - top - 100 * _S)
+        draw.line([(left + 8 * _S, yy), (right - 8 * _S, yy)], fill=GRID, width=_S)
+        draw.text((left + 14 * _S, yy - 14 * _S), _money(label_v), fill=MUTED, font=yf)
+
+    pe_y = bottom - 55 * _S - ((pe - lo) / span) * (bottom - top - 100 * _S)
+    draw.line([(left + 12 * _S, pe_y), (right - 12 * _S, pe_y)], fill=TEAL, width=4 * _S)
 
     pts = [_xy(i, v) for i, v in enumerate(plot_v)]
     if len(pts) >= 2:
-        draw.line(pts, fill=(203, 213, 225), width=4 * _S)
+        draw.line(pts, fill=(203, 213, 225), width=6 * _S)
     for (x, y), v in zip(pts, plot_v):
         col = GREEN if v >= pe else RED
-        r = 7 * _S
+        r = 10 * _S
         draw.ellipse([x - r, y - r, x + r, y + r], fill=col, outline=BG)
 
-    f = _font(15)
-    draw.text((left + 16 * _S, top + 12 * _S), f"PE ${pe:,.0f}", fill=TEAL, font=f)
+    f = _font(24)
+    draw.text((left + 20 * _S, top + 16 * _S), f"PE {_money(pe)}", fill=TEAL, font=f)
     if clipped:
         draw.text(
-            (left + 16 * _S, top + 36 * _S),
+            (left + 20 * _S, top + 48 * _S),
             "Escala util (picos ene. fuera)",
             fill=MUTED,
-            font=_font(13),
+            font=_font(18),
         )
 
     step = max(1, len(plot_d) // 5)
+    df = _font(18)
     for i, d in enumerate(plot_d):
         if i % step != 0 and i != len(plot_d) - 1:
             continue
         x, _ = _xy(i, plot_v[i])
         lab = d.strftime("%d-%b")
-        tw, _ = _text_size(draw, lab, f)
-        draw.text((x - tw / 2, bottom - 26 * _S), lab, fill=MUTED, font=f)
+        tw, _ = _text_size(draw, lab, df)
+        draw.text((x - tw / 2, bottom - 40 * _S), lab, fill=MUTED, font=df)
 
     last_v = plot_v[-1]
     if lo <= last_v <= hi:
         lx, ly = pts[-1]
-        t = f"${last_v:,.0f}"
-        draw.text((lx + 10 * _S, ly - 22 * _S), t, fill=TEXT, font=_font(16))
+        t = _money(last_v)
+        draw.text((lx + 12 * _S, ly - 30 * _S), t, fill=TEXT, font=_font(24))
 
     img.save(path, "PNG")
