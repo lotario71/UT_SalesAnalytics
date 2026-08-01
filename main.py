@@ -20,7 +20,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDFlatButton, MDRaisedButton
+from kivymd.uix.button import MDFlatButton, MDIconButton, MDRaisedButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
@@ -148,17 +148,17 @@ MDNavigationLayout:
                         size_hint_x: 1
                         md_bg_color: 0.08, 0.72, 0.65, 1
                         on_release: app.pick_pe_year()
-                    MDRaisedButton:
+                    MDIconButton:
                         id: btn_refresh_year
-                        text: "↻"
-                        size_hint_x: None
-                        width: "64dp"
-                        md_bg_color: 0.16, 0.20, 0.28, 1
+                        icon: "refresh"
+                        theme_icon_color: "Custom"
+                        icon_color: 0.08, 0.72, 0.65, 1
+                        user_font_size: "36sp"
                         on_release: app.refresh_data()
 
                 MDLabel:
                     id: mode_subtitle
-                    text: "Toca el anio para cambiar · ↻ actualiza SOAP"
+                    text: "Toca el anio para cambiar · icono refresh actualiza"
                     font_style: "Body2"
                     halign: "center"
                     valign: "middle"
@@ -234,7 +234,7 @@ MDNavigationLayout:
                                 id: img_vs
                                 source: "chart_vs_paid.png"
                                 allow_stretch: True
-                                keep_ratio: True
+                                keep_ratio: False
                                 size_hint: 1, 1
 
                     MDBottomNavigationItem:
@@ -251,12 +251,12 @@ MDNavigationLayout:
                                     id: img_tipos
                                     source: "chart_tipos.png"
                                     allow_stretch: True
-                                    keep_ratio: True
+                                    keep_ratio: False
                                 Image:
                                     id: img_tipos_paid
                                     source: "chart_tipos_paid.png"
                                     allow_stretch: True
-                                    keep_ratio: True
+                                    keep_ratio: False
 
                     MDBottomNavigationItem:
                         name: "comp"
@@ -269,7 +269,7 @@ MDNavigationLayout:
                                 id: img_comp
                                 source: "chart_comportamiento.png"
                                 allow_stretch: True
-                                keep_ratio: True
+                                keep_ratio: False
                                 size_hint: 1, 1
 
                     MDBottomNavigationItem:
@@ -283,7 +283,7 @@ MDNavigationLayout:
                                 id: img_pe
                                 source: "chart_pe_hist.png"
                                 allow_stretch: True
-                                keep_ratio: True
+                                keep_ratio: False
                                 size_hint: 1, 1
 
                     MDBottomNavigationItem:
@@ -742,28 +742,51 @@ class SalesAnalyticsApp(MDApp):
 
     def log_activity(self, message: str, *, level: str = "info"):
         stamp = datetime.datetime.now().strftime("%H:%M:%S")
-        prefix = {"ok": "✓", "warn": "!", "err": "✗", "step": "·"}.get(level, "·")
+        prefix = {"ok": "[ok]", "warn": "[!]", "err": "[x]", "step": "-"}.get(level, "-")
         line = f"{stamp}  {prefix}  {message}"
         self._activity_log.insert(0, line)
         self._activity_log = self._activity_log[:120]
+        self._persist_activity_log()
         self._refresh_activity_ui()
 
     def log_activity_block(self, title: str, lines: list[str]):
         stamp = datetime.datetime.now().strftime("%d-%b %H:%M:%S")
-        block = [f"── {title} · {stamp} ──"] + [f"   {ln}" for ln in lines] + [""]
+        block = [f"-- {title} · {stamp} --"] + [f"   {ln}" for ln in lines] + [""]
         self._activity_log = block + self._activity_log
         self._activity_log = self._activity_log[:120]
+        self._persist_activity_log()
         self._refresh_activity_ui()
+
+    def _persist_activity_log(self):
+        try:
+            path = apaths.activity_log_path()
+            path.write_text(
+                json.dumps(self._activity_log, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+        except Exception:
+            pass
+
+    def _load_activity_log(self):
+        try:
+            path = apaths.activity_log_path()
+            if not path.exists():
+                return
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(raw, list):
+                self._activity_log = [str(x) for x in raw][:120]
+        except Exception:
+            pass
 
     def _refresh_activity_ui(self):
         try:
             w = self.root.ids.activity_log
             if not self._activity_log:
                 w.text = (
-                    "Registro de sesión\n\n"
+                    "Registro de sesion\n\n"
                     "Aqui veras el proceso de carga: fuente (conta/SOAP),\n"
-                    "tiempos de red, ventas/PE y caché.\n\n"
-                    "Pulsa ↻ arriba para actualizar."
+                    "tiempos de red, ventas/PE y cache.\n\n"
+                    "Pulsa el icono refresh junto al anio para actualizar."
                 )
             else:
                 w.text = "\n".join(self._activity_log)
@@ -1100,6 +1123,8 @@ class SalesAnalyticsApp(MDApp):
         """Arranque rapido: tarjetas + historial local, sin SOAP automatico."""
         self._setup_display()
         self._ensure_cards()
+        self._load_activity_log()
+        self._refresh_activity_ui()
         try:
             self._pe_history = pe_history.load_merged_history()
             self._pe_years = pe_history.selectable_years(self._pe_history)

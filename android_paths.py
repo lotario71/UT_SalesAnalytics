@@ -42,3 +42,7 @@ def live_history_path() -> Path:
 
 def config_path() -> Path:
     return writable_dir() / "config.txt"
+
+
+def activity_log_path() -> Path:
+    return writable_dir() / "activity_log.json"

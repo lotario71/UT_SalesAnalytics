@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Buildozer — Sales Analytics Android (SOAP + conta seed).
 # Compilar: buildozer -v android debug
-# APK en: bin/salesanalytics-2.2.8-arm64-v8a-debug.apk
+# APK en: bin/salesanalytics-2.2.9-arm64-v8a-debug.apk
 
 [app]
 title = Sales Analytics
@@ -14,7 +14,7 @@ source.include_exts = py,png,jpg,kv,atlas,txt,json,ttf
 source.include_patterns = data/*.json,assets/*
 source.exclude_patterns = BACKUP/*,APK/*,Hello_World/*,__pycache__/*,chart_*.png,.buildozer/*,bin/*
 
-version = 2.2.8
+version = 2.2.9
 
 # Python 3.11: hostpython3 y python3 DEBEN coincidir (si no, p4a usa 3.14 y rompe Kivy).
 requirements = hostpython3==3.11.10,python3==3.11.10,kivy==2.3.0,kivymd==1.2.0,requests,urllib3,charset-normalizer,idna,certifi,pillow,pyjnius,android,openssl,sqlite3
