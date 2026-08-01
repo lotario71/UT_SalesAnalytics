@@ -13,7 +13,11 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.uix.anchorlayout import AnchorLayout
+from kivy.uix.image import Image
+from kivy.uix.modalview import ModalView
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 from kivymd.app import MDApp
@@ -106,8 +110,8 @@ MDNavigationLayout:
                 MDBoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
-                    height: "40dp"
-                    padding: "8dp", "2dp"
+                    height: "44dp"
+                    padding: "8dp", "4dp"
                     spacing: "6dp"
                     MDRaisedButton:
                         id: btn_all
@@ -125,37 +129,41 @@ MDNavigationLayout:
                 MDBoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
-                    height: "38dp"
-                    padding: "10dp", "0dp"
-                    spacing: "6dp"
+                    height: "52dp"
+                    padding: "10dp", "6dp"
+                    spacing: "8dp"
                     MDRaisedButton:
                         text: "<"
                         size_hint_x: None
-                        width: "48dp"
+                        width: "52dp"
                         md_bg_color: 0.16, 0.20, 0.28, 1
                         on_release: app.shift_pe_year(-1)
                     MDRaisedButton:
                         id: year_header
-                        text: "2026  ▾"
+                        text: "2026  v"
                         size_hint_x: 1
                         md_bg_color: 0.08, 0.72, 0.65, 1
                         on_release: app.pick_pe_year()
                     MDRaisedButton:
                         text: ">"
                         size_hint_x: None
-                        width: "48dp"
+                        width: "52dp"
                         md_bg_color: 0.16, 0.20, 0.28, 1
                         on_release: app.shift_pe_year(1)
 
                 MDLabel:
                     id: mode_subtitle
-                    text: "Toca el año (▾) para ir directo · o usa < >"
-                    font_style: "Caption"
+                    text: "Toca el anio (v) para ir directo, o usa < >"
+                    font_style: "Body2"
                     halign: "center"
+                    valign: "middle"
                     theme_text_color: "Custom"
-                    text_color: 0.58, 0.64, 0.72, 1
+                    text_color: 0.70, 0.75, 0.82, 1
                     size_hint_y: None
-                    height: "18dp"
+                    height: "44dp"
+                    padding: "10dp", "4dp"
+                    text_size: self.width, None
+                    shorten: False
 
                 MDBoxLayout:
                     id: loading_row
@@ -181,13 +189,16 @@ MDNavigationLayout:
 
                 MDLabel:
                     id: expense_chip
-                    text: "Gasto mes: —  (menú → Editar gasto)"
-                    font_style: "Caption"
+                    text: "Gasto mes: —  (menu > Editar gasto)"
+                    font_style: "Body2"
                     halign: "center"
+                    valign: "middle"
                     theme_text_color: "Custom"
-                    text_color: 0.8, 0.83, 0.88, 1
+                    text_color: 0.85, 0.88, 0.92, 1
                     size_hint_y: None
-                    height: "22dp"
+                    height: "32dp"
+                    padding: "8dp", "2dp"
+                    text_size: self.width, None
 
                 MDBottomNavigation:
                     id: bottom_nav
@@ -204,41 +215,81 @@ MDNavigationLayout:
                                 id: cards_box
                                 orientation: "vertical"
                                 adaptive_height: True
-                                padding: "10dp"
-                                spacing: "8dp"
+                                padding: "12dp"
+                                spacing: "10dp"
 
                     MDBottomNavigationItem:
                         name: "vs"
                         text: "Vs pagadas"
                         icon: "chart-bar"
-                        AnchorLayout:
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            padding: "6dp"
+                            MDLabel:
+                                text: "Toca la grafica para ampliar"
+                                font_style: "Caption"
+                                halign: "center"
+                                size_hint_y: None
+                                height: "22dp"
+                                theme_text_color: "Custom"
+                                text_color: 0.58, 0.64, 0.72, 1
                             Image:
                                 id: img_vs
                                 source: "chart_vs_paid.png"
                                 allow_stretch: True
                                 keep_ratio: True
+                                size_hint: 1, 1
+                                on_touch_up: app.on_chart_touch(self, args[1])
 
                     MDBottomNavigationItem:
                         name: "tipos"
                         text: "Tipos"
                         icon: "chart-pie"
-                        AnchorLayout:
-                            Image:
-                                id: img_tipos
-                                source: "chart_tipos.png"
-                                allow_stretch: True
-                                keep_ratio: True
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            padding: "6dp"
+                            MDLabel:
+                                text: "Toca / desliza · toca para ampliar"
+                                font_style: "Caption"
+                                halign: "center"
+                                size_hint_y: None
+                                height: "22dp"
+                                theme_text_color: "Custom"
+                                text_color: 0.58, 0.64, 0.72, 1
+                            ScrollView:
+                                do_scroll_x: False
+                                Image:
+                                    id: img_tipos
+                                    source: "chart_tipos.png"
+                                    allow_stretch: True
+                                    keep_ratio: True
+                                    size_hint_x: 1
+                                    size_hint_y: None
+                                    height: (self.texture_size[1] * self.width / self.texture_size[0]) if self.texture_size[0] else 900
+                                    on_touch_up: app.on_chart_touch(self, args[1])
 
                     MDBottomNavigationItem:
                         name: "comp"
                         text: "Comport."
                         icon: "chart-line"
-                        AnchorLayout:
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            padding: "6dp"
+                            MDLabel:
+                                text: "Toca la grafica para ampliar"
+                                font_style: "Caption"
+                                halign: "center"
+                                size_hint_y: None
+                                height: "22dp"
+                                theme_text_color: "Custom"
+                                text_color: 0.58, 0.64, 0.72, 1
                             Image:
                                 id: img_comp
                                 source: "chart_comportamiento.png"
                                 allow_stretch: True
                                 keep_ratio: True
+                                size_hint: 1, 1
+                                on_touch_up: app.on_chart_touch(self, args[1])
 
                     MDBottomNavigationItem:
                         name: "pe"
@@ -250,19 +301,20 @@ MDNavigationLayout:
                             spacing: "4dp"
                             MDLabel:
                                 id: pe_hint
-                                text: "Mismo año que arriba (SOAP + historial PE)"
+                                text: "Mismo anio que arriba · toca para ampliar"
                                 font_style: "Caption"
                                 halign: "center"
                                 size_hint_y: None
                                 height: "22dp"
                                 theme_text_color: "Custom"
                                 text_color: 0.58, 0.64, 0.72, 1
-                            AnchorLayout:
-                                Image:
-                                    id: img_pe
-                                    source: "chart_pe_hist.png"
-                                    allow_stretch: True
-                                    keep_ratio: True
+                            Image:
+                                id: img_pe
+                                source: "chart_pe_hist.png"
+                                allow_stretch: True
+                                keep_ratio: True
+                                size_hint: 1, 1
+                                on_touch_up: app.on_chart_touch(self, args[1])
 
                     MDBottomNavigationItem:
                         name: "actividad"
@@ -332,37 +384,51 @@ MDNavigationLayout:
 
 
 class MetricCard(MDCard):
-    """Tarjeta táctil estilo Windows (2 líneas)."""
+    """Tarjeta táctil estilo Windows (2 líneas), tamaño movil 14T."""
 
     def __init__(self, key: str, title: str, on_open, **kwargs):
         super().__init__(**kwargs)
         self.key = key
         self.on_open = on_open
         self.orientation = "vertical"
-        self.padding = "12dp"
-        self.radius = [12]
+        self.padding = "14dp"
+        self.spacing = "4dp"
+        self.radius = [14]
         self.size_hint_y = None
-        self.height = "92dp"
+        self.height = "118dp"
         self.md_bg_color = (0.12, 0.16, 0.22, 1)
         self.ripple_behavior = True
         self.title_lbl = MDLabel(
             text=title,
-            font_style="Caption",
+            font_style="Body2",
+            bold=True,
             theme_text_color="Custom",
             text_color=(0.08, 0.72, 0.65, 1),
+            size_hint_y=None,
+            height="24dp",
+            shorten=True,
+            shorten_from="right",
         )
         self.line1 = MDLabel(
             text="—",
-            font_style="Subtitle1",
+            font_style="H6",
             bold=True,
             theme_text_color="Custom",
             text_color=(0.89, 0.91, 0.94, 1),
+            size_hint_y=None,
+            height="36dp",
+            shorten=True,
+            shorten_from="right",
         )
         self.line2 = MDLabel(
             text="",
-            font_style="Caption",
+            font_style="Body2",
             theme_text_color="Custom",
             text_color=(0.8, 0.83, 0.88, 1),
+            size_hint_y=None,
+            height="24dp",
+            shorten=True,
+            shorten_from="right",
         )
         self.add_widget(self.title_lbl)
         self.add_widget(self.line1)
@@ -604,7 +670,7 @@ class SalesAnalyticsApp(MDApp):
             self.metrics_mode = "all"
             self.pe_series = "all"
         try:
-            self.root.ids.year_header.text = f"{year}  ▾"
+            self.root.ids.year_header.text = f"{year}  v"
         except Exception:
             pass
         self._goto_resumen_tab()
@@ -723,7 +789,7 @@ class SalesAnalyticsApp(MDApp):
 
     def _refresh_pe_year_ui(self):
         try:
-            self.root.ids.year_header.text = f"{self.pe_year}  ▾"
+            self.root.ids.year_header.text = f"{self.pe_year}  v"
             n = sum(
                 1
                 for e in self._pe_history
@@ -790,9 +856,9 @@ class SalesAnalyticsApp(MDApp):
                 row = MDBoxLayout(
                     orientation="horizontal",
                     adaptive_height=True,
-                    spacing="8dp",
+                    spacing="10dp",
                     size_hint_y=None,
-                    height="92dp",
+                    height="126dp",
                 )
                 box.add_widget(row)
             card = MetricCard(key, titles[key], on_open=self.show_metric_popup, size_hint_x=0.5)
@@ -800,12 +866,12 @@ class SalesAnalyticsApp(MDApp):
             row.add_widget(card)
         hint = MDLabel(
             text="Toca una tarjeta para el desglose · Conta (años cerrados) / SOAP (en curso)",
-            font_style="Caption",
+            font_style="Body2",
             halign="center",
             theme_text_color="Custom",
-            text_color=(0.45, 0.51, 0.58, 1),
+            text_color=(0.55, 0.60, 0.68, 1),
             size_hint_y=None,
-            height="24dp",
+            height="36dp",
         )
         box.add_widget(hint)
 
@@ -970,6 +1036,110 @@ class SalesAnalyticsApp(MDApp):
         except Exception:
             pass
 
+    def on_chart_touch(self, widget, touch):
+        """Un toque en la grafica la abre ampliada."""
+        if not widget.collide_point(*touch.pos):
+            return False
+        if getattr(touch, "is_mouse_scrolling", False):
+            return False
+        src = getattr(widget, "source", None) or ""
+        if not src:
+            return False
+        # Ignora arrastres largos (scroll)
+        try:
+            if abs(touch.dx) + abs(touch.dy) > 12:
+                return False
+        except Exception:
+            pass
+        self.enlarge_chart(src)
+        return True
+
+    def enlarge_chart(self, path: str):
+        """Grafica centrada a pantalla casi completa; se adapta al girar el movil."""
+        if getattr(self, "_chart_modal", None):
+            try:
+                self._chart_modal.dismiss()
+            except Exception:
+                pass
+
+        body = MDBoxLayout(
+            orientation="vertical",
+            padding="12dp",
+            spacing="8dp",
+            md_bg_color=(0.06, 0.09, 0.14, 1),
+        )
+        tip = MDLabel(
+            text="Centrada · gira el telefono para ver mas ancha · toca fuera o Cerrar",
+            font_style="Caption",
+            size_hint_y=None,
+            height="28dp",
+            halign="center",
+            valign="middle",
+            theme_text_color="Custom",
+            text_color=(0.70, 0.75, 0.82, 1),
+        )
+        tip.bind(size=tip.setter("text_size"))
+
+        img = Image(
+            source=path,
+            allow_stretch=True,
+            keep_ratio=True,
+            size_hint=(1, 1),
+        )
+        try:
+            img.reload()
+        except Exception:
+            pass
+        # AnchorLayout centra la imagen al cambiar vertical/horizontal
+        holder = AnchorLayout(anchor_x="center", anchor_y="center", size_hint=(1, 1))
+        holder.add_widget(img)
+
+        btn = MDRaisedButton(
+            text="Cerrar",
+            size_hint=(1, None),
+            height="48dp",
+            md_bg_color=(0.08, 0.72, 0.65, 1),
+        )
+
+        body.add_widget(tip)
+        body.add_widget(holder)
+        body.add_widget(btn)
+
+        modal = ModalView(
+            auto_dismiss=True,
+            size_hint=(0.96, 0.92),
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+            background="",
+            background_color=(0.05, 0.07, 0.12, 0.98),
+            overlay_color=(0, 0, 0, 0.72),
+        )
+        modal.add_widget(body)
+        self._chart_modal = modal
+
+        def _fit_tip(*_args):
+            w, h = Window.size
+            if w >= h:
+                tip.text = "Horizontal · grafica centrada · Cerrar o toca fuera"
+            else:
+                tip.text = "Vertical · gira el telefono para ver mas ancha · Cerrar"
+
+        def _on_win_size(*_args):
+            _fit_tip()
+
+        def _cleanup(*_args):
+            try:
+                Window.unbind(size=_on_win_size)
+            except Exception:
+                pass
+            if getattr(self, "_chart_modal", None) is modal:
+                self._chart_modal = None
+
+        btn.bind(on_release=lambda *_: modal.dismiss())
+        modal.bind(on_dismiss=_cleanup)
+        Window.bind(size=_on_win_size)
+        _fit_tip()
+        modal.open()
+
     def on_start(self):
         self.reload_dashboard()
 
@@ -980,7 +1150,7 @@ class SalesAnalyticsApp(MDApp):
 
         self._ensure_cards()
         try:
-            self.root.ids.year_header.text = f"{year}  ▾"
+            self.root.ids.year_header.text = f"{year}  v"
             self.root.ids.top_bar.title = f"Sales Analytics  {app_version.APP_VERSION_LABEL}"
         except Exception:
             pass
@@ -1258,7 +1428,7 @@ class SalesAnalyticsApp(MDApp):
 
         try:
             self.root.ids.expense_chip.text = (
-                f"Gasto mes: ${m_all.monthly_expense:,.2f}  ·  menú → Editar gasto"
+                f"Gasto mes: ${m_all.monthly_expense:,.2f}  ·  menu > Editar gasto"
             )
             self.root.ids.drawer_version.text = app_version.APP_VERSION_LABEL
         except Exception:
