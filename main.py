@@ -34,6 +34,7 @@ import android_expense as expense
 import android_history as pe_history
 import android_metrics as metrics
 import android_paths as apaths
+import android_year_cache as year_cache
 import android_year_data as year_data
 import app_version
 import config
@@ -42,6 +43,13 @@ import config
 def _cpath(name: str) -> str:
     """Ruta escribible para graficas (PC o storage Android)."""
     return apaths.chart_path(name)
+
+
+def _tipos_paths(year: int) -> tuple[str, str]:
+    return (
+        _cpath(f"chart_tipos_{year}.png"),
+        _cpath(f"chart_tipos_paid_{year}.png"),
+    )
 SOAP_URL = "https://www.umbrellatravel.com/Services/PublicServices.svc"
 
 
@@ -105,7 +113,7 @@ MDNavigationLayout:
                     md_bg_color: 0.06, 0.09, 0.16, 1
                     specific_text_color: 0.89, 0.91, 0.94, 1
                     left_action_items: [["menu", lambda x: app.open_drawer()]]
-                    right_action_items: [["refresh", lambda x: app.refresh_data()]]
+                    right_action_items: []
 
                 MDBoxLayout:
                     id: row_mode
@@ -131,15 +139,9 @@ MDNavigationLayout:
                     id: row_year
                     orientation: "horizontal"
                     size_hint_y: None
-                    height: "52dp"
+                    height: "56dp"
                     padding: "10dp", "6dp"
-                    spacing: "8dp"
-                    MDRaisedButton:
-                        text: "<"
-                        size_hint_x: None
-                        width: "52dp"
-                        md_bg_color: 0.16, 0.20, 0.28, 1
-                        on_release: app.shift_pe_year(-1)
+                    spacing: "10dp"
                     MDRaisedButton:
                         id: year_header
                         text: "2026  v"
@@ -147,22 +149,23 @@ MDNavigationLayout:
                         md_bg_color: 0.08, 0.72, 0.65, 1
                         on_release: app.pick_pe_year()
                     MDRaisedButton:
-                        text: ">"
+                        id: btn_refresh_year
+                        text: "↻"
                         size_hint_x: None
-                        width: "52dp"
+                        width: "64dp"
                         md_bg_color: 0.16, 0.20, 0.28, 1
-                        on_release: app.shift_pe_year(1)
+                        on_release: app.refresh_data()
 
                 MDLabel:
                     id: mode_subtitle
-                    text: "Toca el anio (v) para ir directo, o usa < >"
+                    text: "Toca el anio para cambiar · ↻ actualiza SOAP"
                     font_style: "Body2"
                     halign: "center"
                     valign: "middle"
                     theme_text_color: "Custom"
                     text_color: 0.70, 0.75, 0.82, 1
                     size_hint_y: None
-                    height: "44dp"
+                    height: "40dp"
                     padding: "10dp", "4dp"
                     text_size: self.width, None
                     shorten: False
@@ -241,12 +244,19 @@ MDNavigationLayout:
                         MDBoxLayout:
                             orientation: "vertical"
                             padding: "4dp"
-                            Image:
-                                id: img_tipos
-                                source: "chart_tipos.png"
-                                allow_stretch: True
-                                keep_ratio: True
-                                size_hint: 1, 1
+                            Carousel:
+                                id: carousel_tipos
+                                loop: False
+                                Image:
+                                    id: img_tipos
+                                    source: "chart_tipos.png"
+                                    allow_stretch: True
+                                    keep_ratio: True
+                                Image:
+                                    id: img_tipos_paid
+                                    source: "chart_tipos_paid.png"
+                                    allow_stretch: True
+                                    keep_ratio: True
 
                     MDBottomNavigationItem:
                         name: "comp"
@@ -544,8 +554,25 @@ class SalesAnalyticsApp(MDApp):
         return root
 
     def _setup_display(self):
-        """Safe-area Android (solo vertical)."""
+        """Safe-area Android + tipografia menu inferior."""
         self._apply_system_insets()
+        Clock.schedule_once(lambda dt: self._bump_bottom_nav_fonts(), 0.3)
+
+    def _bump_bottom_nav_fonts(self):
+        """Letras del menu inferior un poco mas grandes / legibles."""
+        try:
+            from kivy.uix.label import Label
+
+            nav = self.root.ids.bottom_nav
+            for w in nav.walk():
+                if isinstance(w, Label) and (w.text or "").strip():
+                    try:
+                        if float(w.font_size) < dp(13):
+                            w.font_size = dp(13)
+                    except Exception:
+                        w.font_size = dp(13)
+        except Exception:
+            pass
 
     def _apply_system_insets(self):
         """Evita que la barra de navegacion Android tape botones de la app."""
@@ -1028,6 +1055,43 @@ class SalesAnalyticsApp(MDApp):
         except Exception:
             pass
 
+    def _reload_tipos_images(self, path_all: str, path_paid: str):
+        self._reload_image("img_tipos", path_all)
+        self._reload_image("img_tipos_paid", path_paid)
+
+    def _render_bundle_charts(self, year: int, bundle: dict) -> dict:
+        """Regenera PNGs del bundle (estilo actual) y devuelve rutas."""
+        subtitle = f"{year}"
+        vs = _cpath(f"chart_vs_paid_{year}.png")
+        tipos_all, tipos_paid = _tipos_paths(year)
+        comp = _cpath(f"chart_comportamiento_{year}.png")
+        m_all = bundle["m_all"]
+        m_paid = bundle.get("m_paid") or m_all
+        charts.save_vs_paid(m_all.total_sales, m_paid.total_sales, vs, subtitle)
+        charts.save_service_pies(
+            bundle.get("services_all") or [],
+            bundle.get("services_paid") or [],
+            tipos_all,
+            subtitle,
+        )
+        charts.save_behavior_monthly(
+            bundle.get("monthly_all") or [],
+            bundle.get("monthly_paid") or [],
+            comp,
+            year,
+        )
+        bundle["img_vs"] = vs
+        bundle["img_tipos"] = tipos_all
+        bundle["img_tipos_paid"] = tipos_paid
+        bundle["img_comp"] = comp
+        return bundle
+
+    def _persist_year_bundle(self, year: int, bundle: dict):
+        try:
+            year_cache.save_year_bundle(year, bundle)
+        except Exception:
+            traceback.print_exc()
+
     def on_start(self):
         # UI inmediata con datos locales; SOAP solo con ↻
         Clock.schedule_once(lambda dt: self._bootstrap_local(), 0)
@@ -1063,7 +1127,22 @@ class SalesAnalyticsApp(MDApp):
             self.log_activity(f"Arranque con cache {year}")
             return
 
-        # 2) Conta empaquetada (offline, inmediata)
+        # 2) Ultimo SOAP/conta guardado en disco (prioridad sobre conta seed)
+        disk = year_cache.load_year_bundle(year)
+        if disk:
+            disk = self._render_bundle_charts(year, disk)
+            self._year_cache[year] = disk
+            self._apply_year_bundle(year, disk, from_cache=True)
+            try:
+                self.root.ids.mode_subtitle.text = (
+                    f"SOAP guardado {year}. Toca ↻ para actualizar."
+                )
+            except Exception:
+                pass
+            self.log_activity(f"Arranque cache disco {year}")
+            return
+
+        # 3) Conta empaquetada (offline, inmediata)
         for y in (year, year - 1 if year == today.year else year):
             if self._apply_conta_year_offline(y):
                 self.pe_year = y
@@ -1113,6 +1192,20 @@ class SalesAnalyticsApp(MDApp):
         if cached:
             self._apply_year_bundle(year, cached, from_cache=True)
             return
+
+        if not force:
+            disk = year_cache.load_year_bundle(year)
+            if disk:
+                disk = self._render_bundle_charts(year, disk)
+                self._year_cache[year] = disk
+                self._apply_year_bundle(year, disk, from_cache=True)
+                try:
+                    self.root.ids.mode_subtitle.text = (
+                        f"SOAP guardado {year}. Toca ↻ para actualizar."
+                    )
+                except Exception:
+                    pass
+                return
 
         if not allow_network:
             if self._apply_conta_year_offline(year):
@@ -1166,11 +1259,15 @@ class SalesAnalyticsApp(MDApp):
             return False
         m_all, monthly, note = pack
         monthly_expense, _exp_note = expense.resolve_monthly_expense(year)
+        tipos_all, tipos_paid = _tipos_paths(year)
         try:
             charts.save_vs_paid(
-                m_all.total_sales, m_all.total_sales, _cpath(f"chart_vs_paid_{year}.png"), f"{year} conta"
+                m_all.total_sales,
+                m_all.total_sales,
+                _cpath(f"chart_vs_paid_{year}.png"),
+                f"{year} conta",
             )
-            charts.save_service_pies([], [], _cpath(f"chart_tipos_{year}.png"), f"{year}")
+            charts.save_service_pies([], [], tipos_all, f"{year}")
             charts.save_behavior_monthly(
                 monthly, [], _cpath(f"chart_comportamiento_{year}.png"), year
             )
@@ -1185,7 +1282,8 @@ class SalesAnalyticsApp(MDApp):
             "services_paid": [],
             "source_note": f"Conta local · {note}",
             "img_vs": _cpath(f"chart_vs_paid_{year}.png"),
-            "img_tipos": _cpath(f"chart_tipos_{year}.png"),
+            "img_tipos": tipos_all,
+            "img_tipos_paid": tipos_paid,
             "img_comp": _cpath(f"chart_comportamiento_{year}.png"),
             "paid_pending": False,
         }
@@ -1222,6 +1320,7 @@ class SalesAnalyticsApp(MDApp):
         if token != self._load_token or year != self.pe_year:
             return
         self._year_cache[year] = bundle
+        self._persist_year_bundle(year, bundle)
         self._apply_year_bundle(year, bundle, from_cache=False)
 
     def _build_year_bundle(self, year: int) -> dict:
@@ -1338,13 +1437,14 @@ class SalesAnalyticsApp(MDApp):
             )
 
         t_g = time.perf_counter()
+        tipos_all, tipos_paid = _tipos_paths(year)
         charts.save_vs_paid(
             m_all.total_sales, m_paid.total_sales, _cpath(f"chart_vs_paid_{year}.png"), subtitle
         )
         charts.save_service_pies(
             services_all,
             services_paid,
-            _cpath(f"chart_tipos_{year}.png"),
+            tipos_all,
             subtitle,
         )
         charts.save_behavior_monthly(
@@ -1366,7 +1466,8 @@ class SalesAnalyticsApp(MDApp):
             "services_all": services_all,
             "services_paid": services_paid,
             "img_vs": _cpath(f"chart_vs_paid_{year}.png"),
-            "img_tipos": _cpath(f"chart_tipos_{year}.png"),
+            "img_tipos": tipos_all,
+            "img_tipos_paid": tipos_paid,
             "img_comp": _cpath(f"chart_comportamiento_{year}.png"),
             "closed": closed,
             "paid_pending": paid_pending,
@@ -1416,10 +1517,11 @@ class SalesAnalyticsApp(MDApp):
                 services_paid = metrics.service_sales(df_paid)
                 monthly_all = bundle.get("monthly_all") or []
                 monthly_paid = metrics.monthly_sales(df_paid)
+                tipos_all, tipos_paid = _tipos_paths(year)
                 charts.save_service_pies(
                     services_all,
                     services_paid,
-                    _cpath(f"chart_tipos_{year}.png"),
+                    tipos_all,
                     f"{year}",
                 )
                 charts.save_behavior_monthly(
@@ -1430,6 +1532,10 @@ class SalesAnalyticsApp(MDApp):
                 )
                 bundle["services_paid"] = services_paid
                 bundle["monthly_paid"] = monthly_paid
+                bundle["img_tipos"] = tipos_all
+                bundle["img_tipos_paid"] = tipos_paid
+                bundle["img_vs"] = _cpath(f"chart_vs_paid_{year}.png")
+                bundle["img_comp"] = _cpath(f"chart_comportamiento_{year}.png")
                 Clock.schedule_once(
                     lambda dt: self._on_paid_ready(year, token, m_paid, ms)
                 )
@@ -1453,6 +1559,7 @@ class SalesAnalyticsApp(MDApp):
         bundle["source_note"] = (bundle.get("source_note") or "") + f" · pagadas SOAP {ms:.0f}ms"
         self._year_cache[year] = bundle
         self._metrics_paid = m_paid
+        self._persist_year_bundle(year, bundle)
         self.log_activity(
             f"Pagadas {year}: ${m_paid.total_sales:,.0f} · {ms:.0f} ms",
             level="ok",
@@ -1460,7 +1567,10 @@ class SalesAnalyticsApp(MDApp):
         if self.metrics_mode == "paid":
             self._apply_cards()
         self._reload_image("img_vs", bundle["img_vs"])
-        self._reload_image("img_tipos", bundle["img_tipos"])
+        self._reload_tipos_images(
+            bundle.get("img_tipos") or _tipos_paths(year)[0],
+            bundle.get("img_tipos_paid") or _tipos_paths(year)[1],
+        )
         self._reload_image("img_comp", bundle["img_comp"])
         self._redraw_pe_chart()
 
@@ -1528,7 +1638,10 @@ class SalesAnalyticsApp(MDApp):
         self._refresh_pe_year_ui()
         self._redraw_pe_chart()
         self._reload_image("img_vs", bundle["img_vs"])
-        self._reload_image("img_tipos", bundle["img_tipos"])
+        self._reload_tipos_images(
+            bundle.get("img_tipos") or _tipos_paths(year)[0],
+            bundle.get("img_tipos_paid") or _tipos_paths(year)[1],
+        )
         self._reload_image("img_comp", bundle["img_comp"])
 
         label = "Solo pagadas" if self.metrics_mode == "paid" else "Todas"

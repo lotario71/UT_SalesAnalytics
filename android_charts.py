@@ -1,4 +1,4 @@
-"""Graficas con Pillow (tema oscuro), verticales a pantalla completa para movil."""
+"""Graficas Pillow verticales — tipografia grande, titulo en barra, sin solapes."""
 from __future__ import annotations
 
 from datetime import date, datetime
@@ -8,6 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 BG = (10, 14, 22)
 PANEL = (22, 30, 42)
+TITLEBAR = (28, 40, 58)
 TEXT = (236, 240, 245)
 MUTED = (160, 174, 192)
 GRID = (51, 65, 85)
@@ -32,9 +33,8 @@ SERVICE_COLORS = {
 
 _MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
 
-# Lienzo vertical (casi todo el hueco entre cabecera y bottom nav)
 _CW, _CH = 1080, 1680
-_S = 2  # PNG nitido al estirar
+_S = 2
 _ASSETS = Path(__file__).resolve().parent / "assets"
 _FONT_FILE = _ASSETS / "chart_font.ttf"
 
@@ -73,14 +73,28 @@ def _new(w: int = _CW, h: int = _CH) -> tuple[Image.Image, ImageDraw.ImageDraw]:
     return img, ImageDraw.Draw(img)
 
 
-def _title(draw, text: str, w: int, y: int = 22):
-    font = _font(32)
-    tw, _ = _text_size(draw, text, font)
-    draw.text(((w * _S - tw) // 2, y * _S), text, fill=TEXT, font=font)
-
-
 def _money(n: float) -> str:
     return f"${n:,.0f}"
+
+
+def _title_bar(draw, w: int, text: str, y: int = 12) -> int:
+    """Barra de titulo. Devuelve y inferior (logico, sin _S)."""
+    bar_h = 56
+    W = w * _S
+    draw.rounded_rectangle(
+        [16 * _S, y * _S, W - 16 * _S, (y + bar_h) * _S],
+        radius=14 * _S,
+        fill=TITLEBAR,
+    )
+    f = _font(30)
+    tw, th = _text_size(draw, text, f)
+    draw.text(
+        ((W - tw) // 2, y * _S + (bar_h * _S - th) // 2),
+        text,
+        fill=TEXT,
+        font=f,
+    )
+    return y + bar_h
 
 
 def save_vs_paid(all_total: float, paid_total: float, path: str | Path, subtitle: str = ""):
@@ -88,40 +102,44 @@ def save_vs_paid(all_total: float, paid_total: float, path: str | Path, subtitle
     img, draw = _new(w, h)
     W, H = img.size
     title = "Todas vs pagadas" + (f" · {subtitle}" if subtitle else "")
-    _title(draw, title, w)
+    bar_bottom = _title_bar(draw, w, title, y=16)
 
-    left, right = 70 * _S, W - 70 * _S
-    top, bottom = 110 * _S, H - 80 * _S
+    left, right = 60 * _S, W - 60 * _S
+    top = (bar_bottom + 20) * _S
+    bottom = H - 90 * _S
     draw.rounded_rectangle([left, top, right, bottom], radius=24 * _S, fill=PANEL)
+
     values = [float(all_total or 0), float(paid_total or 0)]
     vmax = max(values + [1.0])
     labels = ["Todas", "Pagadas"]
     colors = [BLUE, TEAL]
-    bar_w = 200 * _S
-    gap = 260 * _S
-    base_x = left + 150 * _S
-    usable = bottom - top - 160 * _S
+    bar_w = 260 * _S
+    gap = 140 * _S
+    total_w = bar_w * 2 + gap
+    base_x = (left + right - total_w) // 2
+    # Margen superior dentro del panel para montos (evita choque con titulo)
+    chart_top = top + 100 * _S
+    chart_bottom = bottom - 70 * _S
+    usable = chart_bottom - chart_top
     for i, (lab, val, col) in enumerate(zip(labels, values, colors)):
-        x0 = base_x + i * gap
-        bh = int((val / vmax) * usable)
-        y0 = bottom - 90 * _S - bh
-        draw.rounded_rectangle(
-            [x0, y0, x0 + bar_w, bottom - 90 * _S], radius=14 * _S, fill=col
-        )
-        f = _font(28)
+        x0 = base_x + i * (bar_w + gap)
+        bh = int((val / vmax) * usable * 0.92)
+        y0 = chart_bottom - bh
+        draw.rounded_rectangle([x0, y0, x0 + bar_w, chart_bottom], radius=16 * _S, fill=col)
+        f = _font(36)
         t = _money(val)
         tw, _ = _text_size(draw, t, f)
-        draw.text((x0 + (bar_w - tw) // 2, y0 - 48 * _S), t, fill=TEXT, font=f)
-        f2 = _font(26)
+        draw.text((x0 + (bar_w - tw) // 2, y0 - 58 * _S), t, fill=TEXT, font=f)
+        f2 = _font(28)
         lw, _ = _text_size(draw, lab, f2)
-        draw.text((x0 + (bar_w - lw) // 2, bottom - 60 * _S), lab, fill=MUTED, font=f2)
+        draw.text((x0 + (bar_w - lw) // 2, chart_bottom + 18 * _S), lab, fill=MUTED, font=f2)
         if i == 1 and values[0] > 0:
             pct = values[1] / values[0] * 100
             pt = f"{pct:.1f}%"
-            pf = _font(34)
+            pf = _font(40)
             pw, ph = _text_size(draw, pt, pf)
             draw.text(
-                (x0 + (bar_w - pw) // 2, y0 + max(bh // 2 - ph // 2, 10 * _S)),
+                (x0 + (bar_w - pw) // 2, y0 + max(bh // 2 - ph // 2, 8 * _S)),
                 pt,
                 fill=(255, 255, 255),
                 font=pf,
@@ -129,72 +147,133 @@ def save_vs_paid(all_total: float, paid_total: float, path: str | Path, subtitle
     img.save(path, "PNG")
 
 
-def save_service_pies(all_items, paid_items, path: str | Path, subtitle: str = ""):
+def save_service_pie(
+    items,
+    path: str | Path,
+    *,
+    title: str,
+    hint: str = "",
+    subtitle: str = "",
+):
+    """Un solo pastel a pantalla completa (Todas o Pagadas)."""
     w, h = _CW, _CH
     img, draw = _new(w, h)
     W, H = img.size
-    _title(draw, "Tipos de servicio" + (f" · {subtitle}" if subtitle else ""), w)
 
-    def _pie(cy: int, items, title: str):
-        cx = W // 2
-        r = 220 * _S
-        tf = _font(26)
-        tw, _ = _text_size(draw, title, tf)
-        draw.text((cx - tw // 2, cy - r - 55 * _S), title, fill=TEXT, font=tf)
-        if not items:
-            msg = "Sin desglose por tipo"
-            hint = "(necesita SOAP · toca ↻)"
-            mf = _font(24)
-            hf = _font(20)
-            mw, _ = _text_size(draw, msg, mf)
-            hw, _ = _text_size(draw, hint, hf)
-            draw.text((cx - mw // 2, cy - 20 * _S), msg, fill=MUTED, font=mf)
-            draw.text((cx - hw // 2, cy + 20 * _S), hint, fill=MUTED, font=hf)
-            return
-        total = sum(v for _, v in items) or 1.0
-        ang = -90.0
-        for name, val in items:
-            sweep = 360.0 * (val / total)
-            color = SERVICE_COLORS.get(name, (107, 114, 128))
-            if isinstance(color, str):
-                color = _hex_to_rgb(color)
-            draw.pieslice(
-                [cx - r, cy - r, cx + r, cy + r],
-                start=ang,
-                end=ang + sweep,
-                fill=color,
-                outline=BG,
-            )
-            ang += sweep
+    if hint:
+        hf = _font(22)
+        tw, th = _text_size(draw, hint, hf)
+        px = (W - tw) // 2 - 24 * _S
+        draw.rounded_rectangle(
+            [px, 18 * _S, px + tw + 48 * _S, 18 * _S + th + 22 * _S],
+            radius=18 * _S,
+            fill=(40, 55, 75),
+        )
+        draw.text((px + 24 * _S, 28 * _S), hint, fill=TEAL, font=hf)
+        y0 = 70
+    else:
+        y0 = 20
 
-        legend_y = cy + r + 28 * _S
-        lf = _font(22)
-        for name, val in items:
-            color = SERVICE_COLORS.get(name, (107, 114, 128))
-            if isinstance(color, str):
-                color = _hex_to_rgb(color)
-            short = name.replace(" Services", "")
-            line = f"{short}: {_money(val)} ({val / total * 100:.1f}%)"
-            draw.ellipse(
-                [70 * _S, legend_y + 4 * _S, 94 * _S, legend_y + 28 * _S],
-                fill=color,
-            )
-            draw.text((110 * _S, legend_y), line[:52], fill=MUTED, font=lf)
-            legend_y += 40 * _S
+    ttl = title + (f" · {subtitle}" if subtitle else "")
+    tf = _font(30)
+    tw, _ = _text_size(draw, ttl, tf)
+    draw.text(((W - tw) // 2, y0 * _S), ttl, fill=TEXT, font=tf)
 
-    _pie(int(0.30 * H), all_items or [], "Todas (SOAP)")
-    _pie(int(0.72 * H), paid_items or [], "Pagadas (SOAP)")
+    cx = W // 2
+    cy = int(0.42 * H)
+    r = 300 * _S
+    if not items:
+        msg = "Sin desglose por tipo"
+        hint2 = "(necesita SOAP · toca ↻)"
+        mf = _font(26)
+        hf2 = _font(20)
+        mw, _ = _text_size(draw, msg, mf)
+        hw, _ = _text_size(draw, hint2, hf2)
+        draw.text((cx - mw // 2, cy - 20 * _S), msg, fill=MUTED, font=mf)
+        draw.text((cx - hw // 2, cy + 30 * _S), hint2, fill=MUTED, font=hf2)
+        img.save(path, "PNG")
+        return
+
+    total = sum(v for _, v in items) or 1.0
+    ang = -90.0
+    for name, val in items:
+        sweep = 360.0 * (val / total)
+        color = SERVICE_COLORS.get(name, (107, 114, 128))
+        if isinstance(color, str):
+            color = _hex_to_rgb(color)
+        draw.pieslice(
+            [cx - r, cy - r, cx + r, cy + r],
+            start=ang,
+            end=ang + sweep,
+            fill=color,
+            outline=BG,
+        )
+        ang += sweep
+
+    legend_y = cy + r + 36 * _S
+    lf = _font(26)
+    for name, val in items:
+        color = SERVICE_COLORS.get(name, (107, 114, 128))
+        if isinstance(color, str):
+            color = _hex_to_rgb(color)
+        short = name.replace(" Services", "")
+        line = f"{short}: {_money(val)} ({val / total * 100:.1f}%)"
+        draw.ellipse(
+            [70 * _S, legend_y + 4 * _S, 110 * _S, legend_y + 44 * _S],
+            fill=color,
+        )
+        draw.text((130 * _S, legend_y + 6 * _S), line[:52], fill=TEXT, font=lf)
+        legend_y += 56 * _S
     img.save(path, "PNG")
+
+
+def save_service_pies(all_items, paid_items, path: str | Path, subtitle: str = ""):
+    """Compat: genera el PNG 'todas' en path; el de pagadas junto a el."""
+    path = Path(path)
+    paid_path = path.with_name(path.stem.replace("tipos", "tipos_paid") + path.suffix)
+    if "tipos_paid" not in path.stem:
+        # chart_tipos_2026.png -> chart_tipos_paid_2026.png
+        stem = path.stem
+        if stem.startswith("chart_tipos_") and not stem.startswith("chart_tipos_paid_"):
+            paid_path = path.with_name(stem.replace("chart_tipos_", "chart_tipos_paid_", 1) + path.suffix)
+        else:
+            paid_path = path.with_name(path.stem + "_paid" + path.suffix)
+    save_service_pie(
+        all_items or [],
+        path,
+        title="Todas (SOAP)",
+        hint="Todas  ·  desliza > Pagadas",
+        subtitle=subtitle,
+    )
+    save_service_pie(
+        paid_items or [],
+        paid_path,
+        title="Pagadas (SOAP)",
+        hint="< Todas  ·  Pagadas",
+        subtitle=subtitle,
+    )
+    return str(path), str(paid_path)
 
 
 def save_behavior_monthly(all_months, paid_months, path: str | Path, year: int):
     w, h = _CW, _CH
     img, draw = _new(w, h)
     W, H = img.size
-    _title(draw, f"Comportamiento · {year}", w)
-    left, right = 90 * _S, W - 50 * _S
-    top, bottom = 120 * _S, H - 90 * _S
-    draw.rounded_rectangle([left, top, right, bottom], radius=24 * _S, fill=PANEL)
+    bar_bottom = _title_bar(draw, w, f"Comportamiento · {year}", y=14)
+
+    left, right = 40 * _S, W - 30 * _S
+    panel_top = (bar_bottom + 12) * _S
+    bottom = H - 80 * _S
+    draw.rounded_rectangle([left, panel_top, right, bottom], radius=24 * _S, fill=PANEL)
+
+    # Leyenda bajo titulo, encima de escala Y
+    leg_y = panel_top + 18 * _S
+    lf = _font(24)
+    draw.text((left + 24 * _S, leg_y), "Todas", fill=BLUE, font=lf)
+    draw.text((left + 180 * _S, leg_y), "Pagadas", fill=TEAL, font=lf)
+
+    chart_top = leg_y + 50 * _S
+    chart_bottom = bottom - 60 * _S
 
     all_map = dict(all_months or [])
     paid_map = dict(paid_months or [])
@@ -203,42 +282,36 @@ def save_behavior_monthly(all_months, paid_months, path: str | Path, year: int):
     y_paid = [float(paid_map.get(m, 0.0)) for m in months]
     vmax = max(y_all + y_paid + [1.0])
 
-    # Escala Y (3 marcas)
-    yf = _font(18)
-    for frac, label_v in ((0.0, vmax), (0.5, vmax / 2), (1.0, 0.0)):
-        yy = top + 50 * _S + frac * (bottom - top - 130 * _S)
-        draw.line([(left + 8 * _S, yy), (right - 8 * _S, yy)], fill=GRID, width=_S)
-        lab = _money(label_v) if label_v >= 1000 else f"{label_v:,.0f}"
-        draw.text((left + 14 * _S, yy - 14 * _S), lab, fill=MUTED, font=yf)
+    yf = _font(22)
+    for i in range(5):
+        frac = i / 4
+        yy = chart_top + 10 * _S + frac * (chart_bottom - chart_top - 20 * _S)
+        val = vmax * (1 - frac)
+        draw.line([(left + 8 * _S, yy), (right - 8 * _S, yy)], fill=GRID, width=2 * _S)
+        draw.text((left + 14 * _S, yy - 16 * _S), _money(val), fill=MUTED, font=yf)
 
     def _pts(vals):
         pts = []
         for i, v in enumerate(vals):
-            x = left + 50 * _S + i * ((right - left - 90 * _S) / 11)
-            y = bottom - 70 * _S - (v / vmax) * (bottom - top - 130 * _S)
+            x = left + 90 * _S + i * ((right - left - 120 * _S) / 11)
+            y = chart_bottom - (v / vmax) * (chart_bottom - chart_top - 20 * _S)
             pts.append((x, y))
         return pts
 
     def _polyline(pts, color):
         if len(pts) >= 2:
-            draw.line(pts, fill=color, width=6 * _S)
+            draw.line(pts, fill=color, width=7 * _S)
         for x, y in pts:
-            draw.ellipse(
-                [x - 9 * _S, y - 9 * _S, x + 9 * _S, y + 9 * _S],
-                fill=color,
-            )
+            draw.ellipse([x - 10 * _S, y - 10 * _S, x + 10 * _S, y + 10 * _S], fill=color)
 
     _polyline(_pts(y_all), BLUE)
     _polyline(_pts(y_paid), TEAL)
     f = _font(20)
     for i, m in enumerate(months):
-        x = left + 50 * _S + i * ((right - left - 90 * _S) / 11)
+        x = left + 90 * _S + i * ((right - left - 120 * _S) / 11)
         lab = _MONTHS[m - 1]
         tw, _ = _text_size(draw, lab, f)
-        draw.text((x - tw / 2, bottom - 48 * _S), lab, fill=MUTED, font=f)
-    lf = _font(24)
-    draw.text((left + 20 * _S, top + 16 * _S), "Todas", fill=BLUE, font=lf)
-    draw.text((left + 160 * _S, top + 16 * _S), "Pagadas", fill=TEAL, font=lf)
+        draw.text((x - tw / 2, chart_bottom + 16 * _S), lab, fill=MUTED, font=f)
     img.save(path, "PNG")
 
 
@@ -307,7 +380,6 @@ def save_pe_history(
     year: int | None = None,
     series: str = "all",
 ):
-    """Una sola grafica vertical. series: all | paid."""
     rows, scope = _filter_pe_history(history, year)
     use_paid = series == "paid"
     key = "paid_only_avg" if use_paid else "all_data_avg"
@@ -324,22 +396,22 @@ def save_pe_history(
     w, h = _CW, _CH
     img, draw = _new(w, h)
     W, H = img.size
-    _title(draw, f"Evolucion PE · {scope}", w, y=18)
-    sub = f"{label} · ritmo diario"
-    sw, _ = _text_size(draw, sub, _font(22))
-    draw.text(((W - sw) // 2, 70 * _S), sub, fill=MUTED, font=_font(22))
+    bar_bottom = _title_bar(draw, w, f"Evolucion PE · {scope}", y=12)
 
-    left, right = 90 * _S, W - 45 * _S
-    top, bottom = 130 * _S, H - 85 * _S
-    draw.rounded_rectangle([left, top, right, bottom], radius=24 * _S, fill=PANEL)
+    sub = f"{label} · ritmo diario"
+    sw, _ = _text_size(draw, sub, _font(24))
+    draw.text(((W - sw) // 2, (bar_bottom + 12) * _S), sub, fill=MUTED, font=_font(24))
+
+    pe_row = bar_bottom + 48
+    draw.text((40 * _S, pe_row * _S), f"PE {_money(pe)}", fill=TEAL, font=_font(28))
+
+    left, right = 40 * _S, W - 30 * _S
+    panel_top = (pe_row + 44) * _S
+    bottom = H - 75 * _S
+    draw.rounded_rectangle([left, panel_top, right, bottom], radius=24 * _S, fill=PANEL)
 
     if not rows:
-        draw.text(
-            (W // 2 - 100 * _S, H // 2),
-            "Sin historial",
-            fill=MUTED,
-            font=_font(26),
-        )
+        draw.text((W // 2 - 100 * _S, H // 2), "Sin historial", fill=MUTED, font=_font(26))
         img.save(path, "PNG")
         return
 
@@ -352,7 +424,7 @@ def save_pe_history(
     plot_v = [v for v in vals if v is not None]
     if not plot_v:
         draw.text(
-            (W // 2 - 180 * _S, H // 2 - 10 * _S),
+            (W // 2 - 180 * _S, H // 2),
             "Sin datos en esta serie",
             fill=MUTED,
             font=_font(24),
@@ -362,57 +434,59 @@ def save_pe_history(
 
     lo, hi, clipped = _useful_ylim(plot_v, pe)
     span = max(hi - lo, 1.0)
+    chart_top = panel_top + 20 * _S
+    chart_bottom = bottom - 55 * _S
 
     def _xy(i: int, v: float) -> tuple[float, float]:
         if len(plot_d) == 1:
             x = (left + right) / 2
         else:
-            x = left + 30 * _S + i * ((right - left - 60 * _S) / (len(plot_d) - 1))
-        y = bottom - 55 * _S - ((v - lo) / span) * (bottom - top - 100 * _S)
+            x = left + 50 * _S + i * ((right - left - 80 * _S) / (len(plot_d) - 1))
+        y = chart_bottom - ((v - lo) / span) * (chart_bottom - chart_top)
         return x, y
 
-    # Escala Y
-    yf = _font(18)
-    for frac, label_v in ((0.0, hi), (0.5, (hi + lo) / 2), (1.0, lo)):
-        yy = top + 55 * _S + frac * (bottom - top - 100 * _S)
-        draw.line([(left + 8 * _S, yy), (right - 8 * _S, yy)], fill=GRID, width=_S)
-        draw.text((left + 14 * _S, yy - 14 * _S), _money(label_v), fill=MUTED, font=yf)
+    yf = _font(22)
+    for i in range(5):
+        frac = i / 4
+        yy = chart_top + frac * (chart_bottom - chart_top)
+        val = hi - frac * (hi - lo)
+        draw.line([(left + 8 * _S, yy), (right - 8 * _S, yy)], fill=GRID, width=2 * _S)
+        draw.text((left + 14 * _S, yy - 16 * _S), _money(val), fill=MUTED, font=yf)
 
-    pe_y = bottom - 55 * _S - ((pe - lo) / span) * (bottom - top - 100 * _S)
-    draw.line([(left + 12 * _S, pe_y), (right - 12 * _S, pe_y)], fill=TEAL, width=4 * _S)
+    pe_y = chart_bottom - ((pe - lo) / span) * (chart_bottom - chart_top)
+    draw.line([(left + 10 * _S, pe_y), (right - 10 * _S, pe_y)], fill=TEAL, width=5 * _S)
+
+    if clipped:
+        draw.text(
+            (left + 14 * _S, chart_top + 4 * _S),
+            "Escala util (picos ene. fuera)",
+            fill=MUTED,
+            font=_font(16),
+        )
 
     pts = [_xy(i, v) for i, v in enumerate(plot_v)]
     if len(pts) >= 2:
-        draw.line(pts, fill=(203, 213, 225), width=6 * _S)
+        draw.line(pts, fill=(203, 213, 225), width=7 * _S)
     for (x, y), v in zip(pts, plot_v):
         col = GREEN if v >= pe else RED
-        r = 10 * _S
-        draw.ellipse([x - r, y - r, x + r, y + r], fill=col, outline=BG)
+        rr = 11 * _S
+        draw.ellipse([x - rr, y - rr, x + rr, y + rr], fill=col, outline=BG)
 
-    f = _font(24)
-    draw.text((left + 20 * _S, top + 16 * _S), f"PE {_money(pe)}", fill=TEAL, font=f)
-    if clipped:
-        draw.text(
-            (left + 20 * _S, top + 48 * _S),
-            "Escala util (picos ene. fuera)",
-            fill=MUTED,
-            font=_font(18),
-        )
-
+    df = _font(20)
     step = max(1, len(plot_d) // 5)
-    df = _font(18)
     for i, d in enumerate(plot_d):
         if i % step != 0 and i != len(plot_d) - 1:
             continue
         x, _ = _xy(i, plot_v[i])
         lab = d.strftime("%d-%b")
         tw, _ = _text_size(draw, lab, df)
-        draw.text((x - tw / 2, bottom - 40 * _S), lab, fill=MUTED, font=df)
+        draw.text((x - tw / 2, chart_bottom + 14 * _S), lab, fill=MUTED, font=df)
 
     last_v = plot_v[-1]
     if lo <= last_v <= hi:
         lx, ly = pts[-1]
         t = _money(last_v)
-        draw.text((lx + 12 * _S, ly - 30 * _S), t, fill=TEXT, font=_font(24))
+        tw, th = _text_size(draw, t, _font(26))
+        draw.text((lx - tw - 10 * _S, ly - th - 6 * _S), t, fill=TEXT, font=_font(26))
 
     img.save(path, "PNG")
