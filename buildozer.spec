@@ -19,7 +19,7 @@ version = 2.2.5
 # Python 3.11: hostpython3 y python3 DEBEN coincidir (si no, p4a usa 3.14 y rompe Kivy).
 requirements = hostpython3==3.11.10,python3==3.11.10,kivy==2.3.0,kivymd==1.2.0,requests,urllib3,charset-normalizer,idna,certifi,pillow,pyjnius,android,openssl,sqlite3
 
-orientation = all
+orientation = sensor
 fullscreen = 0
 
 # Xiaomi 14T y moviles modernos: solo arm64
