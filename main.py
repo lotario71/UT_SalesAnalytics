@@ -381,22 +381,22 @@ class MetricCard(MDCard):
         )
         self.line1 = MDLabel(
             text="—",
-            font_style="H6",
+            font_style="Subtitle1",
             bold=True,
             theme_text_color="Custom",
             text_color=(0.89, 0.91, 0.94, 1),
             size_hint_y=None,
-            height="36dp",
+            height="32dp",
             shorten=True,
             shorten_from="right",
         )
         self.line2 = MDLabel(
             text="",
-            font_style="Body2",
+            font_style="Caption",
             theme_text_color="Custom",
             text_color=(0.8, 0.83, 0.88, 1),
             size_hint_y=None,
-            height="24dp",
+            height="22dp",
             shorten=True,
             shorten_from="right",
         )
@@ -652,6 +652,18 @@ class SalesAnalyticsApp(MDApp):
 
         def _make_pick(y):
             def _pick(*_):
+                # Feedback inmediato: el diálogo se cierra y se ve el año al instante.
+                try:
+                    self.root.ids.year_header.text = f"{int(y)}  …"
+                    self.root.ids.mode_subtitle.text = f"Cargando {int(y)}…"
+                except Exception:
+                    pass
+                try:
+                    sb = Snackbar()
+                    sb.text = f"Año {int(y)}"
+                    sb.open()
+                except Exception:
+                    pass
                 dialog.dismiss()
                 self.set_selected_year(int(y))
 
@@ -697,11 +709,12 @@ class SalesAnalyticsApp(MDApp):
             self.metrics_mode = "all"
             self.pe_series = "all"
         try:
-            self.root.ids.year_header.text = f"{year}  v"
+            self.root.ids.year_header.text = f"{year}  …"
         except Exception:
             pass
         self._goto_resumen_tab()
         self.log_activity(f"▸ Cambio de año → {year}")
+        self._set_loading(True, f"Cargando {year}…")
         # Sin SOAP automatico: solo local/cache; red con ↻
         self.reload_dashboard(force=False, allow_network=False)
 
@@ -1686,7 +1699,7 @@ class SalesAnalyticsApp(MDApp):
                 f"Ventas Todas: ${m.total_sales:,.2f}",
                 f"Coste: ${m.total_cost:,.2f} · Margen {m.margin_pct:.2f}%",
                 f"PE diario: ${m.breakeven:,.2f} · Media ${m.daily_avg:,.2f}",
-                f"Neto est.: ${m.net_est:,.2f}",
+                f"Neto {'conta' if m.official_accounting else 'est.'}: ${m.net_est:,.2f}",
                 f"Tiempo total: {bundle.get('elapsed_ms', 0):.0f} ms",
             ]
             if bundle.get("paid_pending"):

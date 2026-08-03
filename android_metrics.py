@@ -36,6 +36,18 @@ def money(v: float) -> str:
     return f"{sign}${abs(float(v)):,.2f}"
 
 
+def money_card(v: float) -> str:
+    """Formato corto para tarjetas móviles (evita que se corte el total)."""
+    n = float(v or 0)
+    sign = "-" if n < 0 else ""
+    av = abs(n)
+    if av >= 1_000_000:
+        return f"{sign}${av / 1_000_000:.2f}M"
+    if av >= 10_000:
+        return f"{sign}${av:,.0f}"
+    return f"{sign}${av:,.2f}"
+
+
 def pct(v: float) -> str:
     return f"{float(v):.2f}%"
 
@@ -57,6 +69,8 @@ class YearMetrics:
     net_est: float
     net_margin_pct: float
     monthly_expense: float
+    # True = año cerrado: neto/gastos/bruto oficiales de conta (como Windows).
+    official_accounting: bool = False
 
     @property
     def vs_pe_ok(self) -> bool:
@@ -83,6 +97,10 @@ def compute_year_metrics(
     day_of_year: int,
     period_days: int = 365,
     days_in_year: int = 365,
+    official_accounting: bool = False,
+    official_gross: float | None = None,
+    official_expenses: float | None = None,
+    official_net: float | None = None,
 ) -> YearMetrics:
     sales = float(total_sales or 0)
     cost = float(total_cost or 0)
@@ -92,6 +110,16 @@ def compute_year_metrics(
     year_days = max(int(days_in_year or 365), 1)
 
     if sales <= 0:
+        expenses_y = (
+            float(official_expenses)
+            if official_accounting and official_expenses is not None
+            else expense * 12.0
+        )
+        net0 = (
+            float(official_net)
+            if official_accounting and official_net is not None
+            else -expenses_y
+        )
         return YearMetrics(
             total_sales=0.0,
             total_cost=0.0,
@@ -103,22 +131,44 @@ def compute_year_metrics(
             sales_needed=0.0,
             vs_pe=0.0,
             predicted_sales=0.0,
-            gross_profit_est=0.0,
-            expenses_year=expense * 12.0,
-            net_est=-expense * 12.0,
+            gross_profit_est=float(official_gross or 0.0),
+            expenses_year=expenses_y,
+            net_est=net0,
             net_margin_pct=0.0,
             monthly_expense=expense,
+            official_accounting=bool(official_accounting),
         )
 
     daily = sales / day
     margin = gross_margin_percent(sales, cost)
     pe = pe_daily(expense, margin)
     needed = pe * p_days
-    predicted = daily * year_days
-    gross_est = predicted * (margin / 100.0)
-    expenses_y = expense * 12.0
-    net = gross_est - expenses_y
-    net_m = (net / predicted) * 100.0 if predicted else 0.0
+
+    if official_accounting:
+        # Periodo cerrado: sin proyección lineal; cifras oficiales de conta.
+        predicted = sales
+        gross_est = (
+            float(official_gross)
+            if official_gross is not None
+            else round(sales - cost, 2)
+        )
+        expenses_y = (
+            float(official_expenses)
+            if official_expenses is not None
+            else expense * 12.0
+        )
+        net = (
+            float(official_net)
+            if official_net is not None
+            else round(gross_est - expenses_y, 2)
+        )
+        net_m = (net / sales) * 100.0 if sales else 0.0
+    else:
+        predicted = daily * year_days
+        gross_est = predicted * (margin / 100.0)
+        expenses_y = expense * 12.0
+        net = gross_est - expenses_y
+        net_m = (net / predicted) * 100.0 if predicted else 0.0
 
     return YearMetrics(
         total_sales=sales,
@@ -136,16 +186,23 @@ def compute_year_metrics(
         net_est=net,
         net_margin_pct=net_m,
         monthly_expense=expense,
+        official_accounting=bool(official_accounting),
     )
 
 
 def cards_payload(m: YearMetrics) -> dict[str, dict]:
     """Datos para tarjetas estilo Windows (título, líneas, tono, popup estructurado)."""
+    if m.official_accounting:
+        net_title = "Resultado neto (conta)"
+        net_line2 = "Oficial conta · sin proyección"
+    else:
+        net_title = "Resultado neto est."
+        net_line2 = f"Proy. {money(m.predicted_sales)}"
     return {
         "sales": {
             "title": "Ventas (real vs PE)",
-            "line1": f"Real {money(m.total_sales)}",
-            "line2": f"Necesario {money(m.sales_needed)}",
+            "line1": f"Real {money_card(m.total_sales)}",
+            "line2": f"Nec. {money_card(m.sales_needed)}",
             "tone1": "bad" if not m.sales_ok else "ok",
             "tone2": None,
             "popup": _popup_sales(m),
@@ -160,32 +217,32 @@ def cards_payload(m: YearMetrics) -> dict[str, dict]:
         },
         "daily": {
             "title": "Media diaria (real vs PE)",
-            "line1": f"Real {money(m.daily_avg)}",
-            "line2": f"Necesario {money(m.breakeven)}",
+            "line1": f"Real {money_card(m.daily_avg)}",
+            "line2": f"Nec. {money_card(m.breakeven)}",
             "tone1": "bad" if not m.daily_ok else "ok",
             "tone2": None,
             "popup": _popup_daily(m),
         },
         "pe": {
             "title": "Punto de equilibrio",
-            "line1": money(m.breakeven),
-            "line2": f"Gasto mes {money(m.monthly_expense)}",
+            "line1": money_card(m.breakeven),
+            "line2": f"Gasto {money_card(m.monthly_expense)}",
             "tone1": None,
             "tone2": None,
             "popup": _popup_pe(m),
         },
         "vs_pe": {
             "title": "Vs punto de equilibrio",
-            "line1": money(m.vs_pe),
+            "line1": money_card(m.vs_pe),
             "line2": "Media − PE diario",
             "tone1": "ok" if m.vs_pe_ok else "bad",
             "tone2": None,
             "popup": _popup_vs_pe(m),
         },
         "net": {
-            "title": "Resultado neto est.",
-            "line1": money(m.net_est),
-            "line2": f"Proy. {money(m.predicted_sales)}",
+            "title": net_title,
+            "line1": money_card(m.net_est),
+            "line2": net_line2 if m.official_accounting else f"Proy. {money_card(m.predicted_sales)}",
             "tone1": "ok" if m.net_ok else "bad",
             "tone2": None,
             "popup": _popup_net(m),
@@ -211,6 +268,11 @@ def _popup(
 
 
 def _popup_sales(m: YearMetrics) -> dict:
+    footer = (
+        "Fuente: contabilidad (año cerrado)."
+        if m.official_accounting
+        else "Fuente: SOAP (SQL Umbrella). Año en curso."
+    )
     return _popup(
         badge="Sobre objetivo" if m.sales_ok else "Bajo objetivo",
         badge_tone="ok" if m.sales_ok else "bad",
@@ -224,7 +286,7 @@ def _popup_sales(m: YearMetrics) -> dict:
             },
         ],
         formula=f"Necesario = PE diario × {m.period_days} días\n= {money(m.breakeven)} × {m.period_days}",
-        footer="Fuente: SOAP (SQL Umbrella). Sin conta en Android.",
+        footer=footer,
     )
 
 
@@ -274,24 +336,70 @@ def _popup_vs_pe(m: YearMetrics) -> dict:
 
 
 def _popup_margin(m: YearMetrics) -> dict:
+    gross = m.gross_profit_est if m.official_accounting else (m.total_sales - m.total_cost)
+    if m.official_accounting:
+        formula = (
+            "Margen bruto % = (Ventas − Coste) ÷ Ventas × 100\n"
+            f"= {money(gross)} ÷ {money(m.total_sales)} × 100 = {pct(m.margin_pct)}\n\n"
+            "Margen neto % = Neto conta ÷ Ventas × 100\n"
+            f"= {money(m.net_est)} ÷ {money(m.total_sales)} × 100 = {pct(m.net_margin_pct)}"
+        )
+        footer = "Año cerrado: sin proyección; neto oficial de estados de resultado."
+        net_label = "Margen neto (conta)"
+        rows = [
+            {"label": "Ventas", "value": money(m.total_sales), "tone": None},
+            {"label": "Coste", "value": money(m.total_cost), "tone": None},
+            {"label": "Ganancia bruta", "value": money(gross), "tone": None},
+            {"label": "Margen bruto", "value": pct(m.margin_pct), "tone": None},
+            {"label": "Resultado neto (conta)", "value": money(m.net_est), "tone": "ok" if m.net_ok else "bad"},
+            {"label": net_label, "value": pct(m.net_margin_pct), "tone": "ok" if m.net_ok else "bad"},
+        ]
+    else:
+        formula = (
+            "Margen bruto % = (Ventas − Coste) ÷ Ventas × 100\n"
+            f"= ({money(m.total_sales)} − {money(m.total_cost)}) ÷ {money(m.total_sales)} × 100 "
+            f"= {pct(m.margin_pct)}\n\n"
+            "Margen neto % = Neto est. ÷ Proyección ventas × 100\n"
+            f"= {money(m.net_est)} ÷ {money(m.predicted_sales)} × 100 = {pct(m.net_margin_pct)}"
+        )
+        footer = "Año en curso: neto estimado con proyección lineal."
+        rows = [
+            {"label": "Ventas", "value": money(m.total_sales), "tone": None},
+            {"label": "Coste", "value": money(m.total_cost), "tone": None},
+            {"label": "Ganancia bruta", "value": money(m.total_sales - m.total_cost), "tone": None},
+            {"label": "Margen bruto", "value": pct(m.margin_pct), "tone": None},
+            {"label": "Proyección ventas", "value": money(m.predicted_sales), "tone": None},
+            {"label": "Neto estimado", "value": money(m.net_est), "tone": "ok" if m.net_ok else "bad"},
+            {"label": "Margen neto est.", "value": pct(m.net_margin_pct), "tone": "ok" if m.net_ok else "bad"},
+        ]
     return _popup(
         badge="Neto positivo" if m.net_ok else "Neto negativo",
         badge_tone="ok" if m.net_ok else "bad",
-        rows=[
-            {"label": "Margen bruto", "value": pct(m.margin_pct), "tone": None},
-            {"label": "Margen neto est.", "value": pct(m.net_margin_pct), "tone": "ok" if m.net_ok else "bad"},
-            {"label": "Ventas", "value": money(m.total_sales), "tone": None},
-            {"label": "Coste", "value": money(m.total_cost), "tone": None},
-        ],
-        formula=(
-            "Bruto = (1 − coste/ventas) × 100\n"
-            f"Neto % = Neto ÷ proyección × 100\n"
-            f"Neto {money(m.net_est)} · Proy. {money(m.predicted_sales)}"
-        ),
+        rows=rows,
+        formula=formula,
+        footer=footer,
     )
 
 
 def _popup_net(m: YearMetrics) -> dict:
+    if m.official_accounting:
+        return _popup(
+            badge="Beneficio conta" if m.net_ok else "Pérdida conta",
+            badge_tone="ok" if m.net_ok else "bad",
+            rows=[
+                {"label": "Neto (conta)", "value": money(m.net_est), "tone": "ok" if m.net_ok else "bad"},
+                {"label": "Ventas", "value": money(m.total_sales), "tone": None},
+                {"label": "Ganancia bruta", "value": money(m.gross_profit_est), "tone": None},
+                {"label": "Gastos año (conta)", "value": money(m.expenses_year), "tone": None},
+                {"label": "Margen neto", "value": pct(m.net_margin_pct), "tone": "ok" if m.net_ok else "bad"},
+            ],
+            formula=(
+                "Método CONTABILIDAD (año cerrado)\n"
+                "Neto = suma mensual de estados (bruto − gastos + otros ingresos).\n"
+                "Sin proyección lineal ni SOAP."
+            ),
+            footer="Misma regla que Windows en periodos cerrados.",
+        )
     return _popup(
         badge="Beneficio" if m.net_ok else "Pérdida",
         badge_tone="ok" if m.net_ok else "bad",
@@ -302,7 +410,7 @@ def _popup_net(m: YearMetrics) -> dict:
             {"label": "Gastos año", "value": money(m.expenses_year), "tone": None},
         ],
         formula=(
-            "Método LINEAL (Android)\n"
+            "Método LINEAL (Android · año en curso)\n"
             f"Proy. = media × 365 = {money(m.predicted_sales)}\n"
             f"Neto = bruto − gastos ({money(m.expenses_year)})"
         ),
